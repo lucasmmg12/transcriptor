@@ -84,8 +84,13 @@ export default function Home() {
             return false
         }
 
-        if (file.size > 25 * 1024 * 1024) {
-            setError('El archivo es demasiado grande. El tamaño máximo es 25MB.')
+        // Límite de 10MB para evitar timeouts en Vercel
+        const MAX_SIZE_MB = 10
+        const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024
+        const fileSizeMB = file.size / (1024 * 1024)
+
+        if (file.size > MAX_SIZE_BYTES) {
+            setError(`El archivo es demasiado grande (${fileSizeMB.toFixed(2)}MB). El límite es ${MAX_SIZE_MB}MB (~10 minutos de audio) debido a restricciones de tiempo de Vercel. Para archivos más grandes, contacta con Grow Labs.`)
             return false
         }
 
@@ -253,8 +258,8 @@ export default function Home() {
                                 </label>
                                 <div
                                     className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${dragActive
-                                            ? 'border-green-400 bg-green-400/10 scale-[1.02]'
-                                            : 'border-gray-600 hover:border-green-400/50 hover:bg-white/5'
+                                        ? 'border-green-400 bg-green-400/10 scale-[1.02]'
+                                        : 'border-gray-600 hover:border-green-400/50 hover:bg-white/5'
                                         }`}
                                     onDragEnter={handleDrag}
                                     onDragLeave={handleDrag}
@@ -308,7 +313,7 @@ export default function Home() {
                                                     <span className="text-gray-300"> o arrastra y suelta</span>
                                                 </label>
                                                 <p className="text-sm text-gray-500 mt-2">
-                                                    MP3, WAV, M4A, OPUS, OGG, FLAC, WebM (máx. 25MB)
+                                                    MP3, WAV, M4A, OPUS, OGG, FLAC, WebM (máx. 10MB / ~10 min)
                                                 </p>
                                             </div>
                                         </div>
