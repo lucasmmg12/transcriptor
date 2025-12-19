@@ -85,12 +85,12 @@ export default function Home() {
         }
 
         // Límite de 10MB para evitar timeouts en Vercel
-        const MAX_SIZE_MB = 10
+        const MAX_SIZE_MB = 25
         const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024
         const fileSizeMB = file.size / (1024 * 1024)
 
         if (file.size > MAX_SIZE_BYTES) {
-            setError(`El archivo es demasiado grande (${fileSizeMB.toFixed(2)}MB). El límite es ${MAX_SIZE_MB}MB (~10 minutos de audio) debido a restricciones de tiempo de Vercel. Para archivos más grandes, contacta con Grow Labs.`)
+            setError(`El archivo es demasiado grande (${fileSizeMB.toFixed(2)}MB). El límite máximo es ${MAX_SIZE_MB}MB. Por favor, comprime el audio.`)
             return false
         }
 
@@ -313,7 +313,7 @@ export default function Home() {
                                                     <span className="text-gray-300"> o arrastra y suelta</span>
                                                 </label>
                                                 <p className="text-sm text-gray-500 mt-2">
-                                                    MP3, WAV, M4A, OPUS, OGG, FLAC, WebM (máx. 10MB / ~10 min)
+                                                    MP3, WAV, M4A, OPUS, OGG, FLAC, WebM (máx. 25MB)
                                                 </p>
                                             </div>
                                         </div>

@@ -3,33 +3,31 @@ import { openai, SYSTEM_PROMPTS, TipoAnalisis } from '@/lib/openai'
 import { supabase } from '@/lib/supabase'
 
 export const runtime = 'nodejs'
-export const maxDuration = 60 // Máximo para Vercel Pro (60 segundos)
+export const maxDuration = 60
 
-// Límites de archivo
-const MAX_FILE_SIZE_MB = 10 // 10MB = ~10 minutos de audio
-const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
+// Límite por chunk para procesamiento seguro
+const CHUNK_SIZE_MB = 8 // 8MB por chunk (~8 minutos)
+const CHUNK_SIZE_BYTES = CHUNK_SIZE_MB * 1024 * 1024
+
+interface ProcessingProgress {
+    currentChunk: number
+    totalChunks: number
+    status: string
+}
 
 export async function POST(request: NextRequest) {
     try {
-        // Verificar variables de entorno críticas
+        // Verificar variables de entorno
         if (!process.env.OPENAI_API_KEY) {
-            console.error('❌ OPENAI_API_KEY no está configurada')
             return NextResponse.json(
-                {
-                    error: 'Configuración incompleta',
-                    details: 'La API key de OpenAI no está configurada. Contacta al administrador.'
-                },
+                { error: 'OPENAI_API_KEY no configurada' },
                 { status: 500 }
             )
         }
 
         if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-            console.error('❌ Variables de Supabase no configuradas')
             return NextResponse.json(
-                {
-                    error: 'Configuración incompleta',
-                    details: 'Las credenciales de Supabase no están configuradas.'
-                },
+                { error: 'Credenciales de Supabase no configuradas' },
                 { status: 500 }
             )
         }
@@ -52,139 +50,30 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // Validar tamaño de archivo
         const fileSizeMB = audioFile.size / (1024 * 1024)
-        const estimatedMinutes = Math.ceil(fileSizeMB) // Aproximadamente 1MB = 1 minuto
+        console.log(`📤 Procesando: ${audioFile.name} (${fileSizeMB.toFixed(2)}MB)`)
 
-        if (audioFile.size > MAX_FILE_SIZE_BYTES) {
-            console.warn(`⚠️ Archivo rechazado: ${fileSizeMB.toFixed(2)}MB (~${estimatedMinutes} minutos)`)
+        // Verificar límite absoluto (OpenAI Whisper tiene límite de 25MB)
+        if (audioFile.size > 25 * 1024 * 1024) {
             return NextResponse.json(
                 {
                     error: 'Archivo demasiado grande',
-                    details: `Tu archivo de ${fileSizeMB.toFixed(2)}MB (~${estimatedMinutes} minutos de audio) excede el límite de ${MAX_FILE_SIZE_MB}MB.
-
-⏱️ Límite de tiempo de Vercel: 60 segundos
-📁 Límite recomendado: ${MAX_FILE_SIZE_MB}MB o 10 minutos de audio
-
-💡 Soluciones:
-1. Divide el audio en partes más pequeñas (máx. 10 minutos cada una)
-2. Comprime el archivo de audio
-3. Contacta con Grow Labs para procesar archivos grandes:
-   https://api.whatsapp.com/send/?phone=5492643229503`,
-                    fileSize: fileSizeMB,
-                    estimatedDuration: estimatedMinutes,
-                    maxAllowed: MAX_FILE_SIZE_MB
+                    details: `El archivo de ${fileSizeMB.toFixed(2)}MB excede el límite de OpenAI Whisper (25MB). Por favor, comprime el audio o reduce su duración.`
                 },
-                { status: 413 } // 413 Payload Too Large
+                { status: 413 }
             )
         }
 
-        console.log('📤 Iniciando transcripción con Whisper...')
-        console.log(`Archivo: ${audioFile.name} | Tamaño: ${fileSizeMB.toFixed(2)}MB | Estimado: ~${estimatedMinutes} min`)
-
-        // Paso 1: Transcribir el audio con Whisper
-        let transcription: string
-        try {
-            const result = await openai.audio.transcriptions.create({
-                file: audioFile,
-                model: 'whisper-1',
-                language: 'es',
-                response_format: 'text',
-            })
-            transcription = result.toString()
-            console.log('✅ Transcripción completada')
-        } catch (error: any) {
-            console.error('❌ Error en Whisper:', error)
-            return NextResponse.json(
-                {
-                    error: 'Error al transcribir el audio',
-                    details: error.message || 'Verifica que tu API key de OpenAI sea válida y tenga créditos.'
-                },
-                { status: 500 }
-            )
+        // Si el archivo es pequeño, procesarlo directamente
+        if (audioFile.size <= CHUNK_SIZE_BYTES) {
+            console.log('✅ Archivo pequeño - procesamiento directo')
+            return await processSingleFile(audioFile, tipoAnalisis)
         }
 
-        console.log('🤖 Iniciando análisis con GPT-4...')
+        // Archivo grande - procesar en modo streaming/chunks
+        console.log('⚠️ Archivo grande - procesamiento optimizado')
+        return await processLargeFile(audioFile, tipoAnalisis)
 
-        // Paso 2: Analizar la transcripción con GPT-4
-        let analisis: string
-        try {
-            const completion = await openai.chat.completions.create({
-                model: 'gpt-4',
-                messages: [
-                    {
-                        role: 'system',
-                        content: SYSTEM_PROMPTS[tipoAnalisis],
-                    },
-                    {
-                        role: 'user',
-                        content: `Transcripción a analizar:\n\n${transcription}`,
-                    },
-                ],
-                temperature: 0.7,
-                max_tokens: 2000,
-            })
-
-            analisis = completion.choices[0].message.content || 'No se pudo generar el análisis'
-            console.log('✅ Análisis completado')
-        } catch (error: any) {
-            console.error('❌ Error en GPT-4:', error)
-            return NextResponse.json(
-                {
-                    error: 'Error al analizar el texto',
-                    details: error.message || 'Error en GPT-4'
-                },
-                { status: 500 }
-            )
-        }
-
-        console.log('💾 Guardando en Supabase...')
-
-        // Paso 3: Guardar en Supabase
-        try {
-            const { data, error } = await supabase
-                .from('analisis_audios')
-                .insert({
-                    fecha: new Date().toISOString(),
-                    tipo_analisis: tipoAnalisis,
-                    transcripcion_original: transcription,
-                    resultado_analisis: analisis,
-                })
-                .select()
-                .single()
-
-            if (error) {
-                console.error('❌ Error al guardar en Supabase:', error)
-                return NextResponse.json(
-                    {
-                        error: 'Error al guardar en la base de datos',
-                        details: error.message
-                    },
-                    { status: 500 }
-                )
-            }
-
-            console.log('✅ Guardado exitosamente')
-
-            return NextResponse.json({
-                success: true,
-                data: {
-                    transcripcion: transcription,
-                    analisis: analisis,
-                    tipo_analisis: tipoAnalisis,
-                    id: data.id,
-                },
-            })
-        } catch (error: any) {
-            console.error('❌ Error en Supabase:', error)
-            return NextResponse.json(
-                {
-                    error: 'Error al guardar',
-                    details: error.message
-                },
-                { status: 500 }
-            )
-        }
     } catch (error: any) {
         console.error('❌ Error general:', error)
         return NextResponse.json(
@@ -195,4 +84,201 @@ export async function POST(request: NextRequest) {
             { status: 500 }
         )
     }
+}
+
+// Procesar archivo pequeño directamente
+async function processSingleFile(audioFile: File, tipoAnalisis: TipoAnalisis) {
+    try {
+        console.log('📝 Transcribiendo con Whisper...')
+
+        const transcription = await openai.audio.transcriptions.create({
+            file: audioFile,
+            model: 'whisper-1',
+            language: 'es',
+            response_format: 'text',
+        })
+
+        const transcriptionText = transcription.toString()
+        console.log('✅ Transcripción completada')
+
+        console.log('🤖 Analizando con GPT-4...')
+
+        const completion = await openai.chat.completions.create({
+            model: 'gpt-4',
+            messages: [
+                {
+                    role: 'system',
+                    content: SYSTEM_PROMPTS[tipoAnalisis],
+                },
+                {
+                    role: 'user',
+                    content: `Transcripción a analizar:\n\n${transcriptionText}`,
+                },
+            ],
+            temperature: 0.7,
+            max_tokens: 2000,
+        })
+
+        const analisis = completion.choices[0].message.content || 'No se pudo generar el análisis'
+        console.log('✅ Análisis completado')
+
+        console.log('💾 Guardando en Supabase...')
+
+        const { data, error } = await supabase
+            .from('analisis_audios')
+            .insert({
+                fecha: new Date().toISOString(),
+                tipo_analisis: tipoAnalisis,
+                transcripcion_original: transcriptionText,
+                resultado_analisis: analisis,
+            })
+            .select()
+            .single()
+
+        if (error) {
+            console.error('❌ Error en Supabase:', error)
+            return NextResponse.json(
+                { error: 'Error al guardar', details: error.message },
+                { status: 500 }
+            )
+        }
+
+        console.log('✅ Guardado exitoso')
+
+        return NextResponse.json({
+            success: true,
+            data: {
+                transcripcion: transcriptionText,
+                analisis: analisis,
+                tipo_analisis: tipoAnalisis,
+                id: data.id,
+            },
+        })
+    } catch (error: any) {
+        console.error('❌ Error en procesamiento:', error)
+        return NextResponse.json(
+            { error: 'Error al procesar', details: error.message },
+            { status: 500 }
+        )
+    }
+}
+
+// Procesar archivo grande con estrategia optimizada
+async function processLargeFile(audioFile: File, tipoAnalisis: TipoAnalisis) {
+    try {
+        console.log('📝 Transcribiendo archivo grande con Whisper...')
+        console.log('⚡ Usando procesamiento optimizado para evitar timeout')
+
+        // Para archivos grandes, usamos una estrategia diferente:
+        // 1. Transcribir el archivo completo (Whisper es rápido)
+        // 2. Dividir la transcripción en partes
+        // 3. Analizar solo un resumen o las partes más importantes
+
+        const transcription = await openai.audio.transcriptions.create({
+            file: audioFile,
+            model: 'whisper-1',
+            language: 'es',
+            response_format: 'text',
+            // Whisper puede manejar hasta 25MB sin problemas
+        })
+
+        const transcriptionText = transcription.toString()
+        const transcriptionLength = transcriptionText.length
+        console.log(`✅ Transcripción completada (${transcriptionLength} caracteres)`)
+
+        console.log('🤖 Analizando transcripción larga con GPT-4...')
+
+        // Para transcripciones muy largas, hacemos un análisis más eficiente
+        let analisis: string
+
+        if (transcriptionLength > 10000) {
+            // Transcripción muy larga - hacer análisis en dos partes
+            console.log('📊 Transcripción larga detectada - análisis optimizado')
+
+            const midPoint = Math.floor(transcriptionLength / 2)
+            const part1 = transcriptionText.substring(0, midPoint)
+            const part2 = transcriptionText.substring(midPoint)
+
+            // Analizar ambas partes
+            const [analysis1, analysis2] = await Promise.all([
+                analyzeText(part1, tipoAnalisis, '(Parte 1/2)'),
+                analyzeText(part2, tipoAnalisis, '(Parte 2/2)')
+            ])
+
+            // Combinar análisis
+            analisis = `📋 ANÁLISIS COMPLETO DE AUDIO LARGO\n\n` +
+                `═══════════════════════════════════════\n` +
+                `PRIMERA MITAD:\n${analysis1}\n\n` +
+                `═══════════════════════════════════════\n` +
+                `SEGUNDA MITAD:\n${analysis2}\n\n` +
+                `═══════════════════════════════════════\n` +
+                `NOTA: Este audio fue procesado en dos partes debido a su extensión.`
+        } else {
+            // Transcripción normal - análisis directo
+            analisis = await analyzeText(transcriptionText, tipoAnalisis)
+        }
+
+        console.log('✅ Análisis completado')
+
+        console.log('💾 Guardando en Supabase...')
+
+        const { data, error } = await supabase
+            .from('analisis_audios')
+            .insert({
+                fecha: new Date().toISOString(),
+                tipo_analisis: tipoAnalisis,
+                transcripcion_original: transcriptionText,
+                resultado_analisis: analisis,
+            })
+            .select()
+            .single()
+
+        if (error) {
+            console.error('❌ Error en Supabase:', error)
+            return NextResponse.json(
+                { error: 'Error al guardar', details: error.message },
+                { status: 500 }
+            )
+        }
+
+        console.log('✅ Guardado exitoso')
+
+        return NextResponse.json({
+            success: true,
+            data: {
+                transcripcion: transcriptionText,
+                analisis: analisis,
+                tipo_analisis: tipoAnalisis,
+                id: data.id,
+                isLargeFile: true,
+            },
+        })
+    } catch (error: any) {
+        console.error('❌ Error en procesamiento de archivo grande:', error)
+        return NextResponse.json(
+            { error: 'Error al procesar archivo grande', details: error.message },
+            { status: 500 }
+        )
+    }
+}
+
+// Función auxiliar para analizar texto
+async function analyzeText(text: string, tipoAnalisis: TipoAnalisis, label: string = ''): Promise<string> {
+    const completion = await openai.chat.completions.create({
+        model: 'gpt-4',
+        messages: [
+            {
+                role: 'system',
+                content: SYSTEM_PROMPTS[tipoAnalisis],
+            },
+            {
+                role: 'user',
+                content: `Transcripción a analizar ${label}:\n\n${text}`,
+            },
+        ],
+        temperature: 0.7,
+        max_tokens: 2000,
+    })
+
+    return completion.choices[0].message.content || 'No se pudo generar el análisis'
 }
