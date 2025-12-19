@@ -3,7 +3,7 @@ import OpenAI from 'openai'
 
 export async function GET(request: NextRequest) {
     try {
-        const checks = {
+        const checks: any = {
             timestamp: new Date().toISOString(),
             environment: process.env.NODE_ENV,
             openai: {
@@ -25,10 +25,9 @@ export async function GET(request: NextRequest) {
                 })
 
                 // Hacer una llamada simple para verificar la API key
-                const models = await openai.models.list()
+                await openai.models.list()
 
                 checks.openai.status = '✅ API Key válida y funcionando'
-                checks.openai.modelsAvailable = models.data.length
             } catch (error: any) {
                 checks.openai.status = '❌ Error: ' + error.message
 
