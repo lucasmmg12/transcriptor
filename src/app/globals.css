@@ -373,3 +373,48 @@ p {
   background: var(--primary-green);
   color: white;
 }
+
+/* Print Styles for Presentation */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #presentation-container,
+  #presentation-container * {
+    visibility: visible;
+  }
+
+  #presentation-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--dark-bg) !important;
+  }
+
+  .slide-page {
+    break-after: always;
+    page-break-after: always;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--dark-bg) !important;
+    color: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    margin: 0 !important;
+    padding: 2cm !important;
+    /* Margen interno para la slide en papel */
+    border: none !important;
+  }
+
+  @page {
+    size: landscape;
+    margin: 0;
+  }
+}

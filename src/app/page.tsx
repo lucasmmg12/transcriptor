@@ -15,8 +15,11 @@ export default function Home() {
     const [historial, setHistorial] = useState<AnalisisAudio[]>([])
     const [loadingHistorial, setLoadingHistorial] = useState(true)
     const [dragActive, setDragActive] = useState(false)
-    const [activeTab, setActiveTab] = useState<'standard' | 'largos'>('standard')
+    const [activeTab, setActiveTab] = useState<'standard' | 'largos' | 'presentaciones'>('standard')
     const [textoManual, setTextoManual] = useState('')
+    const [textoPresentacion, setTextoPresentacion] = useState('')
+    const [presentationData, setPresentationData] = useState<any>(null)
+    const [loadingPresentation, setLoadingPresentation] = useState(false)
 
     useEffect(() => {
         cargarHistorial()
@@ -207,6 +210,43 @@ export default function Home() {
         }
     }
 
+    const handleGenerarPresentacion = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!textoPresentacion.trim()) {
+            setError('Por favor ingresa el texto para generar la presentación')
+            return
+        }
+
+        setLoadingPresentation(true)
+        setError(null)
+        setPresentationData(null)
+
+        try {
+            const response = await fetch('/api/generar-presentacion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ texto: textoPresentacion })
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Error al generar la presentación')
+            }
+
+            setPresentationData(data.data)
+
+        } catch (err: any) {
+            setError(err.message || 'Error al generar la presentación')
+        } finally {
+            setLoadingPresentation(false)
+        }
+    }
+
+    const handlePrint = () => {
+        window.print()
+    }
+
     const formatearFecha = (fecha: string) => {
         return new Date(fecha).toLocaleString('es-ES', {
             year: 'numeric',
@@ -312,24 +352,33 @@ export default function Home() {
                     <div className="glass-strong rounded-3xl p-8 md:p-12 card-hover animate-slide-in">
                         {/* Tabs Navigation */}
                         <div className="flex justify-center mb-10">
-                            <div className="bg-gray-800/50 p-1.5 rounded-2xl inline-flex relative">
+                            <div className="bg-gray-800/50 p-1.5 rounded-2xl inline-flex relative flex-wrap justify-center gap-1">
                                 <button
-                                    onClick={() => { setActiveTab('standard'); setError(null); setResultado(null); }}
-                                    className={`relative z-10 px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${activeTab === 'standard'
+                                    onClick={() => { setActiveTab('standard'); setError(null); setResultado(null); setPresentationData(null); }}
+                                    className={`relative z-10 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${activeTab === 'standard'
                                         ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg shadow-green-500/20'
                                         : 'text-gray-400 hover:text-white hover:bg-white/5'
                                         }`}
                                 >
-                                    Transcriptor Estándar
+                                    Transcriptor
                                 </button>
                                 <button
-                                    onClick={() => { setActiveTab('largos'); setError(null); setResultado(null); }}
-                                    className={`relative z-10 px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${activeTab === 'largos'
+                                    onClick={() => { setActiveTab('largos'); setError(null); setResultado(null); setPresentationData(null); }}
+                                    className={`relative z-10 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${activeTab === 'largos'
                                         ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-lg shadow-blue-500/20'
                                         : 'text-gray-400 hover:text-white hover:bg-white/5'
                                         }`}
                                 >
                                     Audios Largos
+                                </button>
+                                <button
+                                    onClick={() => { setActiveTab('presentaciones'); setError(null); setResultado(null); setPresentationData(null); }}
+                                    className={`relative z-10 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${activeTab === 'presentaciones'
+                                        ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/20'
+                                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                        }`}
+                                >
+                                    Presentaciones
                                 </button>
                             </div>
                         </div>
@@ -465,7 +514,7 @@ export default function Home() {
                                     )}
                                 </button>
                             </form>
-                        ) : (
+                        ) : activeTab === 'largos' ? (
                             <form onSubmit={handleTextSubmit} className="space-y-8 animate-fade-in">
                                 {/* Text Upload/Paste Area */}
                                 <div>
@@ -540,6 +589,136 @@ export default function Home() {
                                     )}
                                 </button>
                             </form>
+                        ) : (
+                            <div className="space-y-8 animate-fade-in">
+                                {!presentationData ? (
+                                    <form onSubmit={handleGenerarPresentacion}>
+                                        <label className="block text-lg font-semibold mb-4 text-white">
+                                            📊 Generador de Presentaciones
+                                        </label>
+                                        <p className="text-gray-400 mb-4 text-sm">
+                                            Pega tu texto o transcripción y generaremos slides profesionales listas para exportar a PDF.
+                                        </p>
+
+                                        <textarea
+                                            value={textoPresentacion}
+                                            onChange={(e) => setTextoPresentacion(e.target.value)}
+                                            placeholder="Ingresa el texto para generar la presentación..."
+                                            className="w-full h-64 p-6 bg-gray-900/50 border border-gray-700 rounded-2xl text-white text-base focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none leading-relaxed mb-6"
+                                            disabled={loadingPresentation}
+                                        />
+
+                                        <button
+                                            type="submit"
+                                            disabled={loadingPresentation || !textoPresentacion.trim()}
+                                            className="w-full py-5 px-8 btn btn-secondary text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 border-0 text-white"
+                                        >
+                                            {loadingPresentation ? (
+                                                <span className="flex items-center justify-center gap-3">
+                                                    <div className="spinner"></div>
+                                                    <span>Diseñando slides...</span>
+                                                </span>
+                                            ) : (
+                                                <span className="flex items-center justify-center gap-2">
+                                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                    <span>Generar Presentación</span>
+                                                </span>
+                                            )}
+                                        </button>
+                                    </form>
+                                ) : (
+                                    <div id="presentation-container">
+                                        <div className="flex justify-between items-center mb-8 sticky top-0 z-50 glass p-4 rounded-xl print:hidden">
+                                            <h3 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                                                {presentationData?.titulo_presentacion}
+                                            </h3>
+                                            <div className="flex gap-4">
+                                                <button
+                                                    onClick={() => setPresentationData(null)}
+                                                    className="px-4 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+                                                >
+                                                    ← Volver
+                                                </button>
+                                                <button
+                                                    onClick={handlePrint}
+                                                    className="btn btn-primary from-purple-500 to-pink-500 px-6 py-2 text-sm"
+                                                >
+                                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                                    </svg>
+                                                    Descargar PDF
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-12 print:space-y-0">
+                                            {presentationData?.slides?.map((slide: any, index: number) => (
+                                                <div
+                                                    key={index}
+                                                    className="slide-page aspect-video bg-gray-900 border border-gray-800 rounded-2xl p-16 flex flex-col justify-center relative overflow-hidden shadow-2xl print:border-0 print:shadow-none print:aspect-auto"
+                                                >
+                                                    {/* Background Elements */}
+                                                    <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+                                                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-purple-500/10 to-pink-500/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
+
+                                                    {/* Logo Watermark */}
+                                                    <div className="absolute bottom-8 right-8 opacity-50 flex items-center gap-2">
+                                                        <span className="text-gray-500 text-sm font-semibold tracking-widest">GROW LABS</span>
+                                                        <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                                                    </div>
+
+                                                    {/* Slide Content */}
+                                                    <div className="relative z-10 w-full max-w-4xl mx-auto">
+                                                        <div className="mb-4 flex items-center gap-3">
+                                                            <span className="px-3 py-1 rounded-full bg-white/5 text-gray-400 text-xs font-mono uppercase tracking-wider border border-white/10">
+                                                                Slide {index + 1}
+                                                            </span>
+                                                            {slide.tipo === 'titulo' && (
+                                                                <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-bold uppercase tracking-wider">
+                                                                    Inicio
+                                                                </span>
+                                                            )}
+                                                        </div>
+
+                                                        {slide.tipo === 'titulo' ? (
+                                                            <div className="text-center">
+                                                                <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 mb-8 leading-tight">
+                                                                    {slide.titulo}
+                                                                </h2>
+                                                                <div className="flex flex-col gap-4 text-xl text-gray-400">
+                                                                    {slide.contenido.map((item: string, i: number) => (
+                                                                        <p key={i}>{item}</p>
+                                                                    ))}
+                                                                </div>
+                                                                <div className="w-32 h-2 bg-gradient-to-r from-green-400 to-blue-600 mx-auto mt-12 rounded-full"></div>
+                                                            </div>
+                                                        ) : (
+                                                            <>
+                                                                <h3 className="text-4xl font-bold text-white mb-12 flex items-center gap-4">
+                                                                    <span className="w-2 h-12 bg-green-400 rounded-full"></span>
+                                                                    {slide.titulo}
+                                                                </h3>
+                                                                <ul className="space-y-6">
+                                                                    {slide.contenido.map((point: string, i: number) => (
+                                                                        <li key={i} className="flex items-start gap-4">
+                                                                            <span className="mt-2 w-2 h-2 rounded-full bg-blue-400 flex-shrink-0"></span>
+                                                                            <p className="text-xl md:text-2xl text-gray-300 leading-relaxed font-light">
+                                                                                {point}
+                                                                            </p>
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         )}
 
                         {/* Error Message */}
