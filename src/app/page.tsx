@@ -15,6 +15,8 @@ export default function Home() {
     const [historial, setHistorial] = useState<AnalisisAudio[]>([])
     const [loadingHistorial, setLoadingHistorial] = useState(true)
     const [dragActive, setDragActive] = useState(false)
+    const [activeTab, setActiveTab] = useState<'standard' | 'largos'>('standard')
+    const [textoManual, setTextoManual] = useState('')
 
     useEffect(() => {
         cargarHistorial()
@@ -147,6 +149,64 @@ export default function Home() {
         }
     }
 
+    const handleTextFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            if (file.size > 10 * 1024 * 1024) {
+                setError('El archivo de texto es demasiado grande (Máx 10MB)')
+                return
+            }
+            try {
+                const text = await file.text()
+                setTextoManual(text)
+                setError(null)
+            } catch (err) {
+                console.error(err)
+                setError('Error al leer el archivo de texto')
+            }
+        }
+    }
+
+    const handleTextSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+
+        if (!textoManual.trim()) {
+            setError('Por favor ingresa o sube el texto de la transcripción')
+            return
+        }
+
+        setLoading(true)
+        setError(null)
+        setResultado(null)
+
+        try {
+            const response = await fetch('/api/analizar-texto', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    texto: textoManual,
+                    tipo_analisis: tipoAnalisis,
+                }),
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Error al procesar el texto')
+            }
+
+            setResultado(data.data)
+            await cargarHistorial()
+
+        } catch (err: any) {
+            setError(err.message || 'Error al procesar el texto')
+        } finally {
+            setLoading(false)
+        }
+    }
+
     const formatearFecha = (fecha: string) => {
         return new Date(fecha).toLocaleString('es-ES', {
             year: 'numeric',
@@ -250,136 +310,237 @@ export default function Home() {
                 {/* Main Form */}
                 <div className="max-w-5xl mx-auto">
                     <div className="glass-strong rounded-3xl p-8 md:p-12 card-hover animate-slide-in">
-                        <form onSubmit={handleSubmit} className="space-y-8">
-                            {/* Upload Area */}
-                            <div>
-                                <label className="block text-lg font-semibold mb-4 text-white">
-                                    📁 Archivo de Audio
-                                </label>
-                                <div
-                                    className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${dragActive
-                                        ? 'border-green-400 bg-green-400/10 scale-[1.02]'
-                                        : 'border-gray-600 hover:border-green-400/50 hover:bg-white/5'
+                        {/* Tabs Navigation */}
+                        <div className="flex justify-center mb-10">
+                            <div className="bg-gray-800/50 p-1.5 rounded-2xl inline-flex relative">
+                                <button
+                                    onClick={() => { setActiveTab('standard'); setError(null); setResultado(null); }}
+                                    className={`relative z-10 px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${activeTab === 'standard'
+                                        ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg shadow-green-500/20'
+                                        : 'text-gray-400 hover:text-white hover:bg-white/5'
                                         }`}
-                                    onDragEnter={handleDrag}
-                                    onDragLeave={handleDrag}
-                                    onDragOver={handleDrag}
-                                    onDrop={handleDrop}
                                 >
-                                    <input
-                                        id="audio-input"
-                                        type="file"
-                                        accept=".mp3,.wav,.m4a,.mp4,.mpeg,.mpga,.webm,.ogg,.opus,.flac,audio/*"
-                                        onChange={handleFileChange}
-                                        className="hidden"
+                                    Transcriptor Estándar
+                                </button>
+                                <button
+                                    onClick={() => { setActiveTab('largos'); setError(null); setResultado(null); }}
+                                    className={`relative z-10 px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${activeTab === 'largos'
+                                        ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-lg shadow-blue-500/20'
+                                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                        }`}
+                                >
+                                    Audios Largos
+                                </button>
+                            </div>
+                        </div>
+
+                        {activeTab === 'standard' ? (
+                            <form onSubmit={handleSubmit} className="space-y-8 animate-fade-in">
+                                {/* Upload Area */}
+                                <div>
+                                    <label className="block text-lg font-semibold mb-4 text-white">
+                                        📁 Archivo de Audio
+                                    </label>
+                                    <div
+                                        className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${dragActive
+                                            ? 'border-green-400 bg-green-400/10 scale-[1.02]'
+                                            : 'border-gray-600 hover:border-green-400/50 hover:bg-white/5'
+                                            }`}
+                                        onDragEnter={handleDrag}
+                                        onDragLeave={handleDrag}
+                                        onDragOver={handleDrag}
+                                        onDrop={handleDrop}
+                                    >
+                                        <input
+                                            id="audio-input"
+                                            type="file"
+                                            accept=".mp3,.wav,.m4a,.mp4,.mpeg,.mpga,.webm,.ogg,.opus,.flac,audio/*"
+                                            onChange={handleFileChange}
+                                            className="hidden"
+                                            disabled={loading}
+                                        />
+
+                                        {audioFile ? (
+                                            <div className="flex items-center justify-center gap-4 animate-fade-in">
+                                                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                                                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                                                    </svg>
+                                                </div>
+                                                <div className="text-left flex-1">
+                                                    <p className="text-white font-semibold text-lg">{audioFile.name}</p>
+                                                    <p className="text-gray-400">
+                                                        {(audioFile.size / 1024 / 1024).toFixed(2)} MB
+                                                    </p>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setAudioFile(null)}
+                                                    className="w-10 h-10 rounded-full bg-red-500/20 hover:bg-red-500/30 text-red-400 flex items-center justify-center transition-colors"
+                                                >
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-4">
+                                                <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-green-400/20 to-blue-500/20 flex items-center justify-center">
+                                                    <svg className="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <label htmlFor="audio-input" className="cursor-pointer">
+                                                        <span className="text-green-400 hover:text-green-300 font-semibold text-lg transition-colors">
+                                                            Haz clic para subir
+                                                        </span>
+                                                        <span className="text-gray-300"> o arrastra y suelta</span>
+                                                    </label>
+                                                    <p className="text-sm text-gray-500 mt-2">
+                                                        MP3, WAV, M4A, OPUS, OGG, FLAC, WebM (máx. 25MB)
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Analysis Type Selector */}
+                                <div>
+                                    <label htmlFor="tipo-analisis" className="block text-lg font-semibold mb-4 text-white">
+                                        🎯 Tipo de Análisis
+                                    </label>
+                                    <select
+                                        id="tipo-analisis"
+                                        value={tipoAnalisis}
+                                        onChange={(e) => setTipoAnalisis(e.target.value as TipoAnalisis)}
+                                        className="w-full px-6 py-4 bg-gray-800/60 border border-gray-700 rounded-xl text-white text-lg font-medium focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all cursor-pointer hover:bg-gray-800/80"
+                                        disabled={loading}
+                                    >
+                                        <option value="resumen-general">📝 Resumen General</option>
+                                        <option value="entrevista-trabajo">💼 Entrevista de Trabajo</option>
+                                        <option value="reunion-cliente">🤝 Reunión con Cliente</option>
+                                    </select>
+
+                                    <div className="mt-4 p-5 glass rounded-xl border border-white/10">
+                                        <p className="text-sm text-gray-300 leading-relaxed">
+                                            {tipoAnalisis === 'entrevista-trabajo' && (
+                                                <>
+                                                    <strong className="text-purple-400">Entrevista de Trabajo:</strong> Analiza el perfil del candidato, identifica fortalezas, debilidades y proporciona una recomendación de contratación.
+                                                </>
+                                            )}
+                                            {tipoAnalisis === 'reunion-cliente' && (
+                                                <>
+                                                    <strong className="text-blue-400">Reunión con Cliente:</strong> Extrae requerimientos, genera lista de tareas y evalúa el tono y compromiso del cliente.
+                                                </>
+                                            )}
+                                            {tipoAnalisis === 'resumen-general' && (
+                                                <>
+                                                    <strong className="text-green-400">Resumen General:</strong> Genera un resumen ejecutivo con los puntos clave, temas principales y conclusiones.
+                                                </>
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Submit Button */}
+                                <button
+                                    type="submit"
+                                    disabled={loading || !audioFile}
+                                    className="w-full py-5 px-8 btn btn-primary text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {loading ? (
+                                        <span className="flex items-center justify-center gap-3">
+                                            <div className="spinner"></div>
+                                            <span>Procesando tu audio...</span>
+                                        </span>
+                                    ) : (
+                                        <span className="flex items-center justify-center gap-2">
+                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                            </svg>
+                                            <span>Procesar Audio con IA</span>
+                                        </span>
+                                    )}
+                                </button>
+                            </form>
+                        ) : (
+                            <form onSubmit={handleTextSubmit} className="space-y-8 animate-fade-in">
+                                {/* Text Upload/Paste Area */}
+                                <div>
+                                    <div className="flex justify-between items-center mb-4">
+                                        <label className="block text-lg font-semibold text-white">
+                                            📄 Transcripción (Texto)
+                                        </label>
+                                        <label htmlFor="text-file-input" className="text-sm text-blue-400 hover:text-blue-300 cursor-pointer flex items-center gap-2">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                            </svg>
+                                            Subir archivo .txt
+                                        </label>
+                                        <input
+                                            id="text-file-input"
+                                            type="file"
+                                            accept=".txt,.md,.json"
+                                            onChange={handleTextFileChange}
+                                            className="hidden"
+                                            disabled={loading}
+                                        />
+                                    </div>
+
+                                    <textarea
+                                        value={textoManual}
+                                        onChange={(e) => setTextoManual(e.target.value)}
+                                        placeholder="Pega aquí la transcripción de tu audio largo para analizarla..."
+                                        className="w-full h-64 p-6 bg-gray-900/50 border border-gray-700 rounded-2xl text-white text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none leading-relaxed"
                                         disabled={loading}
                                     />
-
-                                    {audioFile ? (
-                                        <div className="flex items-center justify-center gap-4 animate-fade-in">
-                                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
-                                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                                                </svg>
-                                            </div>
-                                            <div className="text-left flex-1">
-                                                <p className="text-white font-semibold text-lg">{audioFile.name}</p>
-                                                <p className="text-gray-400">
-                                                    {(audioFile.size / 1024 / 1024).toFixed(2)} MB
-                                                </p>
-                                            </div>
-                                            <button
-                                                type="button"
-                                                onClick={() => setAudioFile(null)}
-                                                className="w-10 h-10 rounded-full bg-red-500/20 hover:bg-red-500/30 text-red-400 flex items-center justify-center transition-colors"
-                                            >
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <div className="space-y-4">
-                                            <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-green-400/20 to-blue-500/20 flex items-center justify-center">
-                                                <svg className="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                                </svg>
-                                            </div>
-                                            <div>
-                                                <label htmlFor="audio-input" className="cursor-pointer">
-                                                    <span className="text-green-400 hover:text-green-300 font-semibold text-lg transition-colors">
-                                                        Haz clic para subir
-                                                    </span>
-                                                    <span className="text-gray-300"> o arrastra y suelta</span>
-                                                </label>
-                                                <p className="text-sm text-gray-500 mt-2">
-                                                    MP3, WAV, M4A, OPUS, OGG, FLAC, WebM (máx. 25MB)
-                                                </p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Analysis Type Selector */}
-                            <div>
-                                <label htmlFor="tipo-analisis" className="block text-lg font-semibold mb-4 text-white">
-                                    🎯 Tipo de Análisis
-                                </label>
-                                <select
-                                    id="tipo-analisis"
-                                    value={tipoAnalisis}
-                                    onChange={(e) => setTipoAnalisis(e.target.value as TipoAnalisis)}
-                                    className="w-full px-6 py-4 bg-gray-800/60 border border-gray-700 rounded-xl text-white text-lg font-medium focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all cursor-pointer hover:bg-gray-800/80"
-                                    disabled={loading}
-                                >
-                                    <option value="resumen-general">📝 Resumen General</option>
-                                    <option value="entrevista-trabajo">💼 Entrevista de Trabajo</option>
-                                    <option value="reunion-cliente">🤝 Reunión con Cliente</option>
-                                </select>
-
-                                <div className="mt-4 p-5 glass rounded-xl border border-white/10">
-                                    <p className="text-sm text-gray-300 leading-relaxed">
-                                        {tipoAnalisis === 'entrevista-trabajo' && (
-                                            <>
-                                                <strong className="text-purple-400">Entrevista de Trabajo:</strong> Analiza el perfil del candidato, identifica fortalezas, debilidades y proporciona una recomendación de contratación.
-                                            </>
-                                        )}
-                                        {tipoAnalisis === 'reunion-cliente' && (
-                                            <>
-                                                <strong className="text-blue-400">Reunión con Cliente:</strong> Extrae requerimientos, genera lista de tareas y evalúa el tono y compromiso del cliente.
-                                            </>
-                                        )}
-                                        {tipoAnalisis === 'resumen-general' && (
-                                            <>
-                                                <strong className="text-green-400">Resumen General:</strong> Genera un resumen ejecutivo con los puntos clave, temas principales y conclusiones.
-                                            </>
-                                        )}
+                                    <p className="text-xs text-gray-500 mt-2 text-right">
+                                        {textoManual.length} caracteres
                                     </p>
                                 </div>
-                            </div>
 
-                            {/* Submit Button */}
-                            <button
-                                type="submit"
-                                disabled={loading || !audioFile}
-                                className="w-full py-5 px-8 btn btn-primary text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {loading ? (
-                                    <span className="flex items-center justify-center gap-3">
-                                        <div className="spinner"></div>
-                                        <span>Procesando tu audio...</span>
-                                    </span>
-                                ) : (
-                                    <span className="flex items-center justify-center gap-2">
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                        </svg>
-                                        <span>Procesar Audio con IA</span>
-                                    </span>
-                                )}
-                            </button>
-                        </form>
+                                {/* Analysis Type Selector (Reused) */}
+                                <div>
+                                    <label htmlFor="tipo-analisis-text" className="block text-lg font-semibold mb-4 text-white">
+                                        🎯 Tipo de Análisis
+                                    </label>
+                                    <select
+                                        id="tipo-analisis-text"
+                                        value={tipoAnalisis}
+                                        onChange={(e) => setTipoAnalisis(e.target.value as TipoAnalisis)}
+                                        className="w-full px-6 py-4 bg-gray-800/60 border border-gray-700 rounded-xl text-white text-lg font-medium focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer hover:bg-gray-800/80"
+                                        disabled={loading}
+                                    >
+                                        <option value="resumen-general">📝 Resumen General</option>
+                                        <option value="entrevista-trabajo">💼 Entrevista de Trabajo</option>
+                                        <option value="reunion-cliente">🤝 Reunión con Cliente</option>
+                                    </select>
+                                </div>
+
+                                {/* Submit Button */}
+                                <button
+                                    type="submit"
+                                    disabled={loading || !textoManual.trim()}
+                                    className="w-full py-5 px-8 btn btn-secondary text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 border-0 text-white"
+                                >
+                                    {loading ? (
+                                        <span className="flex items-center justify-center gap-3">
+                                            <div className="spinner"></div>
+                                            <span>Analizando texto...</span>
+                                        </span>
+                                    ) : (
+                                        <span className="flex items-center justify-center gap-2">
+                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                            </svg>
+                                            <span>Analizar con GPT-4</span>
+                                        </span>
+                                    )}
+                                </button>
+                            </form>
+                        )}
 
                         {/* Error Message */}
                         {error && (
