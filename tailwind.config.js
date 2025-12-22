@@ -20,6 +20,16 @@ module.exports = {
                     800: '#075985',
                     900: '#0c4a6e',
                 },
+                medical: {
+                    50: '#f0fdf4',
+                    100: '#dcfce7',
+                    500: '#22c55e',
+                    600: '#16a34a',
+                    700: '#15803d',
+                    800: '#006E50', // Tu verde personalizado
+                    900: '#004d38',
+                    950: '#003325',
+                }
             },
             animation: {
                 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',

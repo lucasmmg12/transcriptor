@@ -20,6 +20,7 @@ export default function Home() {
     const [textoPresentacion, setTextoPresentacion] = useState('')
     const [presentationData, setPresentationData] = useState<any>(null)
     const [loadingPresentation, setLoadingPresentation] = useState(false)
+    const [presentationTemplate, setPresentationTemplate] = useState<'standard' | 'medical'>('standard')
 
     useEffect(() => {
         cargarHistorial()
@@ -225,7 +226,10 @@ export default function Home() {
             const response = await fetch('/api/generar-presentacion', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ texto: textoPresentacion })
+                body: JSON.stringify({
+                    texto: textoPresentacion,
+                    template: presentationTemplate
+                })
             })
 
             const data = await response.json()
@@ -612,6 +616,30 @@ export default function Home() {
                                             disabled={loadingPresentation}
                                         />
 
+                                        <div className="mb-6 grid grid-cols-2 gap-4">
+                                            <div
+                                                onClick={() => setPresentationTemplate('standard')}
+                                                className={`cursor-pointer p-4 rounded-xl border-2 transition-all ${presentationTemplate === 'standard'
+                                                    ? 'border-purple-500 bg-purple-500/10'
+                                                    : 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
+                                                    }`}
+                                            >
+                                                <h4 className="font-bold text-white mb-1">🎭 Visual Novel</h4>
+                                                <p className="text-xs text-gray-400">Presentación artística con slides visuales y narrativa.</p>
+                                            </div>
+
+                                            <div
+                                                onClick={() => setPresentationTemplate('medical')}
+                                                className={`cursor-pointer p-4 rounded-xl border-2 transition-all ${presentationTemplate === 'medical'
+                                                    ? 'border-medical-500 bg-medical-500/10'
+                                                    : 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
+                                                    }`}
+                                            >
+                                                <h4 className="font-bold text-white mb-1">🏥 Formato Médico</h4>
+                                                <p className="text-xs text-gray-400">Plan de trabajo formal estilo A4 para instituciones de salud.</p>
+                                            </div>
+                                        </div>
+
                                         <button
                                             type="submit"
                                             disabled={loadingPresentation || !textoPresentacion.trim()}
@@ -632,7 +660,7 @@ export default function Home() {
                                             )}
                                         </button>
                                     </form>
-                                ) : (
+                                ) : presentationTemplate === 'standard' ? (
                                     <div id="presentation-container">
                                         <div className="flex justify-between items-center mb-8 sticky top-0 z-50 glass p-4 rounded-xl print:hidden">
                                             <h3 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
@@ -658,7 +686,7 @@ export default function Home() {
                                         </div>
 
                                         <div className="space-y-12 print:space-y-0">
-                                            {presentationData?.slides?.map((slide: any, index: number) => (
+                                            {(presentationData?.slides || []).map((slide: any, index: number) => (
                                                 <div
                                                     key={index}
                                                     className="slide-page aspect-video relative overflow-hidden shadow-2xl print:shadow-none bg-gray-900 text-white rounded-2xl print:rounded-none"
@@ -883,6 +911,166 @@ export default function Home() {
                                             ))}
                                         </div>
 
+                                    </div>
+                                ) : (
+                                    <div id="presentation-container" className="bg-white min-h-screen text-gray-800 font-sans">
+                                        {/* Botón flotante para imprimir */}
+                                        <div className="fixed top-24 right-6 no-print z-50 animate-bounce-in print:hidden">
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() => setPresentationData(null)}
+                                                    className="bg-gray-800 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:bg-gray-700 transition-all border border-gray-600"
+                                                >
+                                                    ← Volver
+                                                </button>
+                                                <button onClick={handlePrint} className="bg-medical-800 hover:bg-medical-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg flex items-center gap-3 transition-all transform hover:scale-105 border border-medical-600">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                    </svg>
+                                                    Descargar PDF / Imprimir
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="page-container w-[297mm] h-[210mm] mx-auto bg-white shadow-2xl grid grid-cols-[85mm_1fr] overflow-hidden relative print:w-full print:h-screen print:shadow-none print:m-0 print:grid">
+
+                                            {/* SIDEBAR IZQUIERDA */}
+                                            <aside className="bg-medical-900 text-white p-10 flex flex-col relative overflow-hidden print:bg-medical-900">
+                                                {/* Decoración de fondo */}
+                                                <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-medical-800 opacity-30 blur-3xl"></div>
+                                                <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-medical-600 opacity-20 blur-3xl"></div>
+
+                                                <div className="relative z-10 flex flex-col h-full">
+                                                    {/* LOGO */}
+                                                    <div className="mb-12">
+                                                        <div className="bg-white rounded-lg p-3 inline-block mb-6 shadow-xl">
+                                                            <Image src="/logogrow.png" alt="Logo Grow Labs" width={40} height={40} className="h-10 w-auto object-contain" />
+                                                        </div>
+                                                        <div className="border-l-4 border-medical-500 pl-4">
+                                                            <div className="text-medical-200 text-xs font-bold tracking-widest uppercase mb-1">{presentationData?.subtitulo || 'Propuesta'}</div>
+                                                            <h1 className="text-4xl font-bold leading-none text-white tracking-tight text-balance">{presentationData?.titulo || 'PLAN DE TRABAJO'}</h1>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* INFO CLIENTE */}
+                                                    <div className="space-y-8 flex-grow">
+                                                        <div>
+                                                            <div className="text-medical-400 font-bold text-[10px] uppercase mb-1 tracking-wider">PREPARADO PARA</div>
+                                                            <div className="font-semibold text-xl leading-tight text-white mb-1">{presentationData?.cliente?.nombre || 'Cliente'}</div>
+                                                            <div className="text-medical-200 text-sm leading-tight">{presentationData?.cliente?.cargo}</div>
+                                                            <div className="text-medical-200 text-sm opacity-80">{presentationData?.cliente?.organizacion}</div>
+                                                        </div>
+
+                                                        <div className="w-full h-px bg-medical-800"></div>
+
+                                                        <div className="flex justify-between items-end">
+                                                            <div>
+                                                                <div className="text-medical-400 font-bold text-[10px] uppercase mb-1 tracking-wider">FECHA</div>
+                                                                <div className="text-white text-sm font-medium">{presentationData?.fecha}</div>
+                                                            </div>
+                                                            <div className="text-right">
+                                                                <div className="text-medical-400 font-bold text-[10px] uppercase mb-1 tracking-wider">TOTAL ESTIMADO</div>
+                                                                <div className="text-3xl font-bold text-white leading-none">{presentationData?.total_estimado}</div>
+                                                                <div className="text-[10px] text-medical-300">{presentationData?.carga_transicion}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* FIRMA */}
+                                                    <div className="mt-auto pt-8">
+                                                        <div className="font-bold text-lg text-white">{presentationData?.autor?.nombre}</div>
+                                                        <div className="text-medical-300 text-sm">{presentationData?.autor?.empresa}</div>
+                                                    </div>
+                                                </div>
+                                            </aside>
+
+                                            {/* CONTENIDO PRINCIPAL */}
+                                            <main className="bg-white p-8 flex flex-col h-full overflow-hidden">
+
+                                                {/* Header Objetivo */}
+                                                <div className="bg-medical-50 border-l-4 border-medical-600 p-4 rounded-r-lg mb-6 shadow-sm">
+                                                    <h2 className="text-medical-900 font-bold text-xs uppercase tracking-wider mb-1">Objetivo General</h2>
+                                                    <p className="text-gray-700 text-sm leading-relaxed text-pretty">
+                                                        {presentationData?.objetivo_general}
+                                                    </p>
+                                                </div>
+
+                                                <div className="grid grid-cols-12 gap-8 h-full min-h-0">
+
+                                                    {/* COLUMNA 1: EJES Y HORAS */}
+                                                    <div className="col-span-5 flex flex-col gap-5 min-h-0">
+
+                                                        {/* Tarjeta Ejes */}
+                                                        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 flex-1 overflow-y-auto">
+                                                            {presentationData?.ejes?.map((eje: any, i: number) => (
+                                                                <div key={i} className={i > 0 ? "mt-4 pt-4 border-t border-gray-100" : ""}>
+                                                                    <span className="bg-medical-100 text-medical-800 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide">{eje.titulo}</span>
+                                                                    <ul className="mt-3 space-y-2">
+                                                                        {eje.items?.map((item: any, idx: number) => (
+                                                                            <li key={idx} className="text-xs text-gray-600 flex items-start">
+                                                                                <span className="text-medical-500 mr-2 mt-0.5">•</span>
+                                                                                <span>
+                                                                                    {item.label && <strong className="text-gray-800">{item.label}: </strong>}
+                                                                                    {item.texto}
+                                                                                </span>
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+
+                                                        {/* Tabla Horas */}
+                                                        <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 shadow-sm">
+                                                            <h3 className="text-medical-800 font-bold text-xs uppercase mb-3 border-b border-gray-200 pb-2">Desglose de Horas</h3>
+                                                            <table className="w-full text-xs">
+                                                                <tbody>
+                                                                    {presentationData?.desglose_horas?.map((item: any, i: number) => (
+                                                                        <tr key={i} className="border-b border-gray-200/50 last:border-0">
+                                                                            <td className="py-2 text-gray-600">{item.actividad}</td>
+                                                                            <td className="py-2 text-right font-bold text-gray-800">{item.horas}</td>
+                                                                        </tr>
+                                                                    ))}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* COLUMNA 2: CALENDARIO */}
+                                                    <div className="col-span-7 flex flex-col h-full bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                                                        <div className="bg-medical-50 px-4 py-3 border-b border-medical-100 flex justify-between items-center">
+                                                            <h3 className="font-bold text-medical-800 text-sm tracking-wide">CALENDARIO DE HITOS</h3>
+                                                            <span className="text-[10px] text-medical-600 font-medium bg-white px-2 py-0.5 rounded border border-medical-200 shadow-sm">
+                                                                {presentationData?.calendario_hitos?.[0]?.dia_numero} - {presentationData?.calendario_hitos?.[presentationData?.calendario_hitos?.length - 1]?.dia_numero}
+                                                            </span>
+                                                        </div>
+
+                                                        <div className="flex-1 overflow-hidden relative p-0">
+                                                            {/* Timeline Line */}
+                                                            <div className="absolute left-14 top-0 bottom-0 w-px bg-gray-100 z-0"></div>
+
+                                                            <div className="divide-y divide-gray-50 h-full overflow-y-auto">
+                                                                {presentationData?.calendario_hitos?.map((hito: any, i: number) => (
+                                                                    <div key={i} className={`relative z-10 flex items-center p-3 hover:bg-gray-50 transition-colors ${i % 2 !== 0 ? 'bg-medical-50/30' : ''}`}>
+                                                                        <div className="w-14 text-center flex-shrink-0">
+                                                                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{hito.dia_semana}</div>
+                                                                            <div className="text-lg font-bold text-medical-700 leading-none">{hito.dia_numero}</div>
+                                                                        </div>
+                                                                        <div className="flex-1 pl-4 border-l border-transparent">
+                                                                            <div className="flex justify-between items-start">
+                                                                                <div className="font-bold text-gray-800 text-xs">{hito.titulo}</div>
+                                                                            </div>
+                                                                            <div className="text-[10px] text-gray-500 mt-0.5">{hito.descripcion}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </main>
+                                        </div>
                                     </div>
                                 )}
                             </div>

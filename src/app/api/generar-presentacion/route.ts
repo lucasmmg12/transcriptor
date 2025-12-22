@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json()
-        const { texto } = body
+        const { texto, template } = body
 
         if (!texto || typeof texto !== 'string') {
             return NextResponse.json(
@@ -30,18 +30,22 @@ export async function POST(request: NextRequest) {
             ? texto.substring(0, MAX_CHARS) + "..."
             : texto
 
-        console.log(`📊 Generando presentación. Longitud texto: ${textoProcesar.length}`)
+        console.log(`📊 Generando presentación. Longitud texto: ${textoProcesar.length}, Template: ${template || 'standard'}`)
+
+        const systemPrompt = template === 'medical'
+            ? SYSTEM_PROMPTS['medical-report']
+            : SYSTEM_PROMPTS['generar-presentacion']
 
         const completion = await openai.chat.completions.create({
             model: 'gpt-4o',
             messages: [
                 {
                     role: 'system',
-                    content: SYSTEM_PROMPTS['generar-presentacion'],
+                    content: systemPrompt,
                 },
                 {
                     role: 'user',
-                    content: `Genera una presentación basada en el siguiente texto:\n\n${textoProcesar}`,
+                    content: `Genera una presentación o reporte basada en el siguiente texto:\n\n${textoProcesar}`,
                 },
             ],
             temperature: 0.7,
