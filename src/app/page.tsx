@@ -231,12 +231,16 @@ export default function Home() {
             const data = await response.json()
 
             if (!response.ok) {
-                throw new Error(data.error || 'Error al generar la presentación')
+                const errorMessage = data.details
+                    ? `${data.error}: ${data.details}`
+                    : (data.error || 'Error al generar la presentación')
+                throw new Error(errorMessage)
             }
 
             setPresentationData(data.data)
 
         } catch (err: any) {
+            console.error(err)
             setError(err.message || 'Error al generar la presentación')
         } finally {
             setLoadingPresentation(false)

@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         console.log(`📊 Generando presentación. Longitud texto: ${textoProcesar.length}`)
 
         const completion = await openai.chat.completions.create({
-            model: 'gpt-4',
+            model: 'gpt-4o',
             messages: [
                 {
                     role: 'system',
@@ -45,9 +45,12 @@ export async function POST(request: NextRequest) {
                 },
             ],
             temperature: 0.7,
-            max_tokens: 3000,
-            response_format: { type: "json_object" } // Asegura respuesta JSON
+            max_tokens: 4000,
+            response_format: { type: "json_object" }
         })
+
+        console.log('✅ Respuesta recibida de OpenAI')
+
 
         const content = completion.choices[0].message.content
 
@@ -65,10 +68,14 @@ export async function POST(request: NextRequest) {
 
     } catch (error: any) {
         console.error('❌ Error generando presentación:', error)
+
+        // Intenta extraer más información del error
+        const errorDetails = error.response ? JSON.stringify(error.response.data) : (error.message || JSON.stringify(error))
+
         return NextResponse.json(
             {
                 error: 'Error al generar la presentación',
-                details: error.message
+                details: errorDetails
             },
             { status: 500 }
         )
