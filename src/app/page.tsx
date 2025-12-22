@@ -678,9 +678,9 @@ export default function Home() {
                                                     {/* Decorative Gradients (Subtler) */}
                                                     <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-green-500/5 to-blue-500/5 z-0"></div>
 
-                                                    {/* Grow Labs Logo */}
-                                                    <div className="absolute top-8 right-8 z-20 w-32 h-auto opacity-90 print:opacity-100">
-                                                        <Image src="/logogrow.png" alt="Grow Labs" width={120} height={40} className="object-contain" />
+                                                    {/* Grow Labs Logo - Circular Frame */}
+                                                    <div className="absolute top-8 right-8 z-20 w-24 h-24 rounded-full bg-white flex items-center justify-center shadow-xl print:shadow-none print:opacity-100 overflow-hidden p-2">
+                                                        <Image src="/logogrow.png" alt="Grow Labs" width={100} height={100} className="object-contain" />
                                                     </div>
 
                                                     {/* Slide Content Container */}
