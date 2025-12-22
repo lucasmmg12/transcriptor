@@ -661,65 +661,181 @@ export default function Home() {
                                             {presentationData?.slides?.map((slide: any, index: number) => (
                                                 <div
                                                     key={index}
-                                                    className="slide-page aspect-video bg-gray-900 border border-gray-800 rounded-2xl p-16 flex flex-col justify-center relative overflow-hidden shadow-2xl print:border-0 print:shadow-none print:aspect-auto"
+                                                    className="slide-page aspect-video relative overflow-hidden shadow-2xl print:shadow-none bg-gray-900 text-white rounded-2xl print:rounded-none"
                                                 >
-                                                    {/* Background Elements */}
-                                                    <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
-                                                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-purple-500/10 to-pink-500/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
+                                                    {/* Background Image with Dark Overlay */}
+                                                    <div
+                                                        className="absolute inset-0 z-0 bg-cover bg-center"
+                                                        style={{
+                                                            backgroundImage: "url('/fondogrow.png')",
+                                                        }}
+                                                    />
+                                                    <div className="absolute inset-0 z-0 bg-gray-900/90 mix-blend-multiply" /> {/* Dark overlay for readability */}
 
-                                                    {/* Logo Watermark */}
-                                                    <div className="absolute bottom-8 right-8 opacity-50 flex items-center gap-2">
-                                                        <span className="text-gray-500 text-sm font-semibold tracking-widest">GROW LABS</span>
-                                                        <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                                                    {/* Decorative Gradients */}
+                                                    <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-full blur-3xl -mr-32 -mt-32 z-0"></div>
+                                                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-purple-500/10 to-pink-500/10 rounded-full blur-3xl -ml-32 -mb-32 z-0"></div>
+
+                                                    {/* Grow Labs Logo */}
+                                                    <div className="absolute top-8 right-8 z-20 w-32 h-auto opacity-90">
+                                                        <Image src="/logogrow.png" alt="Grow Labs" width={120} height={40} className="object-contain" />
                                                     </div>
 
-                                                    {/* Slide Content */}
-                                                    <div className="relative z-10 w-full max-w-4xl mx-auto">
-                                                        <div className="mb-4 flex items-center gap-3">
-                                                            <span className="px-3 py-1 rounded-full bg-white/5 text-gray-400 text-xs font-mono uppercase tracking-wider border border-white/10">
-                                                                Slide {index + 1}
-                                                            </span>
-                                                            {slide.tipo === 'titulo' && (
-                                                                <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-bold uppercase tracking-wider">
-                                                                    Inicio
+                                                    {/* Slide Content Container */}
+                                                    <div className="relative z-10 w-full h-full flex flex-col p-12 md:p-16">
+
+                                                        {/* Header: Type Badge & Slide Number */}
+                                                        <div className="flex justify-between items-start mb-8">
+                                                            <div className="flex items-center gap-3">
+                                                                <span className="px-3 py-1 rounded-full bg-white/5 text-gray-400 text-xs font-mono uppercase tracking-wider border border-white/10">
+                                                                    {index + 1} / {presentationData.slides.length}
                                                                 </span>
-                                                            )}
+                                                                {slide.tipo === 'titulo' && (
+                                                                    <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-bold uppercase tracking-wider">
+                                                                        Portada
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                         </div>
 
-                                                        {slide.tipo === 'titulo' ? (
-                                                            <div className="text-center">
-                                                                <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 mb-8 leading-tight">
-                                                                    {slide.titulo}
-                                                                </h2>
-                                                                <div className="flex flex-col gap-4 text-xl text-gray-400">
-                                                                    {slide.contenido.map((item: string, i: number) => (
-                                                                        <p key={i}>{item}</p>
-                                                                    ))}
+                                                        {/* Dynamic Content Rendering */}
+                                                        <div className="flex-1 flex flex-col justify-center">
+
+                                                            {/* TIPO: TITULO (Portada) */}
+                                                            {slide.tipo === 'titulo' && (
+                                                                <div className="text-center max-w-4xl mx-auto">
+                                                                    <div className="w-24 h-1 bg-gradient-to-r from-green-400 to-blue-600 mx-auto mb-8 rounded-full"></div>
+                                                                    <h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-200 mb-6 leading-tight">
+                                                                        {slide.titulo}
+                                                                    </h1>
+                                                                    {presentationData.subtitulo && (
+                                                                        <p className="text-2xl text-gray-300 font-light mb-12 border-b border-gray-700/50 pb-8 inline-block">
+                                                                            {presentationData.subtitulo}
+                                                                        </p>
+                                                                    )}
+                                                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm text-gray-400 mt-8">
+                                                                        {slide.contenido.map((item: string, i: number) => (
+                                                                            <div key={i} className="flex flex-col items-center">
+                                                                                <div className="w-12 h-1 bg-green-500/20 mb-2"></div>
+                                                                                <span className="uppercase tracking-widest font-semibold">{item}</span>
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
                                                                 </div>
-                                                                <div className="w-32 h-2 bg-gradient-to-r from-green-400 to-blue-600 mx-auto mt-12 rounded-full"></div>
-                                                            </div>
-                                                        ) : (
-                                                            <>
-                                                                <h3 className="text-4xl font-bold text-white mb-12 flex items-center gap-4">
-                                                                    <span className="w-2 h-12 bg-green-400 rounded-full"></span>
-                                                                    {slide.titulo}
-                                                                </h3>
-                                                                <ul className="space-y-6">
-                                                                    {slide.contenido.map((point: string, i: number) => (
-                                                                        <li key={i} className="flex items-start gap-4">
-                                                                            <span className="mt-2 w-2 h-2 rounded-full bg-blue-400 flex-shrink-0"></span>
-                                                                            <p className="text-xl md:text-2xl text-gray-300 leading-relaxed font-light">
-                                                                                {point}
-                                                                            </p>
-                                                                        </li>
-                                                                    ))}
-                                                                </ul>
-                                                            </>
-                                                        )}
+                                                            )}
+
+                                                            {/* TIPO: TEXTO DETALLADO & CONTENIDO y CONCLUSION */}
+                                                            {(slide.tipo === 'texto_detallado' || slide.tipo === 'contenido' || slide.tipo === 'conclusion') && (
+                                                                <div className="h-full flex flex-col">
+                                                                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 flex items-center gap-4 border-b border-gray-700 pb-4">
+                                                                        <span className="w-3 h-12 bg-green-500 rounded-sm"></span>
+                                                                        {slide.titulo}
+                                                                    </h2>
+                                                                    <div className="flex-1 overflow-visible space-y-6">
+                                                                        {slide.contenido.map((point: string, i: number) => (
+                                                                            <div key={i} className="flex gap-6 group">
+                                                                                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-800 border border-gray-600 text-green-400 flex items-center justify-center font-bold text-sm mt-1 group-hover:border-green-400 group-hover:bg-green-500/10 transition-colors">
+                                                                                    {i + 1}
+                                                                                </span>
+                                                                                <p className="text-xl md:text-2xl text-gray-300 leading-relaxed font-light text-justify">
+                                                                                    {point}
+                                                                                </p>
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            {/* TIPO: GRAFICO */}
+                                                            {slide.tipo === 'grafico' && (
+                                                                <div className="h-full flex flex-col">
+                                                                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                                                                        {slide.titulo}
+                                                                    </h2>
+                                                                    <p className="text-gray-400 text-lg mb-8 italic border-l-4 border-blue-500 pl-4">
+                                                                        {slide.descripcion}
+                                                                    </p>
+
+                                                                    {/* Chart Visualization */}
+                                                                    <div className="flex-1 bg-gray-800/40 rounded-xl p-8 border border-white/5 flex items-end justify-around gap-4 relative">
+                                                                        {/* Grid lines background */}
+                                                                        <div className="absolute inset-0 p-8 flex flex-col justify-between pointer-events-none opacity-20">
+                                                                            <div className="w-full h-px bg-white"></div>
+                                                                            <div className="w-full h-px bg-white"></div>
+                                                                            <div className="w-full h-px bg-white"></div>
+                                                                            <div className="w-full h-px bg-white"></div>
+                                                                            <div className="w-full h-px bg-white"></div>
+                                                                        </div>
+
+                                                                        {slide.datos_grafico?.valores?.map((valor: number, i: number) => (
+                                                                            <div key={i} className="flex flex-col items-center gap-3 w-full h-full justify-end z-10 group">
+                                                                                <div
+                                                                                    className="w-full max-w-[80px] bg-gradient-to-t from-green-600 to-green-400 rounded-t-lg relative transition-all group-hover:to-green-300 shadow-lg shadow-green-900/50"
+                                                                                    style={{ height: `${valor}%` }}
+                                                                                >
+                                                                                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-white font-bold text-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                                        {valor}%
+                                                                                    </div>
+                                                                                </div>
+                                                                                <span className="text-sm md:text-lg font-medium text-gray-300 uppercase tracking-wider">
+                                                                                    {slide.datos_grafico?.etiquetas?.[i] || `Item ${i}`}
+                                                                                </span>
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                    <div className="mt-4 text-center text-xs text-gray-500 uppercase tracking-widest">
+                                                                        {slide.datos_grafico?.leyenda || 'Visualización de Datos Generada por IA'}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            {/* TIPO: DASHBOARD KPI */}
+                                                            {slide.tipo === 'dashboard_kpi' && (
+                                                                <div className="h-full flex flex-col justify-center">
+                                                                    <div className="flex items-center gap-4 mb-12">
+                                                                        <div className="p-3 bg-purple-500/20 rounded-xl">
+                                                                            <svg className="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                                                            </svg>
+                                                                        </div>
+                                                                        <h2 className="text-4xl font-bold">
+                                                                            {slide.titulo}
+                                                                        </h2>
+                                                                    </div>
+
+                                                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                                                        {slide.kpis?.map((kpi: any, i: number) => (
+                                                                            <div key={i} className="bg-gray-800/60 p-8 rounded-2xl border border-white/10 relative overflow-hidden group hover:border-green-500/50 transition-colors">
+                                                                                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                                                                    {/* Icono de fondo decorativo */}
+                                                                                    <svg className="w-24 h-24 transform rotate-12" fill="currentColor" viewBox="0 0 20 20">
+                                                                                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+                                                                                    </svg>
+                                                                                </div>
+
+                                                                                <p className="text-gray-400 text-sm font-semibold uppercase tracking-widest mb-4">
+                                                                                    {kpi.label}
+                                                                                </p>
+                                                                                <div className="flex items-baseline gap-2">
+                                                                                    <span className="text-5xl md:text-6xl font-black text-white">
+                                                                                        {kpi.valor}
+                                                                                    </span>
+                                                                                </div>
+
+                                                                                <div className={`mt-4 inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-bold ${kpi.tendencia === 'up' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                                                                                    {kpi.tendencia === 'up' ? '↑ Tendencia Positiva' : '↓ Área de Atención'}
+                                                                                </div>
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             ))}
                                         </div>
+
                                     </div>
                                 )}
                             </div>
