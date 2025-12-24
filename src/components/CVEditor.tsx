@@ -176,11 +176,112 @@ export default function CVEditor({ initialData }: CVEditorProps) {
         setShowDownloadModal(false);
     };
 
+    // --- LOGICA DE FOTO IA ---
+    const [showPhotoModal, setShowPhotoModal] = useState(false);
+    const [photoDescription, setPhotoDescription] = useState('Mujer joven profesional, cabello oscuro, expresión amable');
+    const [isGeneratingPhoto, setIsGeneratingPhoto] = useState(false);
+    const [photoError, setPhotoError] = useState('');
+
+    const handleGeneratePhoto = async () => {
+        if (!photoDescription.trim()) return;
+        setIsGeneratingPhoto(true);
+        setPhotoError('');
+
+        try {
+            const response = await fetch('/api/generar-foto', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userDescription: photoDescription }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Error al generar la foto');
+            }
+
+            if (result.image) {
+                handleInputChange('personalInfo', 'imageUrl', result.image);
+                setShowPhotoModal(false);
+            }
+        } catch (err: any) {
+            console.error(err);
+            setPhotoError(err.message || 'Ocurrió un error inesperado');
+        } finally {
+            setIsGeneratingPhoto(false);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-900 text-white flex flex-col md:flex-row relative">
             <Script src="https://cdn.tailwindcss.com" strategy="beforeInteractive" />
             <Script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" />
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+            {/* --- MODAL DE FOTO IA --- */}
+            {showPhotoModal && (
+                <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                    <div className="bg-gray-800 text-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative animate-fade-in-up border border-gray-700">
+                        <button
+                            onClick={() => setShowPhotoModal(false)}
+                            className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                        >
+                            <i className="fas fa-times text-xl"></i>
+                        </button>
+
+                        <div className="text-center mb-6">
+                            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/30">
+                                <i className="fas fa-camera text-2xl text-white"></i>
+                            </div>
+                            <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+                                Estudio Fotográfico IA
+                            </h3>
+                            <p className="text-gray-400 text-sm mt-2">
+                                Describe tus rasgos físicos y la IA generará una foto de perfil profesional estilo "Headshot LinkedIn".
+                            </p>
+                            <div className="mt-2 text-xs bg-yellow-500/10 text-yellow-500 px-3 py-1 rounded-full inline-block border border-yellow-500/20">
+                                <i className="fas fa-clock mr-1"></i> Máximo 3 intentos por hora
+                            </div>
+                        </div>
+
+                        <div className="mb-6">
+                            <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">
+                                Descripción Física (Rasgos)
+                            </label>
+                            <textarea
+                                value={photoDescription}
+                                onChange={(e) => setPhotoDescription(e.target.value)}
+                                className="w-full bg-gray-900 border border-gray-600 rounded-xl p-3 text-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all resize-none"
+                                rows={3}
+                                placeholder="Ej: Hombre de 30 años, barba corta, cabello castaño, lentes, sonrisa confiada..."
+                            />
+                            {photoError && (
+                                <p className="mt-2 text-red-400 text-xs bg-red-400/10 p-2 rounded border border-red-400/20 text-center">
+                                    {photoError}
+                                </p>
+                            )}
+                        </div>
+
+                        <button
+                            onClick={handleGeneratePhoto}
+                            disabled={isGeneratingPhoto || !photoDescription.trim()}
+                            className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-bold shadow-lg transition-all transform active:scale-[0.98] flex items-center justify-center gap-2"
+                        >
+                            {isGeneratingPhoto ? (
+                                <>
+                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    Generando...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-wand-magic-sparkles"></i> Generar Foto
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </div>
+            )}
+
 
             {/* --- MODAL DE DESCARGA --- */}
             {showDownloadModal && (
@@ -245,7 +346,16 @@ export default function CVEditor({ initialData }: CVEditorProps) {
                     <div className="space-y-3">
                         <div className="flex items-center gap-4">
                             {data.personalInfo.imageUrl && <img src={data.personalInfo.imageUrl} className="w-12 h-12 rounded-full object-cover border-2 border-white" />}
-                            <input type="file" onChange={handleImageUpload} className="block w-full text-xs text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer" accept="image/*" />
+                            <div className="w-full flex gap-2">
+                                <input type="file" onChange={handleImageUpload} className="block w-full text-xs text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer" accept="image/*" />
+                                <button
+                                    onClick={() => setShowPhotoModal(true)}
+                                    className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-2 py-1 rounded-full font-bold flex items-center gap-1 whitespace-nowrap transition-colors"
+                                    title="Generar Foto Profesional con IA"
+                                >
+                                    <i className="fas fa-magic"></i> IA
+                                </button>
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-2">

@@ -63,3 +63,32 @@ DO $$
 BEGIN
   RAISE NOTICE 'Tabla analisis_audios creada exitosamente con todos los índices y políticas.';
 END $$;
+
+-- ============================================
+-- Tabla para Rate Limiting de Fotos AI
+-- ============================================
+
+CREATE TABLE IF NOT EXISTS public.generated_photos (
+  id BIGSERIAL PRIMARY KEY,
+  ip_address TEXT NOT NULL,
+  prompt_used TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_generated_photos_ip_created 
+ON public.generated_photos(ip_address, created_at DESC);
+
+ALTER TABLE public.generated_photos ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Permitir insert publico" 
+ON public.generated_photos 
+FOR INSERT 
+WITH CHECK (true);
+
+CREATE POLICY "Permitir lectura publica" 
+ON public.generated_photos 
+FOR SELECT 
+USING (true);
+
+COMMENT ON TABLE public.generated_photos IS 'Registro de fotos generadas para control de rate-limit (3 por hora)';
+
