@@ -28,7 +28,7 @@ export default function Home() {
                     <div className="hidden md:flex gap-8 text-sm font-medium text-gray-300">
                         <Link href="#solutions" className="hover:text-grow transition-colors">Soluciones</Link>
                         <Link href="#roi" className="hover:text-grow transition-colors">ROI</Link>
-                        <Link href="#cv-maker" className="hover:text-grow transition-colors">Herramientas</Link>
+                        <Link href="#tools" className="hover:text-grow transition-colors">Herramientas</Link>
                         <Link href="#faq" className="hover:text-grow transition-colors">FAQ</Link>
                     </div>
 
@@ -256,7 +256,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* ROI, DATA & TECH SECTION (La que ya teniamos, readaptada) */}
+            {/* ROI, DATA & TECH SECTION */}
             <section id="data" className="py-20 bg-black backdrop-blur-sm relative overflow-hidden">
                 <div className="container mx-auto px-6">
                     <div className="flex flex-col md:flex-row items-center gap-16">
@@ -273,7 +273,7 @@ export default function Home() {
                             <a href="https://wa.me/5492645438114" target="_blank" className="text-grow font-bold hover:underline decoration-green-500/30 underline-offset-8">Hablar con un experto &rarr;</a>
                         </div>
 
-                        {/* SVG Line Chart (Manteniendo el componente visual que creamos) */}
+                        {/* SVG Line Chart */}
                         <div className="w-full md:w-1/2">
                             <div className="glass-card p-8 rounded-2xl relative group overflow-hidden">
                                 <div className="flex justify-between items-end mb-8 relative z-10">
@@ -290,7 +290,6 @@ export default function Home() {
                                 {/* SVG Line Chart */}
                                 <div className="relative h-48 w-full">
                                     <svg viewBox="0 0 400 200" className="w-full h-full overflow-visible">
-                                        {/* Definición del Gradiente */}
                                         <defs>
                                             <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="0%" stopColor="#00ff88" stopOpacity="0.4" />
@@ -305,14 +304,12 @@ export default function Home() {
                                             </filter>
                                         </defs>
 
-                                        {/* Área bajo la curva (Relleno) */}
                                         <path
                                             d="M0,150 C50,140 80,100 120,110 C160,120 200,60 250,70 C300,80 350,20 400,30 V200 H0 Z"
                                             fill="url(#chartGradient)"
                                             className="opacity-50"
                                         />
 
-                                        {/* Línea del gráfico (Trazo) - Animada */}
                                         <path
                                             d="M0,150 C50,140 80,100 120,110 C160,120 200,60 250,70 C300,80 350,20 400,30"
                                             fill="none"
@@ -334,7 +331,6 @@ export default function Home() {
                                             />
                                         </path>
 
-                                        {/* Puntos Interactivos (Simulados) */}
                                         {[
                                             { x: 120, y: 110 }, { x: 250, y: 70 }, { x: 400, y: 30 }
                                         ].map((point, i) => (
@@ -402,71 +398,78 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* CV MAKER PROMO SECTION (LEAD MAGNET) */}
-            <section id="cv-maker" className="py-24 px-6 relative border-t border-white/10">
+            {/* HERRAMIENTAS GRATUITAS (TOOLKIT SECTION) */}
+            <section id="tools" className="py-24 px-6 relative border-t border-white/10 bg-black/40">
                 <div className="container mx-auto max-w-6xl">
-                    <div className="glass-card rounded-[2.5rem] p-12 md:p-20 relative overflow-hidden border-grow/20">
+                    <div className="text-center mb-16">
+                        <span className="inline-block py-1 px-3 rounded-lg bg-white/10 text-grow text-xs font-bold mb-4 border border-grow/20">
+                            POWERED BY GROW LABS
+                        </span>
+                        <h2 className="text-4xl md:text-5xl font-bold mb-4">Herramientas <span className="text-white">Gratuitas</span></h2>
+                        <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+                            Tecnología de élite al alcance de todos. Potencia tu productividad y carrera con nuestra suite open access.
+                        </p>
+                    </div>
 
-                        {/* Background Gradient */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-green-900/20 z-0"></div>
+                    <div className="grid md:grid-cols-3 gap-8">
 
-                        <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
-
-                            <div className="w-full md:w-1/2">
-                                <span className="inline-block py-1 px-3 rounded-lg bg-white/10 text-white text-xs font-bold mb-4 border border-white/20">
-                                    🎁 HERRAMIENTA GRATUITA
-                                </span>
-                                <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                                    Potencia tu <br />
-                                    <span className="text-grow">Marca Personal</span>
-                                </h2>
-                                <p className="text-gray-400 mb-8 text-lg">
-                                    Grow Labs no solo potencia empresas, también talentos. Usa nuestro editor de CV premium totalmente gratis.
-                                </p>
-
-                                <Link href="/cv-maker" className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-colors shadow-lg shadow-white/10">
-                                    <span>Crear mi CV Gratis</span>
-                                    <i className="fas fa-arrow-right"></i>
-                                </Link>
+                        {/* Card 1: CV Maker */}
+                        <div className="glass-card p-8 rounded-3xl border border-white/5 hover:border-grow/30 transition-all group relative overflow-hidden flex flex-col">
+                            <div className="absolute top-0 right-0 p-3 bg-white/5 rounded-bl-2xl backdrop-blur-md border-b border-l border-white/5 z-10">
+                                <span className="text-xs font-bold text-grow">MÁS POPULAR</span>
                             </div>
-
-                            {/* Visual CV Preview / Social Card */}
-                            <div className="w-full md:w-1/2 relative flex justify-center">
-                                <div className="relative z-10 bg-gray-900 rounded-2xl border border-gray-700 shadow-2xl p-6 w-full max-w-sm rotate-3 hover:rotate-0 transition-transform duration-500">
-
-                                    {/* Header: Profile */}
-                                    <div className="flex items-center gap-4 mb-4 border-b border-gray-800 pb-4">
-                                        <div className="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-yellow-500 via-red-500 to-purple-600">
-                                            <div className="w-full h-full rounded-full overflow-hidden border-2 border-gray-900 relative">
-                                                <Image src="/lucas.jpeg" alt="Lucas Marinero" fill className="object-cover" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-white text-lg leading-tight">Lucas Marinero</h4>
-                                            <p className="text-gray-400 text-sm">@lucasmmarinero1</p>
-                                        </div>
-                                        <i className="fab fa-instagram text-2xl text-white ml-auto opacity-50"></i>
-                                    </div>
-
-                                    {/* Post Content */}
-                                    <div className="space-y-3">
-                                        <p className="text-gray-200 text-base leading-relaxed">
-                                            "La tecnología es el gran diferenciador. Con <span className="text-grow font-bold">Grow Labs</span>, llevo mi carrera y mi empresa al siguiente nivel." 🚀
-                                        </p>
-                                        <div className="text-xs text-gray-500 font-medium">Hace 2 horas • <span className="text-blue-400">#Innovation #Tech</span></div>
-                                    </div>
-
-                                    {/* Success Badge */}
-                                    <div className="absolute -top-6 -right-6 bg-grow text-black font-bold px-6 py-3 rounded-xl shadow-[0_10px_20px_rgba(0,255,136,0.3)] animate-bounce flex items-center gap-2">
-                                        <i className="fas fa-check-circle text-xl"></i>
-                                        <span>Líder</span>
-                                    </div>
-                                </div>
-                                {/* Decorative elements behind */}
-                                <div className="absolute inset-0 bg-grow/20 blur-[80px] -z-10 rounded-full opacity-60"></div>
+                            <div className="w-14 h-14 bg-grow rounded-2xl flex items-center justify-center text-black text-2xl mb-6 group-hover:scale-110 transition-transform">
+                                <i className="fas fa-file-alt"></i>
                             </div>
+                            <h3 className="text-2xl font-bold mb-3 group-hover:text-grow transition-colors">CV Maker Inteligente</h3>
+                            <p className="text-gray-400 mb-8 text-sm leading-relaxed flex-1">
+                                Diseña un currículum profesional, validado por expertos y optimizado para ATS. Incluye formatos de exportación premium y diseño de alto impacto.
+                            </p>
+                            <Link href="/cv-maker" className="inline-flex items-center gap-2 text-white font-bold hover:gap-4 transition-all mt-auto">
+                                <span>Crear mi CV</span>
+                                <i className="fas fa-arrow-right text-grow"></i>
+                            </Link>
 
+                            {/* Decorative glow */}
+                            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-grow/10 rounded-full blur-3xl group-hover:bg-grow/20 transition-colors"></div>
                         </div>
+
+                        {/* Card 2: Transcriptor */}
+                        <div className="glass-card p-8 rounded-3xl border border-white/5 hover:border-blue-500/30 transition-all group relative overflow-hidden flex flex-col">
+                            <div className="w-14 h-14 bg-blue-500 rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform">
+                                <i className="fas fa-microphone-lines"></i>
+                            </div>
+                            <h3 className="text-2xl font-bold mb-3 group-hover:text-blue-400 transition-colors">Transcriptor IA</h3>
+                            <p className="text-gray-400 mb-8 text-sm leading-relaxed flex-1">
+                                Convierte audios de reuniones, entrevistas o WhatsApp a texto en segundos. Obtén resúmenes automáticos, minutas y detección de hablantes con GPT-4.
+                            </p>
+                            <Link href="/tools/transcriptor" className="inline-flex items-center gap-2 text-white font-bold hover:gap-4 transition-all mt-auto">
+                                <span>Transcribir Audio</span>
+                                <i className="fas fa-arrow-right text-blue-400"></i>
+                            </Link>
+
+                            {/* Decorative glow */}
+                            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-colors"></div>
+                        </div>
+
+                        {/* Card 3: Presentaciones */}
+                        <div className="glass-card p-8 rounded-3xl border border-white/5 hover:border-purple-500/30 transition-all group relative overflow-hidden flex flex-col">
+                            <div className="w-14 h-14 bg-purple-500 rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform">
+                                <i className="fas fa-presentation-screen"></i>
+                            </div>
+                            <h3 className="text-2xl font-bold mb-3 group-hover:text-purple-400 transition-colors">Slides Generator</h3>
+                            <p className="text-gray-400 mb-8 text-sm leading-relaxed flex-1">
+                                Transforma textos o ideas en presentaciones visuales completas. Exporta a PDF con diseños artísticos estilo "Visual Novel" o corporativos.
+                            </p>
+                            <Link href="/tools/transcriptor" className="inline-flex items-center gap-2 text-white font-bold hover:gap-4 transition-all mt-auto">
+                                <span>Generar PDF</span>
+                                <i className="fas fa-arrow-right text-purple-400"></i>
+                            </Link>
+
+                            {/* Decorative glow */}
+                            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-colors"></div>
+                        </div>
+
                     </div>
                 </div>
             </section>
@@ -480,7 +483,7 @@ export default function Home() {
                     <div className="flex justify-center gap-8 mb-12 flex-wrap">
                         <a href="#" className="text-gray-500 hover:text-white transition-colors">Inicio</a>
                         <a href="#solutions" className="text-gray-500 hover:text-white transition-colors">Soluciones</a>
-                        <a href="#cv-maker" className="text-gray-500 hover:text-white transition-colors">CV Maker</a>
+                        <a href="#tools" className="text-gray-500 hover:text-white transition-colors">Herramientas</a>
                         <a href="https://wa.me/5492645438114" target="_blank" className="text-gray-500 hover:text-white transition-colors">Contacto</a>
                     </div>
 
