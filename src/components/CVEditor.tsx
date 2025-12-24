@@ -165,11 +165,72 @@ export default function CVEditor({ initialData }: CVEditorProps) {
         }
     };
 
+    const [showDownloadModal, setShowDownloadModal] = useState(false);
+
+    const handleDownloadClick = () => {
+        setShowDownloadModal(true);
+    };
+
+    const handleDownloadConfirm = () => {
+        downloadPDF();
+        setShowDownloadModal(false);
+    };
+
     return (
-        <div className="min-h-screen bg-gray-900 text-white flex flex-col md:flex-row">
+        <div className="min-h-screen bg-gray-900 text-white flex flex-col md:flex-row relative">
             <Script src="https://cdn.tailwindcss.com" strategy="beforeInteractive" />
             <Script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" />
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+            {/* --- MODAL DE DESCARGA --- */}
+            {showDownloadModal && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+                    <div className="bg-white text-gray-900 rounded-2xl shadow-2xl max-w-md w-full p-6 relative animate-fade-in-up">
+                        <button
+                            onClick={() => setShowDownloadModal(false)}
+                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                            <i className="fas fa-times text-xl"></i>
+                        </button>
+
+                        <div className="flex flex-col items-center text-center">
+                            <div className="w-24 h-24 mb-6 relative">
+                                <img
+                                    src="/logogrow.png"
+                                    alt="Grow Labs Logo"
+                                    className="w-full h-full object-contain drop-shadow-lg"
+                                />
+                            </div>
+
+                            <h3 className="text-2xl font-bold mb-3 text-slate-800">¡Tu CV está listo!</h3>
+
+                            <p className="text-gray-600 mb-8 leading-relaxed">
+                                Antes de descargar, nos ayudarías muchísimo siguiéndonos en Instagram.
+                                <br />
+                                <span className="text-sm font-medium text-blue-600">¡Así podemos seguir creando herramientas gratuitas para todos! 🚀</span>
+                            </p>
+
+                            <div className="flex flex-col w-full gap-3">
+                                <a
+                                    href="https://www.instagram.com/growsanjuan/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full py-3 px-6 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2"
+                                >
+                                    <i className="fab fa-instagram text-xl"></i> Seguir en Instagram
+                                </a>
+
+                                <button
+                                    onClick={handleDownloadConfirm}
+                                    className="w-full py-3 px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-all border border-slate-300 flex items-center justify-center gap-2"
+                                >
+                                    <i className="fas fa-download"></i> Descargar PDF ahora
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* --- FORMULARIO (LADO IZQUIERDO) --- */}
             <div className="w-full md:w-1/3 p-6 overflow-y-auto h-screen border-r border-gray-700 bg-gray-800">
@@ -297,7 +358,7 @@ export default function CVEditor({ initialData }: CVEditorProps) {
                 <div className="absolute top-6 z-50 bg-white text-gray-800 px-4 py-2 rounded-lg shadow-xl flex gap-4 items-center">
                     <span className="font-bold text-sm">Vista Previa</span>
                     <div className="h-4 w-px bg-gray-300"></div>
-                    <button onClick={downloadPDF} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow flex items-center gap-2 transition-all hover:scale-105 active:scale-95">
+                    <button onClick={handleDownloadClick} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow flex items-center gap-2 transition-all hover:scale-105 active:scale-95">
                         <i className="fas fa-file-pdf"></i> Descargar PDF
                     </button>
                 </div>
