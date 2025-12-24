@@ -49,7 +49,7 @@ export default function Home() {
                         Grow Labs es una startup tecnológica dedicada a crear soluciones digitales de alto impacto. Desde analítica de datos hasta desarrollo a medida.
                     </p>
                     <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-                        <a href="https://api.whatsapp.com/send/?phone=5492645043642" className="px-8 py-4 bg-grow hover:bg-green-400 text-black font-bold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(0,255,136,0.4)] flex items-center gap-2 w-full md:w-auto justify-center">
+                        <a href="https://cal.com/lucas-marinero-ji1yyg/15min" target="_blank" className="px-8 py-4 bg-grow hover:bg-green-400 text-black font-bold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(0,255,136,0.4)] flex items-center gap-2 w-full md:w-auto justify-center">
                             <span>Agendar Consultoría</span>
                             <i className="fas fa-calendar-check"></i>
                         </a>
@@ -87,7 +87,7 @@ export default function Home() {
                                 ))}
                             </ul>
 
-                            <a href="#" className="text-grow font-bold hover:underline decoration-green-500/30 underline-offset-8">Ver casos de éxito &rarr;</a>
+                            <a href="https://wa.me/5492645438114" target="_blank" className="text-grow font-bold hover:underline decoration-green-500/30 underline-offset-8">Hablar con un experto &rarr;</a>
                         </div>
 
                         {/* SVG Line Chart */}
@@ -274,7 +274,7 @@ export default function Home() {
                         <a href="#" className="text-gray-500 hover:text-white transition-colors">Inicio</a>
                         <a href="#services" className="text-gray-500 hover:text-white transition-colors">Servicios</a>
                         <a href="/cv-maker" className="text-gray-500 hover:text-white transition-colors">Herramientas</a>
-                        <a href="#" className="text-gray-500 hover:text-white transition-colors">Contacto</a>
+                        <a href="https://wa.me/5492645438114" target="_blank" className="text-gray-500 hover:text-white transition-colors">Contacto</a>
                     </div>
 
                     <div className="text-gray-600 text-sm">
