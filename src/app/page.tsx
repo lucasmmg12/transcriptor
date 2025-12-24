@@ -168,32 +168,41 @@ export default function Home() {
                                 </Link>
                             </div>
 
-                            {/* Visual CV Preview / Graph */}
-                            <div className="w-full md:w-1/2 relative">
-                                <div className="relative z-10 bg-gray-900 rounded-xl border border-gray-700 shadow-2xl p-4 rotate-3 hover:rotate-0 transition-transform duration-500">
-                                    {/* Mockup Header */}
-                                    <div className="flex gap-2 mb-4 border-b border-gray-800 pb-4">
-                                        <div className="w-12 h-12 rounded-full bg-gray-800"></div>
-                                        <div className="space-y-2">
-                                            <div className="w-32 h-3 bg-gray-800 rounded"></div>
-                                            <div className="w-20 h-2 bg-gray-800 rounded"></div>
+                            {/* Visual CV Preview / Social Card */}
+                            <div className="w-full md:w-1/2 relative flex justify-center">
+                                <div className="relative z-10 bg-gray-900 rounded-2xl border border-gray-700 shadow-2xl p-6 w-full max-w-sm rotate-3 hover:rotate-0 transition-transform duration-500">
+
+                                    {/* Header: Profile */}
+                                    <div className="flex items-center gap-4 mb-4 border-b border-gray-800 pb-4">
+                                        <div className="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-yellow-500 via-red-500 to-purple-600">
+                                            <div className="w-full h-full rounded-full overflow-hidden border-2 border-gray-900 relative">
+                                                <Image src="/lucas.jpeg" alt="Lucas Marinero" fill className="object-cover" />
+                                            </div>
                                         </div>
+                                        <div>
+                                            <h4 className="font-bold text-white text-lg leading-tight">Lucas Marinero</h4>
+                                            <p className="text-gray-400 text-sm">@lucasmmarinero1</p>
+                                        </div>
+                                        <i className="fab fa-instagram text-2xl text-white ml-auto opacity-50"></i>
                                     </div>
-                                    {/* Mockup Body */}
+
+                                    {/* Post Content */}
                                     <div className="space-y-3">
-                                        <div className="w-full h-2 bg-gray-800 rounded"></div>
-                                        <div className="w-5/6 h-2 bg-gray-800 rounded"></div>
-                                        <div className="w-4/6 h-2 bg-gray-800 rounded"></div>
+                                        <p className="text-gray-200 text-base leading-relaxed">
+                                            "Asegúrate de destacar entre todos los candidatos usando <span className="text-grow font-bold">tecnología de punta</span>. Tu futuro profesional comienza aquí." 🚀👨‍💻
+                                        </p>
+                                        <div className="text-xs text-gray-500 font-medium">Hace 2 horas • <span className="text-blue-400">#GrowLabs #TechCareer</span></div>
                                     </div>
 
                                     {/* Success Badge */}
-                                    <div className="absolute -top-6 -right-6 bg-grow text-black font-bold px-6 py-4 rounded-xl shadow-lg shadow-green-500/30 animate-bounce">
-                                        <i className="fas fa-check-circle mr-2"></i>Contratado
+                                    <div className="absolute -top-6 -right-6 bg-grow text-black font-bold px-6 py-3 rounded-xl shadow-[0_10px_20px_rgba(0,255,136,0.3)] animate-bounce flex items-center gap-2">
+                                        <i className="fas fa-check-circle text-xl"></i>
+                                        <span>Contratado</span>
                                     </div>
                                 </div>
 
                                 {/* Decorative elements behind */}
-                                <div className="absolute inset-0 bg-grow/20 blur-[60px] -z-10 rounded-full"></div>
+                                <div className="absolute inset-0 bg-grow/20 blur-[80px] -z-10 rounded-full opacity-60"></div>
                             </div>
 
                         </div>
