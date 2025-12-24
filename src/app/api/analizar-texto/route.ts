@@ -105,58 +105,20 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // Guardar en Supabase
-        console.log('💾 Guardando en Supabase...')
-
-        try {
-            const { data, error } = await supabase
-                .from('analisis_audios')
-                .insert({
-                    fecha: new Date().toISOString(),
-                    tipo_analisis: tipoAnalisis,
-                    transcripcion_original: transcription, // Guardamos el texto subido
-                    resultado_analisis: analisis,
-                })
-                .select()
-                .single()
-
-            if (error) {
-                console.error('❌ Error en Supabase:', error)
-                return NextResponse.json(
-                    {
-                        error: 'Error al guardar',
-                        details: error.message
-                    },
-                    { status: 500, headers: { 'Content-Type': 'application/json' } }
-                )
-            }
-
-            console.log('✅ Guardado exitoso')
-
-            return NextResponse.json({
-                success: true,
-                data: {
-                    transcripcion: transcription,
-                    analisis: analisis,
-                    tipo_analisis: tipoAnalisis,
-                    id: data.id,
-                    metadata: {
-                        estimatedTokens,
-                        wasChunked: estimatedTokens > MAX_TOKENS_PER_REQUEST
-                    }
-                },
-            }, { headers: { 'Content-Type': 'application/json' } })
-
-        } catch (error: any) {
-            console.error('❌ Error en Supabase:', error)
-            return NextResponse.json(
-                {
-                    error: 'Error al guardar',
-                    details: error.message
-                },
-                { status: 500, headers: { 'Content-Type': 'application/json' } }
-            )
-        }
+        // Retornar resultado
+        return NextResponse.json({
+            success: true,
+            data: {
+                transcripcion: transcription,
+                analisis: analisis,
+                tipo_analisis: tipoAnalisis,
+                id: null,
+                metadata: {
+                    estimatedTokens,
+                    wasChunked: estimatedTokens > MAX_TOKENS_PER_REQUEST
+                }
+            },
+        }, { headers: { 'Content-Type': 'application/json' } })
 
     } catch (error: any) {
         console.error('❌ Error general:', error)

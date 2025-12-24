@@ -461,7 +461,7 @@ export default function Home() {
                             <p className="text-gray-400 mb-8 text-sm leading-relaxed flex-1">
                                 Transforma textos o ideas en presentaciones visuales completas. Exporta a PDF con diseños artísticos estilo "Visual Novel" o corporativos.
                             </p>
-                            <Link href="/tools/transcriptor" className="inline-flex items-center gap-2 text-white font-bold hover:gap-4 transition-all mt-auto">
+                            <Link href="/tools/presentaciones" className="inline-flex items-center gap-2 text-white font-bold hover:gap-4 transition-all mt-auto">
                                 <span>Generar PDF</span>
                                 <i className="fas fa-arrow-right text-purple-400"></i>
                             </Link>
