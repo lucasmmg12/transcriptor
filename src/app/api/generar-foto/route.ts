@@ -6,7 +6,8 @@ export const maxDuration = 60;
 
 // Configuración
 const MAX_ATTEMPTS_PER_HOUR = 3;
-const MODEL_NAME = 'imagen-3.0-generate-001';
+const IMAGEN_MODEL = 'imagen-3.0-generate-001';
+const VISION_MODEL = 'gemini-1.5-flash';
 
 export async function POST(request: NextRequest) {
     try {
@@ -16,86 +17,89 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { userDescription } = body; // Descripción base del usuario (opcional) o usamos prompt fijo
+        const { userDescription, userImage } = body;
 
         // 2. Obtener IP para Rate Limiting
         const ip = request.headers.get('x-forwarded-for') || 'unknown';
 
-        // 3. Verificar Rate Limit en Supabase
+        // 3. Verificar Rate Limit en Supabase (Omitido por brevedad, el bloque existente está bien)
         const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-
         const { count, error: countError } = await supabase
             .from('generated_photos')
             .select('*', { count: 'exact', head: true })
             .eq('ip_address', ip)
             .gte('created_at', oneHourAgo);
 
-        if (countError) {
-            console.error('Error verificando límites:', countError);
-            // Si falla la DB, permitimos por defecto pero logueamos error, o bloqueamos? Bloqueamos por seguridad.
-            // Pero como la tabla es nueva, si no existe fallará.
-            // Para no romper la demo, si el error es "relation does not exist", pasamos (modo dev).
-            if (!countError.message.includes('relation "public.generated_photos" does not exist')) {
-                // return NextResponse.json({ error: 'Error verificando límites de uso' }, { status: 500 });
+        if (count !== null && count >= MAX_ATTEMPTS_PER_HOUR) {
+            return NextResponse.json({ error: `Has alcanzado el límite de ${MAX_ATTEMPTS_PER_HOUR} fotos por hora.` }, { status: 429 });
+        }
+
+        // 4. Analizar Foto con Gemini Vision (Si hay foto)
+        let facialFeatures = userDescription || "professional person";
+
+        if (userImage) {
+            console.log('👁️ Analizando rostro con Gemini Vision...');
+            try {
+                // Eliminar el prefijo data:image...
+                const base64Image = userImage.split(',')[1];
+
+                const visionApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${VISION_MODEL}:generateContent?key=${process.env.GOOGLE_API_KEY}`;
+
+                const visionResponse = await fetch(visionApiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [
+                                { text: "Describe in detail the facial features, hair style, color, age, gender, and skin tone of this person. Be concise but specific about visual traits. Ignore clothing and background." },
+                                { inline_data: { mime_type: "image/jpeg", data: base64Image } }
+                            ]
+                        }]
+                    })
+                });
+
+                const visionData = await visionResponse.json();
+                if (visionData.candidates && visionData.candidates[0].content) {
+                    facialFeatures = visionData.candidates[0].content.parts[0].text;
+                    console.log('🧬 Rasgos detectados:', facialFeatures);
+                }
+            } catch (err) {
+                console.error('Error analizando imagen:', err);
+                // Fallback a descripción manual si falla la visión
             }
         }
 
-        if (count !== null && count >= MAX_ATTEMPTS_PER_HOUR) {
-            return NextResponse.json(
-                { error: `Has alcanzado el límite de ${MAX_ATTEMPTS_PER_HOUR} fotos por hora. Intenta más tarde.` },
-                { status: 429 }
-            );
-        }
-
-        // 4. Construir Prompt Profesional (ENFORCED)
-        // Forzamos estilo LinkedIn independientemente de lo que pida el usuario
-        const basePrompt = "Professional linkedin headshot, business attire, neutral studio background, soft lighting, high quality, 8k, photorealistic";
-        const customPart = userDescription ? `, ${userDescription} features` : ", professional person";
-        const finalPrompt = `${basePrompt}${customPart}`;
+        // 5. Construir Prompt Final
+        const finalPrompt = `Professional linkedin headshot of a person with these features: ${facialFeatures}. Wearing professional business attire (suit/blazer), neutral studio background, soft lighting, 8k resolution, photorealistic, confident smile.`;
 
         console.log('📸 Generando imagen con prompt:', finalPrompt);
 
-        // 5. Llamar a Google Imagen 3 (REST API)
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:predict?key=${process.env.GOOGLE_API_KEY}`;
+        // 6. Llamar a Google Imagen 3
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${IMAGEN_MODEL}:predict?key=${process.env.GOOGLE_API_KEY}`;
 
         const response = await fetch(apiUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                instances: [
-                    { prompt: finalPrompt }
-                ],
-                parameters: {
-                    sampleCount: 1,
-                    aspectRatio: "1:1"
-                }
+                instances: [{ prompt: finalPrompt }],
+                parameters: { sampleCount: 1, aspectRatio: "1:1" }
             })
         });
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('Error Google API:', errorText);
+            console.error('Error Google Imagen API:', errorText);
             throw new Error(`Google AI Error: ${response.status} ${response.statusText}`);
         }
 
         const data = await response.json();
 
-        // La respuesta de Imagen 3 suele venir en predictions[0].bytesBase64Encoded o similar
-        // Estructura típica Imagen: { predictions: [ { bytesBase64Encoded: "..." } ] }
-
         let imageBase64 = null;
-        if (data.predictions && data.predictions[0] && data.predictions[0].bytesBase64Encoded) {
+        if (data.predictions?.[0]?.bytesBase64Encoded) {
             imageBase64 = data.predictions[0].bytesBase64Encoded;
-        } else if (data.predictions && data.predictions[0] && data.predictions[0].mimeType) {
-            // Handle structured response if different
-            console.log('Estructura de respuesta desconocida:', JSON.stringify(data).substring(0, 200));
         }
 
-        if (!imageBase64) {
-            throw new Error('No se recibió imagen válida de Google AI');
-        }
+        if (!imageBase64) throw new Error('No se recibió imagen válida de Google AI');
 
         const finalImageUrl = `data:image/png;base64,${imageBase64}`;
 

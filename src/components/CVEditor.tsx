@@ -179,11 +179,23 @@ export default function CVEditor({ initialData }: CVEditorProps) {
     // --- LOGICA DE FOTO IA ---
     const [showPhotoModal, setShowPhotoModal] = useState(false);
     const [photoDescription, setPhotoDescription] = useState('Mujer joven profesional, cabello oscuro, expresión amable');
+    const [referencePhoto, setReferencePhoto] = useState<string | null>(null); // Base64 de la foto subida
     const [isGeneratingPhoto, setIsGeneratingPhoto] = useState(false);
     const [photoError, setPhotoError] = useState('');
 
+    const handleReferenceUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setReferencePhoto(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleGeneratePhoto = async () => {
-        if (!photoDescription.trim()) return;
+        if (!photoDescription.trim() && !referencePhoto) return;
         setIsGeneratingPhoto(true);
         setPhotoError('');
 
@@ -191,7 +203,10 @@ export default function CVEditor({ initialData }: CVEditorProps) {
             const response = await fetch('/api/generar-foto', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userDescription: photoDescription }),
+                body: JSON.stringify({
+                    userDescription: photoDescription,
+                    userImage: referencePhoto
+                }),
             });
 
             const result = await response.json();
@@ -203,6 +218,7 @@ export default function CVEditor({ initialData }: CVEditorProps) {
             if (result.image) {
                 handleInputChange('personalInfo', 'imageUrl', result.image);
                 setShowPhotoModal(false);
+                setReferencePhoto(null); // Limpiar para la próxima
             }
         } catch (err: any) {
             console.error(err);
@@ -246,25 +262,70 @@ export default function CVEditor({ initialData }: CVEditorProps) {
 
                         <div className="mb-6">
                             <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">
-                                Descripción Física (Rasgos)
+                                Tu Foto de Referencia (Selfie)
                             </label>
-                            <textarea
-                                value={photoDescription}
-                                onChange={(e) => setPhotoDescription(e.target.value)}
-                                className="w-full bg-gray-900 border border-gray-600 rounded-xl p-3 text-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all resize-none"
-                                rows={3}
-                                placeholder="Ej: Hombre de 30 años, barba corta, cabello castaño, lentes, sonrisa confiada..."
-                            />
+
+                            {!referencePhoto ? (
+                                <div className="border-2 border-dashed border-gray-600 rounded-xl p-6 text-center hover:border-purple-500 transition-colors cursor-pointer relative"
+                                    onDragOver={(e) => e.preventDefault()}
+                                    onDrop={(e) => {
+                                        e.preventDefault();
+                                        const file = e.dataTransfer.files[0];
+                                        if (file) handleReferenceUpload({ target: { files: [file] } } as any);
+                                    }}
+                                >
+                                    <input
+                                        type="file"
+                                        onChange={handleReferenceUpload}
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                        accept="image/*"
+                                    />
+                                    <i className="fas fa-cloud-upload-alt text-3xl text-gray-500 mb-2"></i>
+                                    <p className="text-gray-400 text-sm">Arrastra tu foto aquí o haz clic para subir</p>
+                                    <p className="text-xs text-gray-600 mt-1">Sube una selfie clara de tu rostro</p>
+                                </div>
+                            ) : (
+                                <div className="relative rounded-xl overflow-hidden border border-purple-500 group">
+                                    <img src={referencePhoto} alt="Referencia" className="w-full h-48 object-cover opacity-70 group-hover:opacity-100 transition-opacity" />
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                                        <button
+                                            onClick={() => setReferencePhoto(null)}
+                                            className="bg-red-500/80 hover:bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm"
+                                        >
+                                            <i className="fas fa-trash mr-1"></i> Cambiar Foto
+                                        </button>
+                                    </div>
+                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2 text-center">
+                                        <p className="text-xs text-green-400 font-bold"><i className="fas fa-check-circle"></i> Foto cargada correctamente</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="mt-4">
+                                <div className="relative flex py-2 items-center">
+                                    <div className="flex-grow border-t border-gray-700"></div>
+                                    <span className="flex-shrink-0 mx-4 text-gray-600 text-xs uppercase">O describe tus rasgos (opcional si subes foto)</span>
+                                    <div className="flex-grow border-t border-gray-700"></div>
+                                </div>
+                                <textarea
+                                    value={photoDescription}
+                                    onChange={(e) => setPhotoDescription(e.target.value)}
+                                    className="w-full bg-gray-900 border border-gray-600 rounded-xl p-3 text-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all resize-none"
+                                    rows={2}
+                                    placeholder="Ej: Hombre de 30 años, barba corta, cabello castaño..."
+                                />
+                            </div>
+
                             {photoError && (
-                                <p className="mt-2 text-red-400 text-xs bg-red-400/10 p-2 rounded border border-red-400/20 text-center">
-                                    {photoError}
+                                <p className="mt-4 text-red-400 text-xs bg-red-400/10 p-2 rounded border border-red-400/20 text-center animate-pulse">
+                                    <i className="fas fa-exclamation-circle mr-1"></i> {photoError}
                                 </p>
                             )}
                         </div>
 
                         <button
                             onClick={handleGeneratePhoto}
-                            disabled={isGeneratingPhoto || !photoDescription.trim()}
+                            disabled={isGeneratingPhoto || (!photoDescription.trim() && !referencePhoto)}
                             className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-bold shadow-lg transition-all transform active:scale-[0.98] flex items-center justify-center gap-2"
                         >
                             {isGeneratingPhoto ? (
