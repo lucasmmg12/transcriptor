@@ -186,9 +186,37 @@ export default function CVEditor({ initialData }: CVEditorProps) {
     const handleReferenceUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            // Comprimir imagen antes de subir (Max 1024px, Calidad 0.7)
             const reader = new FileReader();
-            reader.onloadend = () => {
-                setReferencePhoto(reader.result as string);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Redimensionar si es muy grande
+                    const maxSize = 1024;
+                    if (width > maxSize || height > maxSize) {
+                        if (width > height) {
+                            height = Math.round((height * maxSize) / width);
+                            width = maxSize;
+                        } else {
+                            width = Math.round((width * maxSize) / height);
+                            height = maxSize;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx?.drawImage(img, 0, 0, width, height);
+
+                    // Convertir a JPEG comprimido
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                    setReferencePhoto(compressedBase64);
+                };
+                img.src = event.target?.result as string;
             };
             reader.readAsDataURL(file);
         }
@@ -212,13 +240,14 @@ export default function CVEditor({ initialData }: CVEditorProps) {
             const result = await response.json();
 
             if (!response.ok) {
-                throw new Error(result.error || 'Error al generar la foto');
+                // Mostrar detalle técnico si existe
+                throw new Error(result.details || result.error || 'Error desconocido al generar la foto');
             }
 
             if (result.image) {
                 handleInputChange('personalInfo', 'imageUrl', result.image);
                 setShowPhotoModal(false);
-                setReferencePhoto(null); // Limpiar para la próxima
+                setReferencePhoto(null);
             }
         } catch (err: any) {
             console.error(err);
