@@ -9,8 +9,12 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-    title: 'Grow Labs Transcriptor - Transcripción y Análisis de Audio con IA',
-    description: 'Herramienta profesional de Grow Labs para transcribir y analizar archivos de audio con Inteligencia Artificial. Potenciado por OpenAI Whisper y GPT-4.',
+    title: 'Grow Labs - Sistema Operativo Inteligente',
+    description: 'Automatización + Inteligencia Artificial + Gestión del Conocimiento para empresas. Potencia tus operaciones con Grow Labs.',
+    icons: {
+        icon: '/logogrow.png',
+        apple: '/logogrow.png',
+    },
 }
 
 export default function RootLayout({
