@@ -237,24 +237,24 @@ export default function CVEditor({ initialData }: CVEditorProps) {
             {/* --- FORMULARIO (LADO IZQUIERDO) --- */}
             <div className="w-full md:w-1/3 p-6 overflow-y-auto h-screen border-r border-gray-700 bg-gray-800">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-blue-400">Editor de CV</h2>
-                    <a href="/cv-maker" className="text-xs text-gray-400 hover:text-white"> &larr; Volver</a>
+                    <h2 className="text-2xl font-bold text-green-400 neon-text">Editor de CV</h2>
+                    <a href="/" className="text-xs text-gray-400 hover:text-white transition-colors"> &larr; Volver al Hub</a>
                 </div>
 
                 {/* Datos Personales */}
                 <section className="mb-8">
-                    <h3 className="text-lg font-semibold mb-4 border-b border-gray-600 pb-2">Información Personal</h3>
+                    <h3 className="text-lg font-semibold mb-4 border-b border-gray-600 pb-2 text-white">Información Personal</h3>
                     <div className="space-y-3">
                         <div className="flex flex-col gap-3">
                             <div className="flex items-center gap-4">
                                 {data.personalInfo.imageUrl ? (
-                                    <img src={data.personalInfo.imageUrl} className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-lg flex-shrink-0" />
+                                    <img src={data.personalInfo.imageUrl} className="w-16 h-16 rounded-full object-cover border-2 border-green-500 shadow-lg flex-shrink-0 shadow-green-500/20" />
                                 ) : (
                                     <div className="w-16 h-16 rounded-full bg-gray-700 border-2 border-gray-600 flex items-center justify-center text-gray-500 flex-shrink-0">
                                         <i className="fas fa-user text-2xl"></i>
                                     </div>
                                 )}
-                                <input type="file" onChange={handleImageUpload} className="block w-full text-xs text-gray-400 file:mr-2 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer" accept="image/*" />
+                                <input type="file" onChange={handleImageUpload} className="block w-full text-xs text-gray-400 file:mr-2 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-green-600 file:text-black hover:file:bg-green-500 cursor-pointer transition-colors" accept="image/*" />
                             </div>
                         </div>
 
