@@ -2,11 +2,93 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+
 import { useState } from 'react';
+
+const SOLUTIONS = [
+    {
+        id: 'automations',
+        title: "Módulos de Automatización",
+        icon: "cogs",
+        color: "green", // text-grow
+        colorClass: "text-grow",
+        bgClass: "bg-green-500/10",
+        description: "Elimina tareas repetitivas y propensas a errores. Automatizamos procesos administrativos complejos para liberar a tu equipo.",
+        features: [
+            "Reducción del 90% en tiempo de gestión",
+            "Eliminación de errores humanos",
+            "Integración con tus sistemas actuales"
+        ],
+        details: {
+            theoretical: "La automatización de procesos empresariales (BPA) consiste en el uso de tecnología para ejecutar tareas y flujos de trabajo recurrentes con mínima intervención humana. Se busca reemplazar la ejecución manual de procesos administrativos por reglas lógicas ejecutadas por software (RPA - Robotic Process Automation).",
+            practical: "Imagina tener un 'empleado robot' invisible que no duerme. En lugar de que una persona copie datos de un email y los pegue en un Excel, un script lo hace instantáneamente. Conecta sistemas que normalmente no hablan entre sí (ej. tu banco con tu sistema contable, o tu email con tu CRM).",
+            example: "Una empresa de logística recibía 500 pedidos diarios por WhatsApp. Antes, 4 empleados los cargaban manualmente, tardando 6 horas. Con nuestra automatización, el pedido se extrae del chat, se carga en el ERP, y se generan la factura y la hoja de ruta de despacho en 30 segundos, reduciendo el error humano a 0% y liberando al staff para ventas."
+        }
+    },
+    {
+        id: 'rag',
+        title: "RAG Institucional (IA)",
+        icon: "database",
+        color: "blue",
+        colorClass: "text-blue-400",
+        bgClass: "bg-blue-500/10",
+        description: "Tu base de conocimiento institucional potenciada por IA. Convierte manuales y procesos en respuestas instantáneas.",
+        features: [
+            "Búsqueda en toda tu documentación",
+            "Respuestas contextualizadas y citadas",
+            "Onboarding de empleados acelerado"
+        ],
+        details: {
+            theoretical: "RAG (Retrieval-Augmented Generation) es una arquitectura de Inteligencia Artificial que combina grandes modelos de lenguaje (LLMs como GPT) con una base de conocimientos privada y vectorial. Permite que la IA 'aprenda' y responda específicamente sobre los datos privados de una organización, citando fuentes.",
+            practical: "Es como darle un cerebro a tus archivos PDF, Excels y manuales. Puedes 'chatear' con toda la documentación de tu empresa. Un empleado le pregunta '¿Cuál es el procedimiento de devolución para clientes VIP?' y el sistema responde citando la página exacta del manual de operaciones, en lugar de alucinar información.",
+            example: "Una aseguradora con miles de páginas de condiciones generales. Los agentes de soporte tardaban 20 minutos en buscar coberturas específicas. Con RAG, escriben la consulta y obtienen la respuesta precisa junto con la cláusula contractual en 5 segundos, aumentando la satisfacción del cliente y la velocidad de resolución."
+        }
+    },
+    {
+        id: 'apps',
+        title: "Aplicaciones Digitales",
+        icon: "mobile-alt",
+        color: "purple",
+        colorClass: "text-purple-400",
+        bgClass: "bg-purple-500/10",
+        description: "Suite completa de aplicaciones para conectar clientes, colaboradores y administración.",
+        features: [
+            "Portal de Clientes: Autogestión",
+            "Gestor de Proyectos: Trazabilidad",
+            "Asistente de Reuniones: IA Transcriptor"
+        ],
+        details: {
+            theoretical: "El desarrollo de interfaces digitales personalizadas (Web & Mobile Apps) sirve como punto de contacto e interacción entre la empresa y sus stakeholders. Centralizan datos, operaciones y comunicaciones en la nube, permitiendo acceso ubicuo y trazabilidad total.",
+            practical: "Olvida los papeles perdidos y las planillas de Excel compartidas por email. Es crear tu propia plataforma (como tu propio Uber o Homebanking interno) donde tus clientes inician sesión para ver el estado de sus pedidos, o tus empleados marcan asistencia y suben reportes desde el celular.",
+            example: "Una constructora gestionaba el avance de obra con papeles que se perdían y fotos de WhatsApp desorganizadas. Implementamos una App Web Progresiva (PWA) donde los capataces suben reportes diarios geo-referenciados. Los inversores ven el avance en tiempo real desde un dashboard, aumentando la transparencia y confianza."
+        }
+    },
+    {
+        id: 'chatbot',
+        title: "Chatbot WhatsApp IA",
+        icon: "comments",
+        color: "yellow",
+        colorClass: "text-yellow-400",
+        bgClass: "bg-yellow-500/10",
+        description: "Atiende a tus clientes 24/7 con inteligencia real, no menús frustrantes. Vende, agenda y resuelve dudas.",
+        features: [
+            "Atención personalizada 24/7",
+            "Sin árboles de decisión rígidos",
+            "Gestión de turnos y ventas"
+        ],
+        details: {
+            theoretical: "Agentes conversacionales avanzados implementados sobre la API de WhatsApp Business. Utilizan Procesamiento de Lenguaje Natural (NLP) avanzado para interpretar la intención y el sentimiento del usuario, mantener el contexto de la conversación (memoria) y ejecutar acciones complejas mediante integración de APIs.",
+            practical: "No es el típico chatbot de 'Marque 1 para ventas'. Es un asistente que habla natural, entiende audios, maneja ironía y empatía. Puede agendar citas en tu calendario real, enviar catálogos personalizados y cerrar ventas a las 3 de la mañana mientras tu equipo duerme.",
+            example: "Una clínica médica saturada por llamadas telefónicas para turnos. Implementamos un agente de IA en WhatsApp que atiende a 1000 pacientes simultáneos, verifica disponibilidad en el sistema de agenda médica, confirma cobertura de obras sociales y reserva el turno. Redujo el ausentismo en un 40% (recordatorios) y descomprimió la recepción."
+        }
+    }
+];
+
 
 export default function Home() {
     // Estado para FAQ y ROI Calculator (simple visual toggle)
     const [openFaq, setOpenFaq] = useState<number | null>(null);
+    const [selectedSolution, setSelectedSolution] = useState<typeof SOLUTIONS[0] | null>(null);
 
     const toggleFaq = (index: number) => {
         setOpenFaq(openFaq === index ? null : index);
@@ -126,65 +208,35 @@ export default function Home() {
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-8">
-                        {/* Card 1: Automatizacion */}
-                        <div className="glass-card p-8 rounded-2xl hover:bg-white/5 transition-colors group">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="p-3 bg-green-500/10 rounded-xl text-grow text-2xl"><i className="fas fa-cogs"></i></div>
-                                <a href="https://wa.me/5492645438114" target="_blank" className="text-sm font-bold text-gray-500 group-hover:text-white transition-colors">Ver Detalle &rarr;</a>
+                        {SOLUTIONS.map((solution) => (
+                            <div
+                                key={solution.id}
+                                className="glass-card p-8 rounded-2xl hover:bg-white/5 transition-all cursor-pointer group hover:scale-[1.02] border border-white/5 hover:border-white/10"
+                                onClick={() => setSelectedSolution(solution)}
+                            >
+                                <div className="flex justify-between items-start mb-6">
+                                    <div className={`p-3 ${solution.bgClass} rounded-xl ${solution.colorClass} text-2xl`}>
+                                        <i className={`fas fa-${solution.icon}`}></i>
+                                    </div>
+                                    <button className="text-sm font-bold text-gray-500 group-hover:text-white transition-colors flex items-center gap-2">
+                                        Ver Detalle <i className="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                                <h3 className="text-2xl font-bold mb-3">{solution.title}</h3>
+                                <p className="text-gray-400 mb-6">{solution.description}</p>
+                                <ul className="text-sm text-gray-500 space-y-2">
+                                    {solution.features.map((feature, idx) => (
+                                        <li key={idx} className="flex gap-2">
+                                            <i className={`fas fa-check ${solution.colorClass}`}></i>
+                                            {/* Handle the HTML inside string (strong tags) if any, though current data is plain text mostly, 
+                                                except for Apps which had manual bolding. Let's make it simple for now or use dangerouslySetInnerHTML if needed,
+                                                but for safety I'll render the Apps features as strings in the data directly. */}
+                                            <span dangerouslySetInnerHTML={{ __html: feature }}></span>
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
-                            <h3 className="text-2xl font-bold mb-3">Módulos de Automatización</h3>
-                            <p className="text-gray-400 mb-6">Elimina tareas repetitivas y propensas a errores. Automatizamos procesos administrativos complejos para liberar a tu equipo.</p>
-                            <ul className="text-sm text-gray-500 space-y-2">
-                                <li className="flex gap-2"><i className="fas fa-check text-grow"></i> Reducción del 90% en tiempo de gestión</li>
-                                <li className="flex gap-2"><i className="fas fa-check text-grow"></i> Eliminación de errores humanos</li>
-                                <li className="flex gap-2"><i className="fas fa-check text-grow"></i> Integración con tus sistemas actuales</li>
-                            </ul>
-                        </div>
-
-                        {/* Card 2: RAG Institucional */}
-                        <div className="glass-card p-8 rounded-2xl hover:bg-white/5 transition-colors group">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="p-3 bg-blue-500/10 rounded-xl text-blue-400 text-2xl"><i className="fas fa-database"></i></div>
-                                <a href="https://wa.me/5492645438114" target="_blank" className="text-sm font-bold text-gray-500 group-hover:text-white transition-colors">Ver Detalle &rarr;</a>
-                            </div>
-                            <h3 className="text-2xl font-bold mb-3">RAG Institucional (IA)</h3>
-                            <p className="text-gray-400 mb-6">Tu base de conocimiento institucional potenciada por IA. Convierte manuales y procesos en respuestas instantáneas.</p>
-                            <ul className="text-sm text-gray-500 space-y-2">
-                                <li className="flex gap-2"><i className="fas fa-check text-blue-400"></i> Búsqueda en toda tu documentación</li>
-                                <li className="flex gap-2"><i className="fas fa-check text-blue-400"></i> Respuestas contextualizadas y citadas</li>
-                                <li className="flex gap-2"><i className="fas fa-check text-blue-400"></i> Onboarding de empleados acelerado</li>
-                            </ul>
-                        </div>
-
-                        {/* Card 3: Aplicaciones Digitales */}
-                        <div className="glass-card p-8 rounded-2xl hover:bg-white/5 transition-colors group">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="p-3 bg-purple-500/10 rounded-xl text-purple-400 text-2xl"><i className="fas fa-mobile-alt"></i></div>
-                                <a href="https://wa.me/5492645438114" target="_blank" className="text-sm font-bold text-gray-500 group-hover:text-white transition-colors">Ver Detalle &rarr;</a>
-                            </div>
-                            <h3 className="text-2xl font-bold mb-3">Aplicaciones Digitales</h3>
-                            <p className="text-gray-400 mb-6">Suite completa de aplicaciones para conectar clientes, colaboradores y administración.</p>
-                            <ul className="text-sm text-gray-500 space-y-2">
-                                <li className="flex gap-2"><i className="fas fa-check text-purple-400"></i> <strong className="text-white">Portal de Clientes:</strong> Autogestión y fidelización.</li>
-                                <li className="flex gap-2"><i className="fas fa-check text-purple-400"></i> <strong className="text-white">Gestor de Proyectos:</strong> Trazabilidad total.</li>
-                                <li className="flex gap-2"><i className="fas fa-check text-purple-400"></i> <strong className="text-white">Asistente de Reuniones:</strong> Transcripción y minutas con IA.</li>
-                            </ul>
-                        </div>
-
-                        {/* Card 4: Chatbot IA */}
-                        <div className="glass-card p-8 rounded-2xl hover:bg-white/5 transition-colors group">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="p-3 bg-yellow-500/10 rounded-xl text-yellow-400 text-2xl"><i className="fas fa-comments"></i></div>
-                                <a href="https://wa.me/5492645438114" target="_blank" className="text-sm font-bold text-gray-500 group-hover:text-white transition-colors">Ver Detalle &rarr;</a>
-                            </div>
-                            <h3 className="text-2xl font-bold mb-3">Chatbot WhatsApp IA</h3>
-                            <p className="text-gray-400 mb-6">Atiende a tus clientes 24/7 con inteligencia real, no menús frustrantes. Vende, agenda y resuelve dudas.</p>
-                            <ul className="text-sm text-gray-500 space-y-2">
-                                <li className="flex gap-2"><i className="fas fa-check text-yellow-400"></i> Atención personalizada 24/7</li>
-                                <li className="flex gap-2"><i className="fas fa-check text-yellow-400"></i> Sin árboles de decisión rígidos</li>
-                                <li className="flex gap-2"><i className="fas fa-check text-yellow-400"></i> Gestión de turnos y ventas</li>
-                            </ul>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -555,6 +607,81 @@ export default function Home() {
                     </div>
                 </div>
             </footer>
+
+            {/* SOLUTION DETAILS MODAL */}
+            {selectedSolution && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-fade-in" onClick={() => setSelectedSolution(null)}>
+                    <div className="bg-neutral-900 border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto relative shadow-2xl shadow-black" onClick={e => e.stopPropagation()}>
+
+                        {/* Header */}
+                        <div className="sticky top-0 bg-neutral-900/95 backdrop-blur-md border-b border-white/10 p-6 flex justify-between items-center z-10 transition-colors">
+                            <div className="flex items-center gap-4">
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${selectedSolution.bgClass} ${selectedSolution.colorClass}`}>
+                                    <i className={`fas fa-${selectedSolution.icon}`}></i>
+                                </div>
+                                <h3 className="text-2xl font-bold text-white">{selectedSolution.title}</h3>
+                            </div>
+                            <button onClick={() => setSelectedSolution(null)} className="w-8 h-8 rounded-full bg-white/5 hover:bg-red-500/20 hover:text-red-500 flex items-center justify-center transition-all">
+                                <i className="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-8 space-y-8">
+
+                            {/* Theoretical */}
+                            <div className="flex gap-6 flex-col md:flex-row">
+                                <div className="flex-shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/50 border border-white/10">
+                                        <i className="fas fa-book"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 className="text-lg font-bold text-white mb-2">Definición Teórica</h4>
+                                    <p className="text-gray-400 leading-relaxed">{selectedSolution.details.theoretical}</p>
+                                </div>
+                            </div>
+
+                            {/* Practical */}
+                            <div className="flex gap-6 flex-col md:flex-row">
+                                <div className="flex-shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/50 border border-white/10">
+                                        <i className="fas fa-wrench"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 className="text-lg font-bold text-white mb-2">En la Práctica</h4>
+                                    <p className="text-gray-400 leading-relaxed">{selectedSolution.details.practical}</p>
+                                </div>
+                            </div>
+
+                            {/* Case Study */}
+                            <div className="p-6 bg-gradient-to-br from-white/5 to-transparent rounded-xl border border-white/5">
+                                <div className="flex gap-4 items-start">
+                                    <div className={`mt-1 p-2 rounded-lg ${selectedSolution.bgClass} ${selectedSolution.colorClass}`}>
+                                        <i className="fas fa-chart-line"></i>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-lg font-bold text-white mb-2">Caso de Éxito</h4>
+                                        <p className="text-gray-300 leading-relaxed font-light italic">"{selectedSolution.details.example}"</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="p-6 border-t border-white/10 bg-black/20 flex justify-end gap-4">
+                            <button onClick={() => setSelectedSolution(null)} className="px-6 py-3 rounded-xl border border-white/10 hover:bg-white/5 text-gray-400 transition-colors">
+                                Cerrar
+                            </button>
+                            <a href="https://wa.me/5492645438114" target="_blank" className="px-6 py-3 rounded-xl bg-grow text-black font-bold hover:bg-green-400 transition-colors hover:shadow-[0_0_20px_rgba(0,255,136,0.3)] flex items-center gap-2">
+                                <span>Solicitar esta Solución</span>
+                                <i className="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* External CSS for Icons */}
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
