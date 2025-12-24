@@ -401,14 +401,77 @@ export default function Home() {
             {/* HERRAMIENTAS GRATUITAS (TOOLKIT SECTION) */}
             <section id="tools" className="py-24 px-6 relative border-t border-white/10 bg-black/40">
                 <div className="container mx-auto max-w-6xl">
-                    <div className="text-center mb-16">
-                        <span className="inline-block py-1 px-3 rounded-lg bg-white/10 text-grow text-xs font-bold mb-4 border border-grow/20">
-                            POWERED BY GROW LABS
-                        </span>
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4">Herramientas <span className="text-white">Gratuitas</span></h2>
-                        <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-                            Tecnología de élite al alcance de todos. Potencia tu productividad y carrera con nuestra suite open access.
-                        </p>
+                    <div className="flex flex-col md:flex-row items-center gap-12 mb-20 animate-fade-in">
+                        <div className="md:w-1/2 text-left">
+                            <span className="inline-block py-1 px-3 rounded-lg bg-green-500/10 text-green-400 text-xs font-bold mb-4 border border-green-500/20">
+                                POWERED BY GROW LABS
+                            </span>
+                            <h2 className="text-4xl md:text-5xl font-bold mb-6">Herramientas <span className="text-white">Gratuitas</span></h2>
+                            <p className="text-gray-400 text-lg leading-relaxed mb-8">
+                                Tecnología de élite al alcance de todos. Potencia tu productividad y carrera con nuestra suite open access, diseñada originalmente para uso interno y ahora disponible para ti.
+                            </p>
+
+                            <div className="flex gap-4 items-center text-sm text-gray-500">
+                                <span className="flex items-center gap-2">
+                                    <i className="fas fa-check-circle text-green-500"></i> Sin registros
+                                </span>
+                                <span className="flex items-center gap-2">
+                                    <i className="fas fa-check-circle text-green-500"></i> 100% Privado
+                                </span>
+                                <span className="flex items-center gap-2">
+                                    <i className="fas fa-check-circle text-green-500"></i> Acceso Ilimitado
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="md:w-1/2 w-full flex justify-center perspective-1000">
+                            {/* THE RESTORED SOCIAL CARD */}
+                            <div className="glass-card p-6 rounded-2xl max-w-sm w-full transform rotate-3 hover:rotate-0 transition-all duration-500 hover:shadow-2xl hover:shadow-green-500/20 border border-white/10 bg-black/60 relative group-card">
+                                {/* Top Gradient Line */}
+                                <div className="absolute top-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-green-500/50 to-transparent"></div>
+
+                                {/* Header */}
+                                <div className="flex items-center gap-4 mb-6 border-b border-white/5 pb-4">
+                                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-green-500 p-0.5 shadow-lg shadow-green-500/20">
+                                        <div className="w-full h-full rounded-full overflow-hidden relative">
+                                            <Image src="/lucas.jpeg" fill className="object-cover" alt="Lucas Profile" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-white text-sm">Lucas M.</h4>
+                                        <p className="text-xs text-green-400 font-mono">@Founder_GrowLabs</p>
+                                    </div>
+                                    <div className="ml-auto">
+                                        <Image src="/logogrow.png" width={24} height={24} alt="Grow Logo" className="opacity-80" />
+                                    </div>
+                                </div>
+
+                                {/* Content */}
+                                <div className="space-y-4 mb-6">
+                                    <p className="text-gray-300 text-sm leading-relaxed font-light">
+                                        "En <span className="text-green-400 font-bold">Grow Labs</span> creemos que la IA debe ser accesible. Por eso liberamos nuestras mejores herramientas internas para que tú también puedas automatizar tu trabajo."
+                                    </p>
+                                    <div className="relative w-full h-48 rounded-xl overflow-hidden border border-white/10 group hover:border-green-500/30 transition-colors">
+                                        <Image src="/fondogrow.png" fill className="object-cover opacity-60 group-hover:scale-110 transition-transform duration-700" alt="Grow Background" />
+                                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
+                                            <div className="w-16 h-16 bg-black/50 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md">
+                                                <i className="fas fa-play text-white text-xl pl-1"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Footer Actions */}
+                                <div className="flex justify-between items-center text-gray-500 text-sm">
+                                    <div className="flex gap-5">
+                                        <i className="far fa-heart hover:text-red-500 transition-colors cursor-pointer text-lg"></i>
+                                        <i className="far fa-comment hover:text-blue-400 transition-colors cursor-pointer text-lg"></i>
+                                        <i className="far fa-paper-plane hover:text-green-400 transition-colors cursor-pointer text-lg"></i>
+                                    </div>
+                                    <span className="text-xs text-gray-600">Hace 2 horas</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8">
