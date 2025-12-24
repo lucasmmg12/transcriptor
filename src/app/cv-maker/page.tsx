@@ -47,6 +47,37 @@ export default function CVMakerLanding() {
                     </p>
                 </div>
 
+                {/* ATS Information Block */}
+                <div className="max-w-4xl w-full mb-16 animate-fade-in-up">
+                    <div className="glass-card p-8 rounded-2xl border border-green-500/30 bg-green-500/5 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-8 opacity-10">
+                            <i className="fas fa-robot text-8xl text-green-500"></i>
+                        </div>
+                        <div className="relative z-10">
+                            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                                <span className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-black text-sm">
+                                    <i className="fas fa-lightbulb"></i>
+                                </span>
+                                ¿Por qué es importante optimizar tu CV?
+                            </h3>
+                            <div className="grid md:grid-cols-3 gap-6">
+                                <div className="bg-black/40 p-5 rounded-xl border border-white/5">
+                                    <h4 className="font-bold text-green-400 mb-2">Lectura por IA (ATS)</h4>
+                                    <p className="text-gray-400 text-sm">Hoy en día, muchos CVs son filtrados primero por bots. Tu CV debe ser legible para ellos.</p>
+                                </div>
+                                <div className="bg-black/40 p-5 rounded-xl border border-white/5">
+                                    <h4 className="font-bold text-green-400 mb-2">Información Precisa</h4>
+                                    <p className="text-gray-400 text-sm">Evita el relleno. Destaca solo lo que aporta valor real al puesto que buscas.</p>
+                                </div>
+                                <div className="bg-black/40 p-5 rounded-xl border border-white/5">
+                                    <h4 className="font-bold text-green-400 mb-2">Palabras Clave</h4>
+                                    <p className="text-gray-400 text-sm">Si buscas un puesto de "Ventas", asegúrate de que esa palabra destaque en tu perfil.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="grid md:grid-cols-2 gap-8 max-w-5xl w-full animate-slide-in">
 
                     {/* Option 1: AI Mode */}
