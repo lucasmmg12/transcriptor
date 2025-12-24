@@ -11,13 +11,17 @@ const VISION_MODEL = 'gemini-1.5-flash';
 
 export async function POST(request: NextRequest) {
     try {
+        console.log('🚀 Iniciando proceso de generación de foto...');
+
         // 1. Validar configuraciones
         if (!process.env.GOOGLE_API_KEY) {
+            console.error('❌ Error: Falta API KEY');
             return NextResponse.json({ error: 'Configuración de servidor incompleta (API KEY)' }, { status: 500 });
         }
 
         const body = await request.json();
         const { userDescription, userImage } = body;
+        console.log(`📦 Datos recibidos - Descripción: "${userDescription?.substring(0, 20)}...", Imagen: ${userImage ? 'SI (' + userImage.length + ' chars)' : 'NO'}`);
 
         // 2. Obtener IP para Rate Limiting
         const ip = request.headers.get('x-forwarded-for') || 'unknown';
@@ -31,6 +35,7 @@ export async function POST(request: NextRequest) {
             .gte('created_at', oneHourAgo);
 
         if (count !== null && count >= MAX_ATTEMPTS_PER_HOUR) {
+            console.warn(`⚠️ Rate limit excedido para IP: ${ip}`);
             return NextResponse.json({ error: `Has alcanzado el límite de ${MAX_ATTEMPTS_PER_HOUR} fotos por hora.` }, { status: 429 });
         }
 
@@ -44,6 +49,7 @@ export async function POST(request: NextRequest) {
                 const base64Image = userImage.split(',')[1];
 
                 const visionApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${VISION_MODEL}:generateContent?key=${process.env.GOOGLE_API_KEY}`;
+                console.log(`🔗 URL Vision: ${visionApiUrl}`);
 
                 const visionResponse = await fetch(visionApiUrl, {
                     method: 'POST',
@@ -58,24 +64,32 @@ export async function POST(request: NextRequest) {
                     })
                 });
 
-                const visionData = await visionResponse.json();
-                if (visionData.candidates && visionData.candidates[0].content) {
-                    facialFeatures = visionData.candidates[0].content.parts[0].text;
-                    console.log('🧬 Rasgos detectados:', facialFeatures);
+                console.log(`📡 Vision Response Status: ${visionResponse.status}`);
+
+                if (!visionResponse.ok) {
+                    const errText = await visionResponse.text();
+                    console.error('⚠️ Error Vision Text:', errText);
+                    // No lanzamos error fatal, seguimos con la descripción manual
+                } else {
+                    const visionData = await visionResponse.json();
+                    if (visionData.candidates && visionData.candidates[0].content) {
+                        facialFeatures = visionData.candidates[0].content.parts[0].text;
+                        console.log('✅ Rasgos detectados:', facialFeatures);
+                    }
                 }
             } catch (err) {
-                console.error('Error analizando imagen:', err);
+                console.error('❌ Error analizando imagen (catch):', err);
                 // Fallback a descripción manual si falla la visión
             }
         }
 
         // 5. Construir Prompt Final
         const finalPrompt = `Professional linkedin headshot of a person with these features: ${facialFeatures}. Wearing professional business attire (suit/blazer), neutral studio background, soft lighting, 8k resolution, photorealistic, confident smile.`;
-
-        console.log('📸 Generando imagen con prompt:', finalPrompt);
+        console.log('🎨 Prompt Final:', finalPrompt);
 
         // 6. Llamar a Google Imagen 3
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${IMAGEN_MODEL}:predict?key=${process.env.GOOGLE_API_KEY}`;
+        console.log(`🔗 URL Imagen: ${apiUrl}`);
 
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -86,10 +100,12 @@ export async function POST(request: NextRequest) {
             })
         });
 
+        console.log(`📡 Imagen Response Status: ${response.status}`);
+
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('Error Google Imagen API:', errorText);
-            throw new Error(`Google AI Error: ${response.status} ${response.statusText}`);
+            console.error('❌ Error Google Imagen API Body:', errorText);
+            throw new Error(`Google AI Error: ${response.status} ${response.statusText} - ${errorText.substring(0, 100)}`);
         }
 
         const data = await response.json();
