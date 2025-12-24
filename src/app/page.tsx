@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { AnalisisAudio } from '@/lib/supabase'
 import Image from 'next/image'
+import Link from 'next/link'
 
 type TipoAnalisis = 'entrevista-trabajo' | 'reunion-cliente' | 'resumen-general'
 
@@ -302,14 +303,19 @@ export default function Home() {
                                 <p className="text-sm text-gray-400">Transcriptor IA</p>
                             </div>
                         </div>
-                        <a
-                            href="https://api.whatsapp.com/send/?phone=5492643229503&text&type=phone_number&app_absent=0"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn btn-primary"
-                        >
-                            💬 Contactar
-                        </a>
+                        <div className="flex items-center gap-6">
+                            <Link href="/cv-maker" className="text-gray-300 hover:text-white font-medium transition-colors flex items-center gap-2">
+                                <span>📄</span> Crear CV
+                            </Link>
+                            <a
+                                href="https://api.whatsapp.com/send/?phone=5492643229503&text&type=phone_number&app_absent=0"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn btn-primary"
+                            >
+                                💬 Contactar
+                            </a>
+                        </div>
                     </div>
                 </nav>
             </header>
