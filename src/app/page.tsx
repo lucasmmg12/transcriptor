@@ -90,34 +90,88 @@ export default function Home() {
                             <a href="#" className="text-grow font-bold hover:underline decoration-green-500/30 underline-offset-8">Ver casos de éxito &rarr;</a>
                         </div>
 
-                        {/* Gráfico Visual CSS (Simulación Data) */}
+                        {/* SVG Line Chart */}
                         <div className="w-full md:w-1/2">
-                            <div className="glass-card p-8 rounded-2xl relative group">
-                                <div className="flex justify-between items-end mb-8">
+                            <div className="glass-card p-8 rounded-2xl relative group overflow-hidden">
+                                <div className="flex justify-between items-end mb-8 relative z-10">
                                     <div>
                                         <p className="text-gray-400 text-sm uppercase tracking-wider mb-1">Crecimiento Promedio</p>
                                         <h3 className="text-4xl font-bold text-white">+145%</h3>
                                     </div>
-                                    <div className="flex gap-2">
-                                        <div className="w-3 h-3 rounded-full bg-grow animate-pulse"></div>
-                                        <span className="text-xs text-grow font-bold">Live Data</span>
+                                    <div className="flex gap-2 items-center">
+                                        <div className="w-2 h-2 rounded-full bg-grow animate-pulse shadow-[0_0_8px_#00ff88]"></div>
+                                        <span className="text-xs text-grow font-bold tracking-widest">LIVE</span>
                                     </div>
                                 </div>
 
-                                {/* Barras del Gráfico */}
-                                <div className="flex items-end justify-between gap-4 h-48">
-                                    {[40, 65, 45, 80, 60, 95, 85].map((height, i) => (
-                                        <div key={i} className="w-full bg-gray-800 rounded-t-lg relative overflow-hidden group-hover:bg-gray-700 transition-colors">
-                                            <div
-                                                className="absolute bottom-0 w-full bg-gradient-to-t from-green-900 to-grow rounded-t-lg transition-all duration-1000 ease-out"
-                                                style={{ height: `${height}%`, opacity: 0.8 }}
-                                            ></div>
-                                        </div>
-                                    ))}
+                                {/* SVG Line Chart */}
+                                <div className="relative h-48 w-full">
+                                    <svg viewBox="0 0 400 200" className="w-full h-full overflow-visible">
+                                        {/* Definición del Gradiente */}
+                                        <defs>
+                                            <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stopColor="#00ff88" stopOpacity="0.4" />
+                                                <stop offset="100%" stopColor="#00ff88" stopOpacity="0" />
+                                            </linearGradient>
+                                            <filter id="glow">
+                                                <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+                                                <feMerge>
+                                                    <feMergeNode in="coloredBlur" />
+                                                    <feMergeNode in="SourceGraphic" />
+                                                </feMerge>
+                                            </filter>
+                                        </defs>
+
+                                        {/* Área bajo la curva (Relleno) */}
+                                        <path
+                                            d="M0,150 C50,140 80,100 120,110 C160,120 200,60 250,70 C300,80 350,20 400,30 V200 H0 Z"
+                                            fill="url(#chartGradient)"
+                                            className="opacity-50"
+                                        />
+
+                                        {/* Línea del gráfico (Trazo) - Animada */}
+                                        <path
+                                            d="M0,150 C50,140 80,100 120,110 C160,120 200,60 250,70 C300,80 350,20 400,30"
+                                            fill="none"
+                                            stroke="#00ff88"
+                                            strokeWidth="3"
+                                            strokeLinecap="round"
+                                            filter="url(#glow)"
+                                            className="drop-shadow-[0_0_10px_rgba(0,255,136,0.5)]"
+                                        >
+                                            <animate
+                                                attributeName="stroke-dasharray"
+                                                from="0, 1000"
+                                                to="1000, 0"
+                                                dur="2.5s"
+                                                fill="freeze"
+                                                calcMode="spline"
+                                                keyTimes="0;1"
+                                                keySplines="0.4 0 0.2 1"
+                                            />
+                                        </path>
+
+                                        {/* Puntos Interactivos (Simulados) */}
+                                        {[
+                                            { x: 120, y: 110 }, { x: 250, y: 70 }, { x: 400, y: 30 }
+                                        ].map((point, i) => (
+                                            <circle
+                                                key={i}
+                                                cx={point.x}
+                                                cy={point.y}
+                                                r="4"
+                                                fill="#000"
+                                                stroke="#00ff88"
+                                                strokeWidth="2"
+                                                className="transition-all duration-300 hover:r-6 cursor-pointer"
+                                            />
+                                        ))}
+
+                                    </svg>
                                 </div>
 
-                                <div className="flex justify-between mt-4 text-xs text-gray-500 font-mono">
-                                    <span>ENE</span><span>FEB</span><span>MAR</span><span>ABR</span><span>MAY</span><span>JUN</span><span>JUL</span>
+                                <div className="flex justify-between mt-4 text-xs text-gray-500 font-mono relative z-10 border-t border-white/5 pt-4">
+                                    <span>ENE</span><span>MAR</span><span>MAY</span><span>JUL</span><span>SEP</span><span>NOV</span>
                                 </div>
                             </div>
                         </div>
