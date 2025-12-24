@@ -69,7 +69,7 @@ export default function AiCVPage() {
                     <textarea
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
-                        placeholder="Ej: Soy Florencia, tengo 33 años. Fui dueña de una pañalera llamada 'El Rinconcito' desde 2020 donde manejé 18 empleados y vendí online a todo el país. Antes trabajé en Óptica Científica haciendo facturación..."
+                        placeholder="Ej: Soy Juan, ingeniero industrial con 5 años de experiencia en logística. Trabajé en Transporte Global coordinando rutas y reduciendo costos un 15%. Antes fui analista de calidad en Industria Metalúrgica. Hablo inglés avanzado y manejo SAP..."
                         className="w-full h-64 p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none mb-4"
                     />
 
