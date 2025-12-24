@@ -449,7 +449,7 @@ export default function Home() {
                                 {/* Content */}
                                 <div className="space-y-4 mb-6">
                                     <p className="text-gray-300 text-sm leading-relaxed font-light">
-                                        "En <span className="text-green-400 font-bold">Grow Labs</span> creemos que la IA debe ser accesible. Por eso liberamos nuestras mejores herramientas internas para que tú también puedas automatizar tu trabajo."
+                                        "En <span className="text-green-400 font-bold">Grow Labs</span> creemos que la IA debe ser accesible. Por eso liberamos nuestras mejores herramientas internas para que vos también puedas automatizar tu trabajo."
                                     </p>
                                     <div className="relative w-full h-48 rounded-xl overflow-hidden border border-white/10 group hover:border-green-500/30 transition-colors">
                                         <Image src="/fondogrow.png" fill className="object-cover opacity-60 group-hover:scale-110 transition-transform duration-700" alt="Grow Background" />
@@ -518,7 +518,7 @@ export default function Home() {
                         {/* Card 3: Presentaciones */}
                         <div className="glass-card p-8 rounded-3xl border border-white/5 hover:border-purple-500/30 transition-all group relative overflow-hidden flex flex-col">
                             <div className="w-14 h-14 bg-purple-500 rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform">
-                                <i className="fas fa-presentation-screen"></i>
+                                <i className="fas fa-layer-group"></i>
                             </div>
                             <h3 className="text-2xl font-bold mb-3 group-hover:text-purple-400 transition-colors">Slides Generator</h3>
                             <p className="text-gray-400 mb-8 text-sm leading-relaxed flex-1">
