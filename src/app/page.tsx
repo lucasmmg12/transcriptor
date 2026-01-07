@@ -526,7 +526,7 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-8">
+                    <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-8">
 
                         {/* Card 1: CV Maker */}
                         <div className="glass-card p-8 rounded-3xl border border-white/5 hover:border-grow/30 transition-all group relative overflow-hidden flex flex-col">
@@ -583,6 +583,24 @@ export default function Home() {
 
                             {/* Decorative glow */}
                             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-colors"></div>
+                        </div>
+
+                        {/* Card 4: Image to PDF */}
+                        <div className="glass-card p-8 rounded-3xl border border-white/5 hover:border-orange-500/30 transition-all group relative overflow-hidden flex flex-col">
+                            <div className="w-14 h-14 bg-orange-500 rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform">
+                                <i className="fas fa-images"></i>
+                            </div>
+                            <h3 className="text-2xl font-bold mb-3 group-hover:text-orange-400 transition-colors">Image to PDF</h3>
+                            <p className="text-gray-400 mb-8 text-sm leading-relaxed flex-1">
+                                Convierte tus fotos (DNI, documentos) en un PDF único y ordenado. Procesamiento 100% privado en tu navegador.
+                            </p>
+                            <Link href="/tools/image-to-pdf" className="inline-flex items-center gap-2 text-white font-bold hover:gap-4 transition-all mt-auto">
+                                <span>Convertir a PDF</span>
+                                <i className="fas fa-arrow-right text-orange-400"></i>
+                            </Link>
+
+                            {/* Decorative glow */}
+                            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-colors"></div>
                         </div>
 
                     </div>
