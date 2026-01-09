@@ -81,6 +81,25 @@ const SOLUTIONS = [
             practical: "No es el típico chatbot de 'Marque 1 para ventas'. Es un asistente que habla natural, entiende audios, maneja ironía y empatía. Puede agendar citas en tu calendario real, enviar catálogos personalizados y cerrar ventas a las 3 de la mañana mientras tu equipo duerme.",
             example: "Una clínica médica saturada por llamadas telefónicas para turnos. Implementamos un agente de IA en WhatsApp que atiende a 1000 pacientes simultáneos, verifica disponibilidad en el sistema de agenda médica, confirma cobertura de obras sociales y reserva el turno. Redujo el ausentismo en un 40% (recordatorios) y descomprimió la recepción."
         }
+    },
+    {
+        id: 'web-design',
+        title: "Sitios Web de Alto Impacto",
+        icon: "laptop-code",
+        color: "pink",
+        colorClass: "text-pink-400",
+        bgClass: "bg-pink-500/10",
+        description: "Experiencias web totalmente personalizadas, diseñadas con neuromarketing para convertir visitantes en clientes.",
+        features: [
+            "Diseño 100% Personalizado y Responsivo",
+            "Estrategia UX/UI basada en Estadísticas",
+            "SEO Técnico & Velocidad Extrema"
+        ],
+        details: {
+            theoretical: "No hacemos 'páginas web', construimos activos digitales. Combinamos las mejores prácticas de desarrollo moderno (Next.js, React) con principios de psicología del consumidor y Neuromarketing. Cada elemento visual tiene un propósito estratégico: guiar la atención del usuario hacia la conversión.",
+            practical: "Olvídate de las plantillas genéricas que tiene tu competencia. Creamos un traje a medida para tu marca. Desde animaciones impactantes que retienen la atención, hasta una arquitectura de información que facilita la venta. Tu sitio se verá perfecto en celulares, cargará en milisegundos y estará optimizado para que Google te ame.",
+            example: "Una firma legal con un sitio web anticuado apenas recibía consultas online. Rediseñamos su presencia digital con una estética autoritaria y moderna, optimizada para móviles y con funnels de conversión claros. En 2 meses, aumentaron su captación de leads cualificados en un 300% y mejoraron su posicionamiento en búsquedas locales."
+        }
     }
 ];
 
