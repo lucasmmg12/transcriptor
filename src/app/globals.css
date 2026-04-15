@@ -89,3 +89,27 @@ body {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+
+/* Animacion Panel Flip 3D para texto rotativo */
+@keyframes flipInX {
+  0% {
+    transform: perspective(400px) rotateX(90deg);
+    opacity: 0;
+  }
+  40% {
+    transform: perspective(400px) rotateX(-10deg);
+  }
+  70% {
+    transform: perspective(400px) rotateX(10deg);
+  }
+  100% {
+    transform: perspective(400px) rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+.animate-flip {
+  backface-visibility: visible !important;
+  animation: flipInX 0.8s ease-out both;
+  display: inline-block;
+}

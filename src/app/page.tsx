@@ -5,37 +5,6 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
 const VERBOS_HERO = ["escala", "potencia", "automatiza", "transforma", "revoluciona"];
-const CHARS = "<>-_\\/[]{}—=+*^?#01";
-
-const ScrambleText = ({ text }: { text: string }) => {
-    const [displayText, setDisplayText] = useState(text);
-
-    useEffect(() => {
-        let iteration = 0;
-        
-        const interval = setInterval(() => {
-            setDisplayText((_) => 
-                text
-                    .split("")
-                    .map((letter, index) => {
-                        if (index < Math.floor(iteration)) return text[index];
-                        return CHARS[Math.floor(Math.random() * CHARS.length)];
-                    })
-                    .join("")
-            );
-
-            if (iteration >= text.length) {
-                clearInterval(interval);
-            }
-
-            iteration += 1 / 3; 
-        }, 35);
-
-        return () => clearInterval(interval);
-    }, [text]);
-
-    return <>{displayText}</>;
-};
 
 const SOLUTIONS = [
     {
@@ -150,11 +119,12 @@ export default function Home() {
                         <div className="inline-block px-4 py-1.5 mb-6 md:mb-8 rounded-full border border-gray-200 bg-white text-gray-600 text-xs font-semibold uppercase tracking-widest shadow-sm">
                             Business Intelligence & IA Empresarial
                         </div>
-                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 text-gray-900 tracking-tight leading-tight">
-                            El sistema operativo que <br className="hidden lg:block" />
-                            <span className="text-green-600 inline-block min-w-[250px] sm:min-w-[300px] md:min-w-[420px]">
-                                <ScrambleText text={VERBOS_HERO[wordIndex]} />
-                            </span> tu negocio
+                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 text-gray-900 tracking-tight leading-tight flex flex-col md:block items-center justify-center">
+                            <span>El sistema operativo que</span>
+                            <span key={wordIndex} className="text-green-600 animate-flip px-2 md:px-3">
+                                {VERBOS_HERO[wordIndex]}
+                            </span>
+                            <span>tu negocio</span>
                         </h1>
                         <p className="text-lg sm:text-xl text-gray-600 mb-8 md:mb-10 max-w-3xl mx-auto px-2 leading-relaxed">
                             <strong>Ingeniería de software Full-Stack.</strong> Desarrollamos programas empresariales a medida, automatizamos tareas repetitivas y atendemos a tus clientes 24/7 integrando IA nativa en tus procesos.
