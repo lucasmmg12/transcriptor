@@ -589,6 +589,19 @@ export default function Home() {
                 </div>
             </footer>
 
+            {/* FLOATING SOCIAL BAR */}
+            <div className="fixed right-4 md:right-6 bottom-4 md:bottom-8 flex flex-col gap-3 z-50">
+                <a href="https://www.linkedin.com/in/lucas-marinero-182521308/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-teal-700 text-xl shadow-[0_4px_15px_rgba(0,0,0,0.1)] border border-gray-100/50 hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition-all duration-300">
+                    <i className="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://www.instagram.com/growsanjuan/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-teal-700 text-xl shadow-[0_4px_15px_rgba(0,0,0,0.1)] border border-gray-100/50 hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition-all duration-300">
+                    <i className="fab fa-instagram"></i>
+                </a>
+                <a href="https://api.whatsapp.com/send/?phone=5492645438114&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-[#25D366] rounded-full flex items-center justify-center text-white text-2xl shadow-[0_4px_15px_rgba(37,211,102,0.3)] border border-[#25D366] hover:bg-[#1ebc59] hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(37,211,102,0.4)] transition-all duration-300">
+                    <i className="fab fa-whatsapp"></i>
+                </a>
+            </div>
+
             {/* External CSS for Icons */}
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         </div>
