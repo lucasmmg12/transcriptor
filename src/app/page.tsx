@@ -56,7 +56,6 @@ const INTEGRATIONS = [
 
 export default function Home() {
     const [openFaq, setOpenFaq] = useState<number | null>(null);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const toggleFaq = (index: number) => {
         setOpenFaq(openFaq === index ? null : index);
@@ -120,7 +119,7 @@ export default function Home() {
                             <a href="https://cal.com/lucas-marinero-ji1yyg/15min" target="_blank" className="btn-primary w-full sm:w-auto px-8 py-4 text-center">
                                 Diagnóstico Gratuito
                             </a>
-                            <a href="https://wa.me/5492645438114" target="_blank" className="btn-secondary w-full sm:w-auto px-8 py-4 flex items-center justify-center gap-2">
+                            <a href="https://wa.me/5492645438114" target="_blank" className="btn-secondary w-full sm:w-auto px-8 py-4 flex items-center justify-center gap-2 border border-gray-200 shadow-sm bg-white hover:bg-gray-50 text-gray-900">
                                 <i className="fab fa-whatsapp text-green-500 text-lg"></i> WhatsApp
                             </a>
                         </div>
@@ -151,29 +150,57 @@ export default function Home() {
                 {/* STATS SECTION */}
                 <section className="py-12 md:py-16 bg-gray-50 border-b border-gray-200">
                     <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center divide-y sm:divide-y-0 sm:divide-x divide-gray-200">
-                            <div className="py-4">
-                                <span className="block text-4xl md:text-5xl font-bold text-gray-900 mb-2">80%</span>
-                                <span className="text-xs md:text-sm text-gray-600 font-medium block">Más rápido en tiempos de gestión</span>
+                        <div className="grid grid-cols-1 sm:grid-cols-4 gap-8 text-center divide-y sm:divide-y-0 sm:divide-x divide-gray-200">
+                            {[
+                                { label: "Reducción de Errores", value: "85%" },
+                                { label: "Más Rápido", value: "10x" },
+                                { label: "Disponibilidad", value: "24/7" },
+                                { label: "Crecimiento", value: "+245%" }
+                            ].map((stat, i) => (
+                                <div key={i} className="py-2">
+                                    <h3 className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</h3>
+                                    <p className="text-sm text-gray-500 uppercase tracking-widest">{stat.label}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* MISION / VISION SECTION (Restored & Light Theme adapted) */}
+                <section className="py-20 bg-white border-b border-gray-200">
+                    <div className="container mx-auto px-6 max-w-4xl text-center">
+                        <h2 className="text-sm font-bold text-green-600 uppercase tracking-widest mb-4">Quiénes Somos</h2>
+                        <h3 className="text-3xl md:text-4xl font-bold mb-8 text-gray-900">Expertos en Tecnología para la Realidad Empresarial de LATAM</h3>
+                        <p className="text-gray-600 text-lg mb-12 leading-relaxed">
+                            Grow Labs nace de la experiencia directa en la complejidad operativa de las empresas. Entendemos profundamente los desafíos de burocracia, ineficiencia y falta de datos claros. Nuestra misión es transformar esa fricción en eficiencia mediante tecnología de punta adaptada a tus necesidades.
+                        </p>
+
+                        <div className="grid md:grid-cols-3 gap-8 text-left">
+                            <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
+                                <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-4 text-green-600"><i className="fas fa-rocket"></i></div>
+                                <h4 className="font-bold text-gray-900 mb-2">Misión</h4>
+                                <p className="text-sm text-gray-600">Eliminar la fricción operativa para que los equipos se enfoquen en lo que realmente importa: el crecimiento.</p>
                             </div>
-                            <div className="py-4">
-                                <span className="block text-4xl md:text-5xl font-bold text-gray-900 mb-2">30%</span>
-                                <span className="text-xs md:text-sm text-gray-600 font-medium block">Ahorro en costes operativos</span>
+                            <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
+                                <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-4 text-green-600"><i className="fas fa-brain"></i></div>
+                                <h4 className="font-bold text-gray-900 mb-2">Visión</h4>
+                                <p className="text-sm text-gray-600">Ser el cerebro digital que impulsa las operaciones ágiles de las empresas modernas líderes en LATAM.</p>
                             </div>
-                            <div className="py-4">
-                                <span className="block text-4xl md:text-5xl font-bold text-gray-900 mb-2">24/7</span>
-                                <span className="text-xs md:text-sm text-gray-600 font-medium block">Disponibilidad de agentes IA</span>
+                            <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
+                                <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-4 text-green-600"><i className="fas fa-gem"></i></div>
+                                <h4 className="font-bold text-gray-900 mb-2">Valores</h4>
+                                <p className="text-sm text-gray-600">Precisión Operativa • Adaptación Local • Innovación Transparente y Escalabilidad garantizada.</p>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 {/* PRODUCTS/SOLUTIONS SECTION */}
-                <section id="solutions" className="py-16 md:py-24 px-4 md:px-6 bg-white relative border-b border-gray-200">
+                <section id="solutions" className="py-16 md:py-24 px-4 md:px-6 bg-gray-50 relative border-b border-gray-200">
                     <div className="container mx-auto max-w-6xl">
                         <div className="mb-10 md:mb-16 text-center md:text-left">
-                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">Tú construyes el negocio,<br className="hidden md:block"/>nosotros lo automatizamos</h2>
-                            <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto md:mx-0">Descubre las funcionalidades que te permitirán optimizar los recursos internos y mejorar la experiencia de tu cliente.</p>
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">Servicios y <span className="text-green-600">Soluciones</span></h2>
+                            <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto md:mx-0">Soluciones modulares diseñadas específicamente para optimizar procesos y ventas de tu negocio local.</p>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -183,7 +210,7 @@ export default function Home() {
                                     href={`https://wa.me/5492645438114?text=${encodeURIComponent(`Hola, estaba viendo su sitio web y me interesa saber más sobre el servicio de ${s.title}.`)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="light-card p-6 md:p-8 flex flex-col hover:shadow-xl hover:border-green-400 transition-all cursor-pointer group hover:-translate-y-1 block"
+                                    className="bg-white border border-gray-200 shadow-sm rounded-2xl p-6 md:p-8 flex flex-col hover:shadow-xl hover:border-green-400 transition-all cursor-pointer group hover:-translate-y-1 block"
                                 >
                                     <span className="text-green-600 font-bold text-sm mb-4 bg-green-50 border border-green-100 w-8 h-8 flex items-center justify-center rounded-full group-hover:bg-green-100 transition-colors">
                                         {idx + 1}
@@ -200,51 +227,242 @@ export default function Home() {
                     </div>
                 </section>
 
-                {/* WHY SECTION */}
-                <section id="why" className="py-16 md:py-24 bg-gray-50 border-b border-gray-200">
-                    <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-                        <div className="mb-12 md:mb-16 max-w-2xl text-center mx-auto">
-                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Hecho para escalar contigo</h2>
-                            <p className="text-base md:text-lg text-gray-600 px-4">Diseño robusto para empresas tradicionales que quieren dar el salto digital.</p>
-                        </div>
+                {/* PROBLEMAS / COMPARACION (Restored & Light Theme adapted) */}
+                <section className="py-20 bg-white border-b border-gray-200">
+                    <div className="container mx-auto px-6 max-w-6xl">
+                        <div className="flex flex-col md:flex-row gap-16">
+                            {/* Problemas */}
+                            <div className="w-full md:w-1/2">
+                                <h3 className="text-3xl font-bold mb-8 text-gray-900">¿Tu empresa está perdiendo dinero sin saberlo?</h3>
+                                <div className="space-y-6">
+                                    <div className="flex gap-4">
+                                        <div className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0 text-xl border border-red-100"><i className="fas fa-times"></i></div>
+                                        <div>
+                                            <h4 className="font-bold text-gray-900 text-lg">Oportunidades Perdidas</h4>
+                                            <p className="text-gray-600 text-sm">El 15-30% de los leads se pierden por falta de seguimiento o respuesta rápida.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-4">
+                                        <div className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0 text-xl border border-red-100"><i className="fas fa-chart-down"></i></div>
+                                        <div>
+                                            <h4 className="font-bold text-gray-900 text-lg">Ineficiencias Operativas</h4>
+                                            <p className="text-gray-600 text-sm">Tu equipo dedica horas a tareas manuales en lugar de a estrategias y ventas.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-4">
+                                        <div className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0 text-xl border border-red-100"><i className="fas fa-user-clock"></i></div>
+                                        <div>
+                                            <h4 className="font-bold text-gray-900 text-lg">Clientes Frustrados</h4>
+                                            <p className="text-gray-600 text-sm">Tiempos de respuesta inconsistentes generan mala experiencia empresarial.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-x-12 md:gap-y-16">
-                            <div className="bg-white p-6 md:p-0 md:bg-transparent rounded-2xl md:rounded-none shadow-sm md:shadow-none border border-gray-100 md:border-none">
-                                <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3 flex items-center gap-2">
-                                    <i className="fas fa-check-circle text-green-500"></i> Accesible
-                                </h3>
-                                <p className="text-gray-600 text-sm leading-relaxed">Entregamos tecnología amigable. No necesitas un equipo técnico interno para usar nuestras aplicaciones ni tableros; tu equipo aprenderá en minutos.</p>
-                            </div>
-                            <div className="bg-white p-6 md:p-0 md:bg-transparent rounded-2xl md:rounded-none shadow-sm md:shadow-none border border-gray-100 md:border-none">
-                                <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3 flex items-center gap-2">
-                                    <i className="fas fa-chart-pie text-green-500"></i> Datos en Tiempo Real
-                                </h3>
-                                <p className="text-gray-600 text-sm leading-relaxed">Toma decisiones ejecutivas basadas en métricas reales de tu empresa, presentadas en dashboards limpios y fáciles de interpretar.</p>
-                            </div>
-                            <div className="bg-white p-6 md:p-0 md:bg-transparent rounded-2xl md:rounded-none shadow-sm md:shadow-none border border-gray-100 md:border-none">
-                                <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3 flex items-center gap-2">
-                                    <i className="fas fa-seedling text-green-500"></i> Retorno Garantizado (ROI)
-                                </h3>
-                                <p className="text-gray-600 text-sm leading-relaxed">Nuestro enfoque no es un gasto, es una inversión. Las automatizaciones recuperan su coste inicial durante el primer trimestre operativo.</p>
-                            </div>
-                            <div className="bg-white p-6 md:p-0 md:bg-transparent rounded-2xl md:rounded-none shadow-sm md:shadow-none border border-gray-100 md:border-none">
-                                <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3 flex items-center gap-2">
-                                    <i className="fas fa-laptop-code text-green-500"></i> Estética SaaS Moderna
-                                </h3>
-                                <p className="text-gray-600 text-sm leading-relaxed">Aplicamos principios de diseño contemporáneo, amigables, rápidos y 100% responsivos para que tu marca destaque.</p>
+                            {/* Comparacion */}
+                            <div className="w-full md:w-1/2 bg-gray-50 rounded-2xl p-8 border border-gray-200 shadow-sm">
+                                <h3 className="text-xl font-bold mb-6 text-center text-gray-900">Por qué Grow Labs es diferente</h3>
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-3 gap-4 text-sm font-bold text-gray-500 border-b border-gray-200 pb-3">
+                                        <span></span>
+                                        <span className="text-green-600 text-center">Grow Labs</span>
+                                        <span className="text-center">Tradicional</span>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
+                                        <span className="text-gray-700 font-medium">Implementación</span>
+                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">Días/Semanas</span>
+                                        <span className="text-center text-gray-500">6-12 meses</span>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
+                                        <span className="text-gray-700 font-medium">Tecnología</span>
+                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">IA Inteligente</span>
+                                        <span className="text-center text-gray-500">Software Rígido</span>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
+                                        <span className="text-gray-700 font-medium">Soporte</span>
+                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">24/7 Asesoría</span>
+                                        <span className="text-center text-gray-500">Tickets Lentos</span>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
+                                        <span className="text-gray-700 font-medium">ROI (Retorno)</span>
+                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">Inmediato</span>
+                                        <span className="text-center text-gray-500">Incierto</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
+                {/* ROI, DATA & TECH SECTION (Restored moving SVG & Light Theme adapted) */}
+                <section id="data" className="py-20 bg-gray-900 border-b border-gray-800 text-white relative overflow-hidden">
+                    <div className="container mx-auto px-6">
+                        <div className="flex flex-col md:flex-row items-center gap-16 relative z-10">
+                            {/* Texto BI */}
+                            <div className="w-full md:w-1/2 text-left">
+                                <span className="text-green-400 font-bold tracking-widest text-xs uppercase mb-2 block">Business Intelligence</span>
+                                <h2 className="text-3xl md:text-5xl font-bold mb-6">
+                                    El Poder de los <span className="text-green-400 drop-shadow-[0_0_15px_rgba(34,197,94,0.4)]">Datos</span>
+                                </h2>
+                                <p className="text-gray-300 text-lg mb-8 leading-relaxed">
+                                    No tomes decisiones ciegamente. Organizamos tus datos dispersos y los convertimos en un panel corporativo para predicciones precisas y métricas absolutas.
+                                </p>
+                                <a href="https://wa.me/5492645438114" target="_blank" className="text-green-400 font-bold hover:text-green-300 hover:underline decoration-green-400/50 underline-offset-8 transition-all">
+                                    Solicitar una evaluación &rarr;
+                                </a>
+                            </div>
+
+                            {/* SVG Line Chart */}
+                            <div className="w-full md:w-1/2">
+                                <div className="bg-black/50 p-8 rounded-3xl border border-gray-700 relative group overflow-hidden shadow-2xl backdrop-blur-sm">
+                                    <div className="flex justify-between items-end mb-8 relative z-10">
+                                        <div>
+                                            <p className="text-gray-400 text-sm uppercase tracking-wider mb-1">Crecimiento Eficiencia</p>
+                                            <h3 className="text-4xl font-bold text-white">+145%</h3>
+                                        </div>
+                                        <div className="flex gap-2 items-center">
+                                            <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_#22c55e]"></div>
+                                            <span className="text-xs text-green-500 font-bold tracking-widest">LIVE</span>
+                                        </div>
+                                    </div>
+
+                                    {/* SVG Line Chart */}
+                                    <div className="relative h-48 w-full">
+                                        <svg viewBox="0 0 400 200" className="w-full h-full overflow-visible">
+                                            <defs>
+                                                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="#22c55e" stopOpacity="0.4" />
+                                                    <stop offset="100%" stopColor="#22c55e" stopOpacity="0" />
+                                                </linearGradient>
+                                                <filter id="glow">
+                                                    <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                                                    <feMerge>
+                                                        <feMergeNode in="coloredBlur" />
+                                                        <feMergeNode in="SourceGraphic" />
+                                                    </feMerge>
+                                                </filter>
+                                            </defs>
+
+                                            <path
+                                                d="M0,150 C50,140 80,100 120,110 C160,120 200,60 250,70 C300,80 350,20 400,30 V200 H0 Z"
+                                                fill="url(#chartGradient)"
+                                                className="opacity-70"
+                                            />
+
+                                            <path
+                                                d="M0,150 C50,140 80,100 120,110 C160,120 200,60 250,70 C300,80 350,20 400,30"
+                                                fill="none"
+                                                stroke="#22c55e"
+                                                strokeWidth="4"
+                                                strokeLinecap="round"
+                                                filter="url(#glow)"
+                                            >
+                                                <animate
+                                                    attributeName="stroke-dasharray"
+                                                    from="0, 1000"
+                                                    to="1000, 0"
+                                                    dur="3s"
+                                                    fill="freeze"
+                                                    calcMode="spline"
+                                                    keyTimes="0;1"
+                                                    keySplines="0.4 0 0.2 1"
+                                                />
+                                            </path>
+
+                                            {[
+                                                { x: 120, y: 110 }, { x: 250, y: 70 }, { x: 400, y: 30 }
+                                            ].map((point, i) => (
+                                                <circle
+                                                    key={i}
+                                                    cx={point.x}
+                                                    cy={point.y}
+                                                    r="5"
+                                                    fill="#000"
+                                                    stroke="#22c55e"
+                                                    strokeWidth="3"
+                                                    className="transition-all duration-300 cursor-pointer"
+                                                />
+                                            ))}
+                                        </svg>
+                                    </div>
+
+                                    <div className="flex justify-between mt-4 text-xs text-gray-500 font-mono relative z-10 border-t border-gray-800 pt-5">
+                                        <span>ENE</span><span>MAR</span><span>MAY</span><span>JUL</span><span>SEP</span><span>NOV</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* ROI SECTION SIMPLE (Restored) */}
+                <section className="py-20 bg-green-500 text-white">
+                    <div className="container mx-auto px-6 text-center">
+                        <h2 className="text-3xl md:text-5xl font-black mb-6 drop-shadow-sm">Garantía Asegurada</h2>
+                        <p className="text-xl font-medium max-w-2xl mx-auto mb-10 text-green-50">
+                            Nuestros desarrollos no son gastos, son inversiones que recuperan dinero desde el primer trimestre.
+                        </p>
+                        <a href="https://cal.com/lucas-marinero-ji1yyg/15min" target="_blank" className="inline-block px-8 py-4 bg-gray-900 border border-gray-800 text-white font-bold rounded-xl hover:bg-black transition-colors shadow-lg">
+                            Agendar Auditoría Gratuita
+                        </a>
+                    </div>
+                </section>
+
+
                 {/* HERRAMIENTAS GRATUITAS (TOOLKIT) */}
-                <section id="tools" className="py-16 md:py-24 px-4 md:px-6 bg-white border-b border-gray-200">
-                    <div className="container mx-auto max-w-6xl text-center">
-                        <span className="inline-block py-1 px-3 rounded-full text-green-600 text-xs font-bold border border-green-200 bg-green-50 mb-4">
-                            OPEN ACCESS
-                        </span>
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 md:mb-6">Herramientas en la Nube</h2>
-                        <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto mb-10 md:mb-16 px-4">Muestras de nuestro poder técnico, 100% gratis para la comunidad.</p>
+                <section id="tools" className="py-16 md:py-24 px-4 md:px-6 bg-white border-b border-gray-200 overflow-hidden">
+                    <div className="container mx-auto max-w-6xl">
+                        <div className="flex flex-col md:flex-row items-center gap-12 mb-16">
+                            {/* Texto y Título */}
+                            <div className="md:w-1/2 text-center md:text-left">
+                                <span className="inline-block py-1 px-3 rounded-full text-green-600 text-xs font-bold border border-green-200 bg-green-50 mb-4">
+                                    OPEN ACCESS
+                                </span>
+                                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Herramientas Públicas</h2>
+                                <p className="text-base md:text-lg text-gray-600 leading-relaxed mb-6">
+                                    Muestras de nuestro poder técnico y desarrollos libres disponibles de manera totalmente gratuita para la comunidad.
+                                </p>
+                                <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-gray-500 font-medium">
+                                    <span className="flex items-center gap-1.5"><i className="fas fa-check-circle text-green-500"></i> Código Abierto</span>
+                                    <span className="flex items-center gap-1.5"><i className="fas fa-check-circle text-green-500"></i> Sin Registro</span>
+                                    <span className="flex items-center gap-1.5"><i className="fas fa-check-circle text-green-500"></i> Uso Ilimitado</span>
+                                </div>
+                            </div>
+
+                            {/* THE RESTORED SOCIAL CARD */}
+                            <div className="md:w-1/2 w-full flex justify-center perspective-1000">
+                                <div className="bg-white p-6 rounded-2xl max-w-sm w-full transform md:rotate-3 hover:rotate-0 transition-all duration-500 shadow-xl border border-gray-200 relative group-card">
+                                    {/* Header */}
+                                    <div className="flex items-center gap-4 mb-5 border-b border-gray-100 pb-4">
+                                        <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 p-0.5">
+                                            <div className="w-full h-full rounded-full overflow-hidden relative">
+                                                <Image src="/lucas.jpeg" fill className="object-cover" alt="Lucas Profile" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-gray-900 text-sm">Lucas M.</h4>
+                                            <p className="text-xs text-gray-500 font-mono">@Founder_GrowLabs</p>
+                                        </div>
+                                        <div className="ml-auto opacity-20">
+                                            <Image src="/logogrow.png" width={24} height={24} alt="Grow Logo" />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-4 mb-5">
+                                        <p className="text-gray-700 text-sm leading-relaxed font-normal">
+                                            "En <span className="font-bold text-green-600">Grow Labs</span> creemos que la tecnología debe empujar todo hacia adelante. Por eso dejamos a disposición el uso libre de estas herramientas de inteligencia artificial para uso general."
+                                        </p>
+                                    </div>
+                                    <div className="flex justify-between items-center text-gray-400 text-sm pt-2">
+                                        <div className="flex gap-4">
+                                            <i className="far fa-heart hover:text-red-500 transition-colors cursor-pointer text-lg"></i>
+                                            <i className="far fa-comment hover:text-blue-500 transition-colors cursor-pointer text-lg"></i>
+                                            <i className="far fa-paper-plane hover:text-green-500 transition-colors cursor-pointer text-lg"></i>
+                                        </div>
+                                        <span className="text-xs">Post de equipo</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6 text-left">
                             <div className="light-card p-6 md:p-8 flex flex-col relative overflow-hidden group hover:border-green-300">
@@ -262,7 +480,7 @@ export default function Home() {
                             <div className="light-card p-6 md:p-8 flex flex-col group hover:border-green-300">
                                 <div className="mb-4 md:mb-6"><i className="fas fa-microphone-lines text-2xl md:text-3xl text-gray-700 group-hover:text-green-600 transition-colors"></i></div>
                                 <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">Transcriptor IA</h3>
-                                <p className="text-xs md:text-sm text-gray-600 mb-6 md:mb-8 flex-1">Convierte reuniones en resúmenes estructurados usando Whisper. Detección automática de hablantes.</p>
+                                <p className="text-xs md:text-sm text-gray-600 mb-6 md:mb-8 flex-1">Convierte reuniones en resúmenes estructurados usando IA. Transcripciones puras.</p>
                                 <Link href="/tools/transcriptor" className="text-green-600 font-bold hover:text-green-700 transition-colors flex items-center gap-2 text-xs md:text-sm uppercase tracking-wider mt-auto">
                                     TRANSCRIBIR <i className="fas fa-arrow-right"></i>
                                 </Link>
@@ -271,7 +489,7 @@ export default function Home() {
                             <div className="light-card p-6 md:p-8 flex flex-col group hover:border-green-300">
                                 <div className="mb-4 md:mb-6"><i className="fas fa-images text-2xl md:text-3xl text-gray-700 group-hover:text-green-600 transition-colors"></i></div>
                                 <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">Image to PDF</h3>
-                                <p className="text-xs md:text-sm text-gray-600 mb-6 md:mb-8 flex-1">Convierte fotografías de documentos directamente a PDFs ligeros. Proceso 100% privado en navegador.</p>
+                                <p className="text-xs md:text-sm text-gray-600 mb-6 md:mb-8 flex-1">Convierte fotografías de documentos directamente a PDFs ligeros. 100% privado.</p>
                                 <Link href="/tools/image-to-pdf" className="text-green-600 font-bold hover:text-green-700 transition-colors flex items-center gap-2 text-xs md:text-sm uppercase tracking-wider mt-auto">
                                     CONVERTIR <i className="fas fa-arrow-right"></i>
                                 </Link>
@@ -291,7 +509,7 @@ export default function Home() {
                                 { q: "¿Se conecta a mi sistema de facturación actual?", a: "Sí. Mediante APIs o Webhooks, interactuamos con casi cualquier sistema moderno o legacy." },
                                 { q: "¿Cuál es el costo del servicio?", a: "Depende de la solución implementada. Por favor, agenda una reunión gratuita para realizar una consulta técnica y armar una cotización exacta." }
                             ].map((faq, i) => (
-                                <div key={i} className="light-card overflow-hidden cursor-pointer bg-white" onClick={() => toggleFaq(i)}>
+                                <div key={i} className="bg-white border border-gray-200 rounded-xl overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onClick={() => toggleFaq(i)}>
                                     <div className="p-4 md:p-6 flex justify-between items-center text-base md:text-lg font-bold text-gray-900 hover:text-green-600 transition-colors">
                                         <span className="pr-4">{faq.q}</span>
                                         <i className={`fas fa-chevron-down text-gray-400 flex-shrink-0 transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`}></i>
