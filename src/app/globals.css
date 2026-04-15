@@ -3,87 +3,89 @@
 @import 'tailwindcss/utilities';
 
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 10, 10, 10;
-  --background-end-rgb: 0, 0, 0;
-
-  /* Grow Labs Colors */
-  --grow-green: #00ff88;
-  --grow-dark: #0a0a0a;
+  --foreground-rgb: 17, 24, 39;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 249, 250, 251;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: black;
+  background: white;
   min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Background Global para todo el sitio con overlay oscuro */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
+/* Patrón de cuadrícula tenue similar a la imagen */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center top;
+}
+
+/* Botones Light Theme */
+.btn-primary {
+  background-color: #111827;
+  color: white;
+  border-radius: 9999px;
+  font-weight: 600;
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary {
+  background-color: white;
+  color: #111827;
+  border: 1px solid #E5E7EB;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: #D1D5DB;
+  background-color: #F9FAFB;
+}
+
+.light-card {
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.light-card:hover {
+  border-color: #D1D5DB;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+  transform: translateY(-2px);
+}
+
+/* Marquesina de integraciones (Infinite Scroll) */
+.marquee-container {
+  overflow: hidden;
+  display: flex;
   width: 100%;
-  height: 100%;
-  background-image: url('/fondogrow.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.15;
-  /* Sutil marca de agua */
-  z-index: -1;
-  pointer-events: none;
+  white-space: nowrap;
 }
 
-/* Utilidades Grow */
-.text-grow {
-  color: var(--grow-green);
+.marquee-content {
+  display: flex;
+  align-items: center;
+  animation: scroll 40s linear infinite;
 }
 
-.bg-grow {
-  background-color: var(--grow-green);
+.marquee-container:hover .marquee-content {
+  animation-play-state: paused;
 }
 
-.border-grow {
-  border-color: var(--grow-green);
-}
-
-.hover\:text-grow:hover {
-  color: var(--grow-green);
-}
-
-.glass-card {
-  background: rgba(10, 10, 10, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.glass-card:hover {
-  border-color: rgba(0, 255, 136, 0.3);
-  box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
-}
-
-/* Animaciones de Barras para los Gráficos */
-@keyframes fillBar {
-  from {
-    width: 0;
-  }
-
-  to {
-    width: var(--target-width);
-  }
-}
-
-.animate-fill {
-  animation: fillBar 1.5s ease-out forwards;
-}
-
-/* Efecto Neón */
-.neon-text {
-  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-}
-
-.neon-border {
-  box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
