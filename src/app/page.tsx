@@ -237,9 +237,9 @@ export default function Home() {
                     <div className="marquee-container">
                         <div className="marquee-content flex gap-8 md:gap-12 px-4 md:px-6 items-center" style={{ animationDuration: '80s' }}>
                             {[...CLIENT_LOGOS, ...CLIENT_LOGOS, ...CLIENT_LOGOS].map((logo, idx) => (
-                                <div key={idx} className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center p-3 md:p-4 overflow-hidden group">
-                                    <div className="relative w-full h-full transform group-hover:scale-110 transition-transform duration-300">
-                                        <Image src={logo} alt={`Cliente ${idx}`} fill className="object-contain" />
+                                <div key={idx} className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center overflow-hidden group">
+                                    <div className="relative w-full h-full transform group-hover:scale-110 transition-transform duration-300 rounded-full overflow-hidden">
+                                        <Image src={logo} alt={`Cliente ${idx}`} fill className="object-cover" />
                                     </div>
                                 </div>
                             ))}
