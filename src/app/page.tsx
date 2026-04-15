@@ -154,25 +154,7 @@ export default function Home() {
                     </div>
                 </section>
 
-                {/* CLIENTS MARQUEE */}
-                <section className="py-8 md:py-10 border-b border-gray-200 bg-white overflow-hidden relative">
-                    <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-white to-transparent z-10"></div>
-                    <div className="absolute right-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-l from-white to-transparent z-10"></div>
-                    
-                    <div className="text-center text-xs md:text-sm font-semibold text-gray-400 mb-6 md:mb-8 uppercase tracking-widest px-4">
-                        Más de 30 empresas ya confían y escalan con nosotros
-                    </div>
 
-                    <div className="marquee-container">
-                        <div className="marquee-content flex gap-12 md:gap-20 px-4 md:px-6 items-center">
-                            {[...CLIENT_LOGOS, ...CLIENT_LOGOS, ...CLIENT_LOGOS].map((logo, idx) => (
-                                <div key={idx} className="relative w-28 h-12 md:w-36 md:h-16 flex-shrink-0 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
-                                    <Image src={logo} alt={`Cliente ${idx}`} fill className="object-contain" />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
 
                 {/* INTEGRATIONS MARQUEE */}
                 <section className="py-8 md:py-10 border-y border-gray-200 bg-white overflow-hidden relative">
@@ -239,6 +221,28 @@ export default function Home() {
                                 <h4 className="font-bold text-gray-900 mb-2">Valores</h4>
                                 <p className="text-sm text-gray-600">Precisión Operativa • Adaptación Local • Innovación Transparente y Escalabilidad garantizada.</p>
                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* CLIENTS MARQUEE (Moved above Solutions) */}
+                <section className="py-8 md:py-12 border-b border-gray-200 bg-white overflow-hidden relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+                    <div className="absolute right-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+                    
+                    <div className="text-center text-xs md:text-sm font-semibold text-gray-400 mb-8 uppercase tracking-widest px-4">
+                        Más de 30 empresas ya confían y escalan con nosotros
+                    </div>
+
+                    <div className="marquee-container">
+                        <div className="marquee-content flex gap-8 md:gap-12 px-4 md:px-6 items-center" style={{ animationDuration: '80s' }}>
+                            {[...CLIENT_LOGOS, ...CLIENT_LOGOS, ...CLIENT_LOGOS].map((logo, idx) => (
+                                <div key={idx} className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center p-3 md:p-4 overflow-hidden group">
+                                    <div className="relative w-full h-full transform group-hover:scale-110 transition-transform duration-300">
+                                        <Image src={logo} alt={`Cliente ${idx}`} fill className="object-contain" />
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </section>
