@@ -6,6 +6,20 @@ import { useState, useEffect } from 'react';
 
 const VERBOS_HERO = ["escala", "potencia", "automatiza", "transforma", "revoluciona"];
 
+const CLIENT_LOGOS = [
+    '/absorbpad.webp',
+    '/adventure pro.webp',
+    '/brico supermercados.webp',
+    '/centro medico de especialidades.webp',
+    '/jerpro.webp',
+    '/lomos emi.webp',
+    '/neumaticos gallo.webp',
+    '/rustik.webp',
+    '/sanatorio argentino.webp',
+    '/todo alarmas.webp',
+    '/vyper suplementos.webp'
+];
+
 const SOLUTIONS = [
     {
         id: 'crm',
@@ -136,6 +150,26 @@ export default function Home() {
                             <a href="https://wa.me/5492645438114" target="_blank" className="btn-secondary w-full sm:w-auto px-8 py-4 flex items-center justify-center gap-2 border border-gray-200 shadow-sm bg-white hover:bg-gray-50 text-gray-900">
                                 <i className="fab fa-whatsapp text-green-500 text-lg"></i> WhatsApp
                             </a>
+                        </div>
+                    </div>
+                </section>
+
+                {/* CLIENTS MARQUEE */}
+                <section className="py-8 md:py-10 border-b border-gray-200 bg-white overflow-hidden relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-white to-transparent z-10"></div>
+                    <div className="absolute right-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-l from-white to-transparent z-10"></div>
+                    
+                    <div className="text-center text-xs md:text-sm font-semibold text-gray-400 mb-6 md:mb-8 uppercase tracking-widest px-4">
+                        Más de 30 empresas ya confían y escalan con nosotros
+                    </div>
+
+                    <div className="marquee-container">
+                        <div className="marquee-content flex gap-12 md:gap-20 px-4 md:px-6 items-center">
+                            {[...CLIENT_LOGOS, ...CLIENT_LOGOS, ...CLIENT_LOGOS].map((logo, idx) => (
+                                <div key={idx} className="relative w-28 h-12 md:w-36 md:h-16 flex-shrink-0 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+                                    <Image src={logo} alt={`Cliente ${idx}`} fill className="object-contain" />
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </section>
