@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+const VERBOS_HERO = ["escala", "potencia", "automatiza", "transforma", "revoluciona"];
 
 const SOLUTIONS = [
     {
@@ -56,6 +58,14 @@ const INTEGRATIONS = [
 
 export default function Home() {
     const [openFaq, setOpenFaq] = useState<number | null>(null);
+    const [wordIndex, setWordIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setWordIndex((current) => (current + 1) % VERBOS_HERO.length);
+        }, 4000);
+        return () => clearInterval(interval);
+    }, []);
 
     const toggleFaq = (index: number) => {
         setOpenFaq(openFaq === index ? null : index);
@@ -110,7 +120,12 @@ export default function Home() {
                             Business Intelligence & IA Empresarial
                         </div>
                         <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 text-gray-900 tracking-tight leading-tight">
-                            El sistema operativo que <span className="text-green-600">escala tu negocio</span>
+                            El sistema operativo que <br className="hidden lg:block" />
+                            <span className="text-green-600 inline-block min-w-[250px] sm:min-w-[300px] md:min-w-[420px]">
+                                <span key={wordIndex} className="inline-block animate-fade-in-up">
+                                    {VERBOS_HERO[wordIndex]}
+                                </span> tu negocio
+                            </span>
                         </h1>
                         <p className="text-lg sm:text-xl text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto px-2">
                             Automatizamos tareas repetitivas, conectamos tus datos y atendemos a tus clientes 24/7 sin escribir una sola línea de código.
