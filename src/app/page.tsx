@@ -73,6 +73,7 @@ const INTEGRATIONS = [
 export default function Home() {
     const [openFaq, setOpenFaq] = useState<number | null>(null);
     const [wordIndex, setWordIndex] = useState(0);
+    const [selectedLogo, setSelectedLogo] = useState<string | null>(null);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -237,9 +238,13 @@ export default function Home() {
                     <div className="marquee-container">
                         <div className="marquee-content flex gap-8 md:gap-12 px-4 md:px-6 items-center" style={{ animationDuration: '80s' }}>
                             {[...CLIENT_LOGOS, ...CLIENT_LOGOS, ...CLIENT_LOGOS].map((logo, idx) => (
-                                <div key={idx} className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center overflow-hidden group">
-                                    <div className="relative w-full h-full transform group-hover:scale-110 transition-transform duration-300 rounded-full overflow-hidden">
-                                        <Image src={logo} alt={`Cliente ${idx}`} fill className="object-cover" />
+                                <div 
+                                    key={idx} 
+                                    onClick={() => setSelectedLogo(logo)}
+                                    className="cursor-pointer relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center p-2 group overflow-hidden"
+                                >
+                                    <div className="relative w-full h-full transform group-hover:scale-110 transition-transform duration-300">
+                                        <Image src={logo} alt={`Cliente ${idx}`} fill className="object-contain" />
                                     </div>
                                 </div>
                             ))}
@@ -605,6 +610,29 @@ export default function Home() {
                     <i className="fab fa-whatsapp"></i>
                 </a>
             </div>
+
+            {/* CLIENT LOGO LIGHTBOX */}
+            {selectedLogo && (
+                <div 
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 cursor-pointer transition-opacity"
+                    onClick={() => setSelectedLogo(null)}
+                >
+                    <div 
+                        className="relative w-full max-w-3xl aspect-[16/9] md:aspect-video bg-white/5 rounded-2xl p-4 md:p-8 shadow-2xl transform transition-transform animate-flip cursor-default"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button 
+                            className="absolute -top-4 -right-4 md:-top-6 md:-right-6 w-12 h-12 bg-white rounded-full flex items-center justify-center text-gray-900 border border-gray-200 shadow-lg hover:bg-gray-100 hover:scale-110 transition-all z-10"
+                            onClick={() => setSelectedLogo(null)}
+                        >
+                            <i className="fas fa-times text-xl"></i>
+                        </button>
+                        <div className="relative w-full h-full">
+                            <Image src={selectedLogo} fill alt="Cliente Detalle" className="object-contain" />
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* External CSS for Icons */}
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
