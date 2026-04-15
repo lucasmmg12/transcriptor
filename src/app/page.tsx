@@ -6,34 +6,34 @@ import { useState } from 'react';
 
 const SOLUTIONS = [
     {
+        id: 'crm',
+        title: "CRM a Medida",
+        description: "El caballito de batalla. Desarrollamos sistemas de gestión de clientes (CRM) 100% adaptados a tu flujo de ventas, sin licencias costosas ni funciones que no necesitas."
+    },
+    {
+        id: 'sistemas',
+        title: "Sistemas a Medida",
+        description: "Si tu empresa tiene una operación única, construimos el software exacto para resolverla. Desde portales operativos internos hasta plataformas corporativas."
+    },
+    {
+        id: 'ecommerce',
+        title: "E-Commerce Personalizado",
+        description: "Tiendas online de alto rendimiento. Optimizadas para velocidad, conversiones y con pasarelas de pago integradas exactamente para las necesidades de tu negocio."
+    },
+    {
         id: 'automations',
-        title: "Automatización de Procesos",
-        description: "Elimina tareas repetitivas y propensas a errores. Automatizamos flujos administrativos para liberar a tu equipo y ahorrar cientos de horas mensuales."
-    },
-    {
-        id: 'rag',
-        title: "Bases de Conocimiento IA",
-        description: "Convierte tus manuales y PDFs en Asistentes virtuales que responden al instante. Una Inteligencia Artificial conectada únicamente a tu información institucional."
-    },
-    {
-        id: 'apps',
-        title: "Aplicaciones Personalizadas",
-        description: "Desarrollamos portales Web y Mobile (Next.js) para tus clientes o colaboradores, centralizando operaciones con una experiencia de usuario impecable."
+        title: "Automatización con IA",
+        description: "Eliminamos el trabajo manual repetitivo. Conectamos tus plataformas para que los datos viajen solos y ahorres cientos de horas operativas al mes."
     },
     {
         id: 'chatbot',
-        title: "Agentes IA para WhatsApp",
-        description: "Atiende a tus clientes 24/7 con IA real, comprende audios y automatiza agendas o ventas directamente desde WhatsApp Business."
-    },
-    {
-        id: 'data',
-        title: "Inteligencia de Negocios",
-        description: "Conectamos múltiples fuentes de datos (CRM, ERP) en Dashboards ejecutivos para visualizar, en tiempo real, el pulso financiero y operativo."
+        title: "Agentes IA en WhatsApp",
+        description: "Tu negocio atiende 24/7. Creamos asistentes de Inteligencia Artificial que entienden texto y audio, vendiendo y respondiendo directo en WhatsApp."
     },
     {
         id: 'web-design',
-        title: "Desarrollo Front-End",
-        description: "Diseño Web impulsado por Neuromarketing, optimizado en velocidad y con layouts modernos que convierten visitantes en clientes."
+        title: "Desarrollo Web Elite",
+        description: "Tu carta de presentación en internet. Diseñamos con estética premium, velocidad extrema (Next.js) y principios que convierten visitantes en clientes confiados."
     }
 ];
 
@@ -178,13 +178,23 @@ export default function Home() {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                             {SOLUTIONS.map((s, idx) => (
-                                <article key={s.id} className="light-card p-6 md:p-8 flex flex-col hover:shadow-lg hover:border-green-300 transition-all">
-                                    <span className="text-green-600 font-bold text-sm mb-4 bg-green-50 border border-green-100 w-8 h-8 flex items-center justify-center rounded-full">
+                                <a 
+                                    key={s.id} 
+                                    href={`https://wa.me/5492645438114?text=${encodeURIComponent(`Hola, estaba viendo su sitio web y me interesa saber más sobre el servicio de ${s.title}.`)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="light-card p-6 md:p-8 flex flex-col hover:shadow-xl hover:border-green-400 transition-all cursor-pointer group hover:-translate-y-1 block"
+                                >
+                                    <span className="text-green-600 font-bold text-sm mb-4 bg-green-50 border border-green-100 w-8 h-8 flex items-center justify-center rounded-full group-hover:bg-green-100 transition-colors">
                                         {idx + 1}
                                     </span>
                                     <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">{s.title}</h3>
-                                    <p className="text-sm text-gray-600 leading-relaxed flex-1">{s.description}</p>
-                                </article>
+                                    <p className="text-sm text-gray-600 leading-relaxed flex-1 mb-4">{s.description}</p>
+                                    
+                                    <div className="mt-auto flex items-center gap-2 text-green-600 font-bold text-xs uppercase tracking-wider group-hover:text-green-700 transition-colors">
+                                        Consultar  <i className="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </a>
                             ))}
                         </div>
                     </div>
