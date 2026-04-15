@@ -127,8 +127,8 @@ export default function Home() {
                                 </span> tu negocio
                             </span>
                         </h1>
-                        <p className="text-lg sm:text-xl text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto px-2">
-                            Automatizamos tareas repetitivas, conectamos tus datos y atendemos a tus clientes 24/7 sin escribir una sola línea de código.
+                        <p className="text-lg sm:text-xl text-gray-600 mb-8 md:mb-10 max-w-3xl mx-auto px-2 leading-relaxed">
+                            <strong>Ingeniería de software Full-Stack.</strong> Desarrollamos programas empresariales a medida, automatizamos tareas repetitivas y atendemos a tus clientes 24/7 integrando IA nativa en tus procesos.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
                             <a href="https://cal.com/lucas-marinero-ji1yyg/15min" target="_blank" className="btn-primary w-full sm:w-auto px-8 py-4 text-center">
