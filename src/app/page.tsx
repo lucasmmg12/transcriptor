@@ -72,8 +72,8 @@ export default function Home() {
             <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
                 <div className="container mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
                     <div className="flex items-center gap-3 relative z-50">
-                        <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center text-white font-bold text-sm">
-                            G
+                        <div className="relative w-8 h-8 rounded-full overflow-hidden border border-gray-200">
+                            <Image src="/logogrow.png" alt="Grow Labs" fill className="object-cover" />
                         </div>
                         <span className="font-bold text-lg tracking-tight text-gray-900">Grow Labs</span>
                     </div>
@@ -309,8 +309,8 @@ export default function Home() {
             {/* FOOTER */}
             <footer className="bg-white py-10 md:py-12 relative z-10">
                 <div className="container mx-auto px-6 text-center">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gray-900 text-white font-bold flex items-center justify-center mx-auto mb-6 text-sm md:text-base">
-                        G
+                    <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gray-200 mx-auto mb-6">
+                        <Image src="/logogrow.png" alt="Grow Labs" fill className="object-cover" />
                     </div>
                     <div className="flex justify-center gap-6 md:gap-8 mb-6 md:mb-8 text-xs md:text-sm font-medium flex-wrap">
                         <Link href="#solutions" className="text-gray-500 hover:text-gray-900 transition-colors">Funcionalidades</Link>

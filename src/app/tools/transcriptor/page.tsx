@@ -64,7 +64,6 @@ export default function TranscriptorTool() {
             return false
         }
 
-        // Límite de 25MB para Whisper
         const MAX_SIZE_MB = 25
         const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024
         const fileSizeMB = file.size / (1024 * 1024)
@@ -115,7 +114,6 @@ export default function TranscriptorTool() {
 
             setResultado(data.data)
 
-            // Limpiar input
             setAudioFile(null)
             const fileInput = document.getElementById('audio-input') as HTMLInputElement
             if (fileInput) fileInput.value = ''
@@ -184,35 +182,27 @@ export default function TranscriptorTool() {
         }
     }
 
-    const formatearFecha = (fecha: string) => {
-        return new Date(fecha).toLocaleString('es-ES', {
-            year: 'numeric', month: 'long', day: 'numeric',
-            hour: '2-digit', minute: '2-digit',
-        })
-    }
-
     return (
-        <div className="min-h-screen bg-black text-white selection:bg-green-500 selection:text-black">
+        <div className="min-h-screen bg-white text-gray-900 selection:bg-green-100 selection:text-green-900 overflow-x-hidden">
+            {/* Elemento de Fondo de Cuadrícula */}
+            <div className="fixed inset-0 bg-grid-pattern pointer-events-none z-0"></div>
+
             {/* Header */}
-            <header className="glass sticky top-0 z-50 border-b border-white/10">
-                <nav className="container mx-auto px-6 py-4">
+            <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
+                <nav className="container mx-auto px-4 md:px-6 py-3 md:py-4">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 relative z-50">
                             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                                <Image
-                                    src="/logogrow.png"
-                                    alt="Grow Labs Logo"
-                                    width={40}
-                                    height={40}
-                                    className="rounded-lg"
-                                />
-                                <span className="font-bold text-xl tracking-tight hidden md:inline">GROW LABS</span>
+                                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-gray-200">
+                                    <Image src="/logogrow.png" alt="Grow Labs Logo" fill className="object-cover" />
+                                </div>
+                                <span className="font-bold text-lg tracking-tight hidden md:inline text-gray-900">Grow Labs</span>
                             </Link>
-                            <span className="hidden md:inline text-gray-700">|</span>
-                            <span className="text-sm font-medium text-gray-400">Transcriptor IA</span>
+                            <span className="hidden md:inline text-gray-300">|</span>
+                            <span className="text-sm font-medium text-gray-500">Transcriptor IA</span>
                         </div>
                         <div className="flex items-center gap-6">
-                            <Link href="/" className="text-gray-400 hover:text-white text-sm font-medium transition-colors">
+                            <Link href="/" className="text-gray-500 hover:text-green-600 text-sm font-medium transition-colors">
                                 Volver al Inicio
                             </Link>
                         </div>
@@ -220,20 +210,20 @@ export default function TranscriptorTool() {
                 </nav>
             </header>
 
-            <main className="container mx-auto px-6 py-12">
+            <main className="relative z-10 container mx-auto px-4 md:px-6 pt-32 pb-12">
                 {!resultado ? (
                     <div className="max-w-4xl mx-auto animate-fade-in">
 
-                        <div className="text-center mb-12">
-                            <div className="inline-block p-4 rounded-full bg-green-500/10 text-green-400 mb-6">
+                        <div className="text-center mb-10 md:mb-12">
+                            <div className="inline-block p-4 rounded-full bg-green-50 text-green-600 mb-6 border border-green-100 shadow-sm">
                                 <i className="fas fa-microphone-lines text-3xl"></i>
                             </div>
-                            <h1 className="text-4xl md:text-6xl font-black mb-6">
-                                Transcripción y <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">Análisis Inteligente</span>
+                            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-gray-900">
+                                Transcripción y <br className="hidden md:block" />
+                                <span className="text-green-600">Análisis Inteligente</span>
                             </h1>
-                            <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-                                Sube tu audio, entrevista o reunión y obtén una transcripción perfecta junto con un análisis ejecutivo generado por GPT-4.
+                            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                                Sube tu audio, entrevista o reunión y obtén una transcripción perfecta junto con un análisis ejecutivo generado por IA.
                             </p>
                         </div>
 
@@ -241,25 +231,28 @@ export default function TranscriptorTool() {
                         <div className="flex justify-center mb-8">
                             <button
                                 onClick={() => { setShowLongAudioInput(!showLongAudioInput); setError(null); }}
-                                className="text-sm text-gray-400 hover:text-white underline decoration-dotted underline-offset-4 transition-colors"
+                                className="text-sm md:text-base text-gray-500 font-medium hover:text-green-600 transition-colors flex items-center gap-2"
                             >
-                                {showLongAudioInput ? "← Volver a subir audio" : "Tengo el texto, quiero solo el análisis →"}
+                                {showLongAudioInput 
+                                    ? <><i className="fas fa-arrow-left"></i> Volver a subir audio</>
+                                    : <>Tengo el texto, quiero solo el análisis <i className="fas fa-arrow-right"></i></>
+                                }
                             </button>
                         </div>
 
-                        <div className="glass-card p-8 md:p-12 rounded-3xl border border-white/5 shadow-2xl">
+                        <div className="bg-white p-6 md:p-12 rounded-3xl border border-gray-200 shadow-sm">
 
                             {!showLongAudioInput ? (
                                 /* AUDIO UPLOAD FORM */
-                                <form onSubmit={handleSubmit} className="space-y-8 animate-fade-in">
+                                <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8 animate-fade-in">
                                     <div>
-                                        <label className="block text-lg font-bold mb-4 text-white">
+                                        <label className="block text-base md:text-lg font-bold mb-4 text-gray-900">
                                             1. Sube tu Audio
                                         </label>
                                         <div
-                                            className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${dragActive
-                                                ? 'border-green-400 bg-green-400/10 scale-[1.02]'
-                                                : 'border-gray-700 hover:border-green-400/50 hover:bg-white/5'
+                                            className={`relative border-2 border-dashed rounded-2xl p-8 md:p-12 text-center transition-all duration-300 ${dragActive
+                                                ? 'border-green-400 bg-green-50 scale-[1.02]'
+                                                : 'border-gray-300 hover:border-green-400 bg-gray-50'
                                                 }`}
                                             onDragEnter={handleDrag}
                                             onDragLeave={handleDrag}
@@ -277,36 +270,36 @@ export default function TranscriptorTool() {
 
                                             {audioFile ? (
                                                 <div className="flex items-center justify-center gap-4 animate-fade-in">
-                                                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-900/20">
-                                                        <i className="fas fa-file-audio text-2xl text-white"></i>
+                                                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-green-100 flexitems-center justify-center border border-green-200 flex flex-col justify-center shrink-0">
+                                                        <i className="fas fa-file-audio text-xl md:text-2xl text-green-600"></i>
                                                     </div>
-                                                    <div className="text-left flex-1">
-                                                        <p className="text-white font-bold text-lg">{audioFile.name}</p>
-                                                        <p className="text-gray-400 text-sm font-mono">
+                                                    <div className="text-left flex-1 min-w-0">
+                                                        <p className="text-gray-900 font-bold text-sm md:text-lg truncate">{audioFile.name}</p>
+                                                        <p className="text-gray-500 text-xs md:text-sm font-mono mt-1">
                                                             {(audioFile.size / 1024 / 1024).toFixed(2)} MB
                                                         </p>
                                                     </div>
                                                     <button
                                                         type="button"
                                                         onClick={() => setAudioFile(null)}
-                                                        className="w-10 h-10 rounded-full bg-red-500/10 hover:bg-red-500/20 text-red-400 flex items-center justify-center transition-colors"
+                                                        className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-red-50 hover:bg-red-100 text-red-500 flex items-center justify-center transition-colors shrink-0"
                                                     >
                                                         <i className="fas fa-times"></i>
                                                     </button>
                                                 </div>
                                             ) : (
                                                 <div className="space-y-4">
-                                                    <div className="w-20 h-20 mx-auto rounded-full bg-gray-800 flex items-center justify-center text-gray-500">
-                                                        <i className="fas fa-cloud-upload-alt text-3xl"></i>
+                                                    <div className="w-16 h-16 md:w-20 md:h-20 mx-auto rounded-full bg-white shadow-sm border border-gray-200 flex items-center justify-center text-gray-400">
+                                                        <i className="fas fa-cloud-upload-alt text-2xl md:text-3xl"></i>
                                                     </div>
                                                     <div>
                                                         <label htmlFor="audio-input" className="cursor-pointer">
-                                                            <span className="text-green-400 hover:text-green-300 font-bold text-lg transition-colors underline decoration-2 underline-offset-4">
+                                                            <span className="text-green-600 hover:text-green-700 font-bold text-base md:text-lg transition-colors underline decoration-2 underline-offset-4">
                                                                 Haz clic para subir
                                                             </span>
-                                                            <span className="text-gray-300"> o arrastra aquí</span>
+                                                            <span className="text-gray-500"> o arrastra aquí</span>
                                                         </label>
-                                                        <p className="text-sm text-gray-500 mt-2 font-mono">
+                                                        <p className="text-xs md:text-sm text-gray-400 mt-2 font-mono">
                                                             MP3, WAV, M4A, OGG (Máx. 25MB)
                                                         </p>
                                                     </div>
@@ -316,7 +309,7 @@ export default function TranscriptorTool() {
                                     </div>
 
                                     <div>
-                                        <label htmlFor="tipo-analisis" className="block text-lg font-bold mb-4 text-white">
+                                        <label htmlFor="tipo-analisis" className="block text-base md:text-lg font-bold mb-3 md:mb-4 text-gray-900">
                                             2. Selecciona el Tipo de Análisis
                                         </label>
                                         <div className="relative">
@@ -324,22 +317,22 @@ export default function TranscriptorTool() {
                                                 id="tipo-analisis"
                                                 value={tipoAnalisis}
                                                 onChange={(e) => setTipoAnalisis(e.target.value as TipoAnalisis)}
-                                                className="w-full px-6 py-4 bg-gray-900 border border-gray-700 rounded-xl text-white text-lg font-medium focus:ring-2 focus:ring-green-400 focus:border-transparent appearance-none cursor-pointer hover:bg-gray-800 transition-colors"
+                                                className="w-full px-4 py-3 md:px-6 md:py-4 bg-white border border-gray-300 rounded-xl text-gray-900 text-base md:text-lg font-medium focus:ring-2 focus:ring-green-400 focus:border-green-400 appearance-none cursor-pointer hover:bg-gray-50 transition-colors shadow-sm"
                                                 disabled={loading}
                                             >
                                                 <option value="resumen-general">📝 Resumen General (Minuta)</option>
                                                 <option value="entrevista-trabajo">💼 Entrevista de Trabajo</option>
                                                 <option value="reunion-cliente">🤝 Reunión con Cliente</option>
                                             </select>
-                                            <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                            <div className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                                                 <i className="fas fa-chevron-down"></i>
                                             </div>
                                         </div>
                                     </div>
 
                                     {error && (
-                                        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 flex items-center gap-3 animate-head-shake">
-                                            <i className="fas fa-exclamation-circle text-xl"></i>
+                                        <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 flex items-center gap-3 animate-head-shake text-sm md:text-base">
+                                            <i className="fas fa-exclamation-circle text-lg md:text-xl"></i>
                                             {error}
                                         </div>
                                     )}
@@ -347,11 +340,11 @@ export default function TranscriptorTool() {
                                     <button
                                         type="submit"
                                         disabled={loading || !audioFile}
-                                        className="w-full py-5 px-8 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-black text-xl font-bold rounded-xl shadow-[0_0_20px_rgba(0,255,136,0.3)] transition-all transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center justify-center gap-3"
+                                        className="w-full py-4 md:py-5 px-6 md:px-8 bg-green-600 hover:bg-green-700 text-white text-lg md:text-xl font-bold rounded-xl shadow-lg shadow-green-600/20 transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center justify-center gap-3"
                                     >
                                         {loading ? (
                                             <>
-                                                <div className="w-6 h-6 border-3 border-black/30 border-t-black rounded-full animate-spin"></div>
+                                                <div className="w-5 h-5 md:w-6 md:h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
                                                 <span>Transcribiendo...</span>
                                             </>
                                         ) : (
@@ -364,15 +357,15 @@ export default function TranscriptorTool() {
                                 </form>
                             ) : (
                                 /* TEXT INPUT FORM */
-                                <form onSubmit={handleTextSubmit} className="space-y-8 animate-fade-in">
+                                <form onSubmit={handleTextSubmit} className="space-y-6 md:space-y-8 animate-fade-in">
                                     <div>
-                                        <div className="flex justify-between items-center mb-4">
-                                            <label className="block text-lg font-bold text-white">
+                                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-4">
+                                            <label className="block text-base md:text-lg font-bold text-gray-900">
                                                 Pega tu Transcripción
                                             </label>
-                                            <label htmlFor="text-file-input" className="text-sm text-green-400 hover:text-green-300 cursor-pointer flex items-center gap-2 font-medium">
+                                            <label htmlFor="text-file-input" className="text-sm text-green-600 hover:text-green-700 cursor-pointer flex items-center gap-2 font-medium bg-green-50 px-3 py-1.5 rounded-full border border-green-100 w-fit">
                                                 <i className="fas fa-upload"></i>
-                                                Subir .txt
+                                                Subir archivo .txt
                                             </label>
                                             <input
                                                 id="text-file-input"
@@ -388,13 +381,13 @@ export default function TranscriptorTool() {
                                             value={textoManual}
                                             onChange={(e) => setTextoManual(e.target.value)}
                                             placeholder="Pega aquí el texto que deseas analizar..."
-                                            className="w-full h-64 p-6 bg-gray-900 border border-gray-700 rounded-xl text-white text-base focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all resize-none leading-relaxed placeholder-gray-600"
+                                            className="w-full h-48 md:h-64 p-4 md:p-6 bg-white border border-gray-300 rounded-xl text-gray-900 text-sm md:text-base focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all resize-none leading-relaxed placeholder-gray-400 shadow-sm"
                                             disabled={loading}
                                         />
                                     </div>
 
                                     <div>
-                                        <label htmlFor="tipo-analisis-text" className="block text-lg font-bold mb-4 text-white">
+                                        <label htmlFor="tipo-analisis-text" className="block text-base md:text-lg font-bold mb-3 md:mb-4 text-gray-900">
                                             Selecciona el Tipo de Análisis
                                         </label>
                                         <div className="relative">
@@ -402,22 +395,22 @@ export default function TranscriptorTool() {
                                                 id="tipo-analisis-text"
                                                 value={tipoAnalisis}
                                                 onChange={(e) => setTipoAnalisis(e.target.value as TipoAnalisis)}
-                                                className="w-full px-6 py-4 bg-gray-900 border border-gray-700 rounded-xl text-white text-lg font-medium focus:ring-2 focus:ring-green-400 focus:border-transparent appearance-none cursor-pointer hover:bg-gray-800 transition-colors"
+                                                className="w-full px-4 py-3 md:px-6 md:py-4 bg-white border border-gray-300 rounded-xl text-gray-900 text-base md:text-lg font-medium focus:ring-2 focus:ring-green-400 focus:border-green-400 appearance-none cursor-pointer hover:bg-gray-50 transition-colors shadow-sm"
                                                 disabled={loading}
                                             >
                                                 <option value="resumen-general">📝 Resumen General</option>
                                                 <option value="entrevista-trabajo">💼 Entrevista de Trabajo</option>
                                                 <option value="reunion-cliente">🤝 Reunión con Cliente</option>
                                             </select>
-                                            <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                            <div className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                                                 <i className="fas fa-chevron-down"></i>
                                             </div>
                                         </div>
                                     </div>
 
                                     {error && (
-                                        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 flex items-center gap-3">
-                                            <i className="fas fa-exclamation-circle text-xl"></i>
+                                        <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 flex items-center gap-3 text-sm md:text-base">
+                                            <i className="fas fa-exclamation-circle text-lg md:text-xl"></i>
                                             {error}
                                         </div>
                                     )}
@@ -425,11 +418,11 @@ export default function TranscriptorTool() {
                                     <button
                                         type="submit"
                                         disabled={loading || !textoManual.trim()}
-                                        className="w-full py-5 px-8 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white text-xl font-bold rounded-xl shadow-lg transition-all transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                                        className="w-full py-4 md:py-5 px-6 md:px-8 bg-gray-900 hover:bg-black text-white text-lg md:text-xl font-bold rounded-xl shadow-lg transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                                     >
                                         {loading ? (
                                             <>
-                                                <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                                <div className="w-5 h-5 md:w-6 md:h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
                                                 <span>Analizando...</span>
                                             </>
                                         ) : (
@@ -447,28 +440,33 @@ export default function TranscriptorTool() {
                 ) : (
                     /* RESULT VIEW */
                     <div className="max-w-6xl mx-auto animate-slide-in">
-                        <div className="flex justify-between items-center mb-8">
-                            <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                                <span className="text-green-400">✅</span> Análisis Completado
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-3">
+                                <span className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-sm md:text-base">
+                                    <i className="fas fa-check"></i>
+                                </span> 
+                                Análisis Completado
                             </h2>
                             <button
                                 onClick={() => setResultado(null)}
-                                className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium transition-colors border border-white/10"
+                                className="px-4 py-2 md:px-6 md:py-3 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-medium transition-colors shadow-sm text-sm md:text-base"
                             >
-                                ← Analizar otro archivo
+                                ← Analizar otro
                             </button>
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-8">
+                        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
                             {/* Columna Izquierda: Análisis */}
                             <div className="space-y-6">
-                                <div className="glass-card p-8 rounded-2xl border border-green-500/20 bg-green-900/5">
-                                    <h3 className="text-xl font-bold text-green-400 mb-6 flex items-center gap-2">
-                                        <i className="fas fa-chart-pie"></i>
+                                <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm">
+                                    <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                                        <span className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+                                            <i className="fas fa-chart-pie"></i>
+                                        </span>
                                         Reporte Ejecutivo
                                     </h3>
-                                    <div className="prose prose-invert prose-lg max-w-none">
-                                        <div className="whitespace-pre-wrap leading-relaxed text-gray-200">
+                                    <div className="prose prose-gray prose-sm md:prose-base max-w-none">
+                                        <div className="whitespace-pre-wrap leading-relaxed text-gray-700">
                                             {resultado.analisis}
                                         </div>
                                     </div>
@@ -477,21 +475,21 @@ export default function TranscriptorTool() {
 
                             {/* Columna Derecha: Transcripción Original */}
                             <div className="space-y-6">
-                                <div className="glass-card p-8 rounded-2xl border border-white/5 bg-black/40">
+                                <div className="bg-gray-50 p-6 md:p-8 rounded-2xl border border-gray-200">
                                     <div className="flex justify-between items-center mb-6">
-                                        <h3 className="text-xl font-bold text-gray-300 flex items-center gap-2">
-                                            <i className="fas fa-quote-left text-gray-500"></i>
+                                        <h3 className="text-lg md:text-xl font-bold text-gray-900 flex items-center gap-2">
+                                            <i className="fas fa-quote-left text-gray-400"></i>
                                             Transcripción Original
                                         </h3>
                                         <button
                                             onClick={() => navigator.clipboard.writeText(resultado.transcripcion)}
-                                            className="text-xs px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 transition-colors"
+                                            className="text-xs font-bold px-3 py-1.5 rounded-full bg-white border border-gray-200 hover:bg-gray-50 text-gray-600 transition-colors shadow-sm"
                                         >
                                             Copiar
                                         </button>
                                     </div>
-                                    <div className="h-[600px] overflow-y-auto pr-2 custom-scrollbar">
-                                        <p className="whitespace-pre-wrap text-gray-400 leading-relaxed text-sm font-mono">
+                                    <div className="h-[400px] md:h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                                        <p className="whitespace-pre-wrap text-gray-600 leading-relaxed text-xs md:text-sm font-mono bg-white p-4 rounded-xl border border-gray-100">
                                             {resultado.transcripcion}
                                         </p>
                                     </div>
