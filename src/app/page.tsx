@@ -116,6 +116,9 @@ export default function Home() {
                         <Link href="/tools/transcriptor" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-green-600 transition-colors mr-2">
                             Transcriptor
                         </Link>
+                        <Link href="/diagnostico" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-green-600 transition-colors mr-2">
+                            Diagnóstico
+                        </Link>
                         <a href="https://cal.com/lucas-marinero-ji1yyg/15min" target="_blank" className="btn-primary px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm">
                             <span className="hidden sm:inline">Agendar Demo</span>
                             <span className="sm:hidden">Agendar</span>
@@ -145,9 +148,9 @@ export default function Home() {
                             <strong>Ingeniería de software Full-Stack.</strong> Desarrollamos programas empresariales a medida, automatizamos tareas repetitivas y atendemos a tus clientes 24/7 integrando IA nativa en tus procesos.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
-                            <a href="https://cal.com/lucas-marinero-ji1yyg/15min" target="_blank" className="btn-primary w-full sm:w-auto px-8 py-4 text-center">
+                            <Link href="/diagnostico" className="btn-primary w-full sm:w-auto px-8 py-4 text-center">
                                 Diagnóstico Gratuito
-                            </a>
+                            </Link>
                             <a href="https://wa.me/5492645438114" target="_blank" className="btn-secondary w-full sm:w-auto px-8 py-4 flex items-center justify-center gap-2 border border-gray-200 shadow-sm bg-white hover:bg-gray-50 text-gray-900">
                                 <i className="fab fa-whatsapp text-green-500 text-lg"></i> WhatsApp
                             </a>
@@ -459,9 +462,9 @@ export default function Home() {
                         <p className="text-xl font-medium max-w-2xl mx-auto mb-10 text-green-50">
                             Nuestros desarrollos no son gastos, son inversiones que recuperan dinero desde el primer trimestre.
                         </p>
-                        <a href="https://cal.com/lucas-marinero-ji1yyg/15min" target="_blank" className="inline-block px-8 py-4 bg-gray-900 border border-gray-800 text-white font-bold rounded-xl hover:bg-black transition-colors shadow-lg">
-                            Agendar Auditoría Gratuita
-                        </a>
+                        <Link href="/diagnostico" className="inline-block px-8 py-4 bg-gray-900 border border-gray-800 text-white font-bold rounded-xl hover:bg-black transition-colors shadow-lg">
+                            Comenzar Diagnóstico
+                        </Link>
                     </div>
                 </section>
 
