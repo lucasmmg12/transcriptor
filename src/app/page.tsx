@@ -158,7 +158,103 @@ export default function Home() {
                     </div>
                 </section>
 
+                {/* ━━━ IMMERSIVE "CÓDIGO QUE CONSTRUYE" SECTION ━━━ */}
+                <section className="relative bg-gray-950 text-white overflow-hidden">
+                    {/* Grid pattern overlay */}
+                    <div className="absolute inset-0 opacity-[0.03]" style={{
+                        backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
+                        backgroundSize: '40px 40px'
+                    }} />
+                    
+                    {/* Ambient glow */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-green-500/5 blur-[120px] pointer-events-none" />
 
+                    <div className="relative z-10 container mx-auto px-4 md:px-6 py-20 md:py-32">
+                        {/* Title */}
+                        <div className="text-center mb-12 md:mb-16">
+                            <span className="inline-block px-4 py-1.5 mb-4 rounded-full border border-green-500/20 bg-green-500/5 text-green-400 text-xs font-semibold uppercase tracking-widest">
+                                Nuestra Metodología
+                            </span>
+                            <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
+                                Código que <span className="text-green-400">Construye</span>
+                            </h2>
+                            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                                Cada línea de código que escribimos levanta un piso más de tu negocio digital. 
+                                Así trabajamos: con precisión, velocidad y visión.
+                            </p>
+                        </div>
+
+                        {/* Terminal + Building Image */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl mx-auto">
+                            {/* Terminal */}
+                            <div className="bg-[#0f172a] border border-gray-700/50 rounded-2xl p-5 md:p-6 shadow-2xl">
+                                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-700/50">
+                                    <span className="w-3 h-3 rounded-full bg-red-500/80"></span>
+                                    <span className="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+                                    <span className="w-3 h-3 rounded-full bg-green-500/80"></span>
+                                    <span className="ml-3 text-xs text-gray-500 font-mono">grow-labs — terminal</span>
+                                </div>
+                                <div className="font-mono text-sm leading-relaxed space-y-1.5">
+                                    <div><span className="text-purple-400">$</span> <span className="text-gray-300">grow-labs init --project=&quot;Tu Negocio&quot;</span></div>
+                                    <div className="text-gray-500">  → Initializing workspace...</div>
+                                    <div className="text-green-400">  ✓ Core engine loaded</div>
+                                    <div className="text-green-400">  ✓ AI pipeline connected</div>
+                                    <div className="text-gray-600">  // Installing modules...</div>
+                                    <div><span className="text-purple-400">$</span> <span className="text-gray-300">grow-labs install --modules</span></div>
+                                    <div className="text-green-400">  ✓ @grow/crm-engine <span className="text-gray-600">........</span> installed</div>
+                                    <div className="text-green-400">  ✓ @grow/ai-bot <span className="text-gray-600">...........</span> installed</div>
+                                    <div className="text-green-400">  ✓ @grow/dashboard-bi <span className="text-gray-600">.....</span> installed</div>
+                                    <div className="text-green-400">  ✓ @grow/ecommerce <span className="text-gray-600">........</span> installed</div>
+                                    <div className="text-green-400">  ✓ @grow/web-platform <span className="text-gray-600">.....</span> installed</div>
+                                    <div className="text-gray-600">  // Running tests...</div>
+                                    <div className="text-green-400">  ✓ All 12 tests passed</div>
+                                    <div><span className="text-purple-400">$</span> <span className="text-gray-300">grow-labs deploy --production</span></div>
+                                    <div className="text-green-400 font-bold">  ✓ Deploy successful ✨</div>
+                                    <div className="text-yellow-400 mt-1">  🚀 Your software is live!</div>
+                                </div>
+                            </div>
+
+                            {/* AI-Generated Building Image */}
+                            <div className="relative group">
+                                <div className="absolute -inset-4 bg-gradient-to-r from-green-500/10 to-green-600/5 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                                <div className="relative rounded-2xl overflow-hidden border border-gray-700/30 shadow-2xl">
+                                    <Image 
+                                        src="/building-construction.png" 
+                                        alt="Software que construye tu negocio digital — Grow Labs" 
+                                        width={600} 
+                                        height={500}
+                                        className="w-full h-auto object-cover"
+                                    />
+                                    {/* Overlay gradient */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-gray-950/60 via-transparent to-transparent" />
+                                    {/* Caption */}
+                                    <div className="absolute bottom-4 left-4 right-4">
+                                        <p className="text-xs font-mono text-green-400/70 tracking-wider">
+                                            BUILD: STABLE │ FLOORS: 12/12 │ STATUS: PRODUCTION
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Process steps */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto mt-12 md:mt-16">
+                            {[
+                                { step: '01', title: 'Diagnóstico', desc: 'Escaneamos tu operación', icon: '🔍' },
+                                { step: '02', title: 'Arquitectura', desc: 'Diseñamos la solución', icon: '📐' },
+                                { step: '03', title: 'Desarrollo', desc: 'Construimos con IA', icon: '⚡' },
+                                { step: '04', title: 'Deploy', desc: 'Lo ponemos en producción', icon: '🚀' },
+                            ].map((p) => (
+                                <div key={p.step} className="text-center p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:border-green-500/20 transition-colors">
+                                    <span className="text-2xl mb-2 block">{p.icon}</span>
+                                    <span className="text-[10px] font-mono text-green-400/60 tracking-wider">STEP {p.step}</span>
+                                    <h4 className="font-bold text-white text-sm mt-1">{p.title}</h4>
+                                    <p className="text-xs text-gray-500 mt-1">{p.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
 
                 {/* INTEGRATIONS MARQUEE */}
                 <section className="py-8 md:py-10 border-y border-gray-200 bg-white overflow-hidden relative">
