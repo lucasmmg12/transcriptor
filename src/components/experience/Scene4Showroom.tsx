@@ -96,8 +96,8 @@ export default function Scene4Showroom() {
                             <span className="ml-2 text-gray-600">test-suite</span>
                         </div>
                         {TEST_CODE.slice(0, Math.floor(progress * TEST_CODE.length) + 1).map((line, i) => (
-                            <div key={i} className="py-0.5" style={{ color: line.type === 'success' ? '#34D399' : line.type === 'command' ? '#A78BFA' : line.type === 'error' ? '#F87171' : '#6B7280' }}>
-                                {line.type === 'command' ? '$ ' : line.type === 'success' ? '  ✓ ' : line.type === 'error' ? '  ✗ ' : '  → '}
+                            <div key={i} className="py-0.5" style={{ color: line.type === 'success' ? '#34D399' : line.type === 'command' ? '#A78BFA' : (line.type as string) === 'error' ? '#F87171' : '#6B7280' }}>
+                                {line.type === 'command' ? '$ ' : line.type === 'success' ? '  ✓ ' : (line.type as string) === 'error' ? '  ✗ ' : '  → '}
                                 {line.text}
                             </div>
                         ))}

@@ -82,44 +82,73 @@ export default function Home() {
         return () => clearInterval(interval);
     }, []);
 
+    // Scroll Reveal Observer — animates sections as they enter viewport
+    useEffect(() => {
+        const sections = document.querySelectorAll('.reveal-section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+
+        sections.forEach((s) => observer.observe(s));
+        return () => observer.disconnect();
+    }, []);
+
     const toggleFaq = (index: number) => {
         setOpenFaq(openFaq === index ? null : index);
     };
 
     return (
-        <div className="font-sans text-gray-900 bg-white selection:bg-green-100 scroll-smooth overflow-x-hidden">
+        <div className="font-sans text-gray-900 bg-gray-950 selection:bg-green-100 scroll-smooth overflow-x-hidden">
             
-            {/* Elemento de Fondo de Cuadrícula */}
-            <div className="fixed inset-0 bg-grid-pattern pointer-events-none z-0"></div>
+            {/* ━━━ FIXED VIDEO BACKGROUND — visible across entire page ━━━ */}
+            <div className="fixed inset-0 z-0">
+                <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover object-center"
+                    poster="/building-construction.png"
+                >
+                    <source src="/building-hero-2.mp4" type="video/mp4" />
+                </video>
+                {/* Heavy dark overlay */}
+                <div className="absolute inset-0 bg-black/75" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
+            </div>
 
             {/* HEADER / NAVIGATION */}
-            <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
+            <header className="fixed top-0 w-full z-50 bg-black/40 backdrop-blur-xl border-b border-white/10">
                 <div className="container mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
                     <div className="flex items-center gap-3 relative z-50">
-                        <div className="relative w-8 h-8 rounded-full overflow-hidden border border-gray-200">
+                        <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20">
                             <Image src="/logogrow.png" alt="Grow Labs" fill className="object-cover" />
                         </div>
-                        <span className="font-bold text-lg tracking-tight text-gray-900">Grow Labs</span>
+                        <span className="font-bold text-lg tracking-tight text-white">Grow Labs</span>
                     </div>
 
-                    <div className="hidden lg:flex gap-8 text-sm font-medium text-gray-600">
-                        <Link href="#solutions" className="hover:text-green-600 transition-colors">Funcionalidades</Link>
-                        <Link href="#why" className="hover:text-green-600 transition-colors">Ventajas</Link>
-                        <Link href="#tools" className="hover:text-green-600 transition-colors">Herramientas</Link>
-                        <Link href="#faq" className="hover:text-green-600 transition-colors">FAQ</Link>
+                    <div className="hidden lg:flex gap-8 text-sm font-medium text-gray-300">
+                        <Link href="#solutions" className="hover:text-green-400 transition-colors">Funcionalidades</Link>
+                        <Link href="#why" className="hover:text-green-400 transition-colors">Ventajas</Link>
+                        <Link href="#tools" className="hover:text-green-400 transition-colors">Herramientas</Link>
+                        <Link href="#faq" className="hover:text-green-400 transition-colors">FAQ</Link>
                     </div>
 
                     <div className="flex gap-3 items-center relative z-50">
-                        <Link href="/cv-maker" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-green-600 transition-colors">
+                        <Link href="/cv-maker" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-green-400 transition-colors">
                             CV Maker
                         </Link>
-                        <Link href="/tools/transcriptor" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-green-600 transition-colors mr-2">
+                        <Link href="/tools/transcriptor" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-green-400 transition-colors mr-2">
                             Transcriptor
                         </Link>
-                        <Link href="/diagnostico" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-green-600 transition-colors mr-2">
+                        <Link href="/diagnostico" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-green-400 transition-colors mr-2">
                             Diagnóstico
                         </Link>
-                        <a href="https://cal.com/lucas-marinero-ji1yyg/15min" target="_blank" className="btn-primary px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm">
+                        <a href="https://cal.com/lucas-marinero-ji1yyg/15min" target="_blank" className="px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm bg-green-500 text-white font-semibold rounded-full shadow-lg hover:bg-green-400 transition-all">
                             <span className="hidden sm:inline">Agendar Demo</span>
                             <span className="sm:hidden">Agendar</span>
                         </a>
@@ -130,126 +159,126 @@ export default function Home() {
                 </div>
             </header>
 
-            {/* HERO SECTION */}
+            {/* HERO SECTION — video visible behind */}
             <main className="relative z-10 w-full pt-20">
-                <section className="pt-16 pb-12 md:pt-32 md:pb-24 px-4 sm:px-6 relative text-center">
+                <section className="pt-16 pb-12 md:pt-32 md:pb-24 px-4 sm:px-6 relative text-center min-h-[85vh] md:min-h-[75vh] flex items-center justify-center">
                     <div className="container mx-auto max-w-4xl">
-                        <div className="inline-block px-4 py-1.5 mb-6 md:mb-8 rounded-full border border-gray-200 bg-white text-gray-600 text-xs font-semibold uppercase tracking-widest shadow-sm">
+                        <div className="inline-block px-4 py-1.5 mb-6 md:mb-8 rounded-full border border-green-400/30 bg-green-500/10 text-green-400 text-xs font-semibold uppercase tracking-widest backdrop-blur-sm">
                             Business Intelligence & IA Empresarial
                         </div>
-                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 text-gray-900 tracking-tight leading-tight flex flex-col md:block items-center justify-center">
+                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 text-white tracking-tight leading-tight flex flex-col md:block items-center justify-center drop-shadow-lg">
                             <span>El sistema operativo que</span>
-                            <span key={wordIndex} className="text-green-600 animate-flip px-2 md:px-3">
+                            <span key={wordIndex} className="text-green-400 animate-flip px-2 md:px-3">
                                 {VERBOS_HERO[wordIndex]}
                             </span>
                             <span>tu negocio</span>
                         </h1>
-                        <p className="text-lg sm:text-xl text-gray-600 mb-8 md:mb-10 max-w-3xl mx-auto px-2 leading-relaxed">
-                            <strong>Ingeniería de software Full-Stack.</strong> Desarrollamos programas empresariales a medida, automatizamos tareas repetitivas y atendemos a tus clientes 24/7 integrando IA nativa en tus procesos.
+                        <p className="text-lg sm:text-xl text-gray-300 mb-8 md:mb-10 max-w-3xl mx-auto px-2 leading-relaxed drop-shadow-md">
+                            <strong className="text-white">Ingeniería de software Full-Stack.</strong> Desarrollamos programas empresariales a medida, automatizamos tareas repetitivas y atendemos a tus clientes 24/7 integrando IA nativa en tus procesos.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
-                            <Link href="/diagnostico" className="btn-primary w-full sm:w-auto px-8 py-4 text-center">
+                            <Link href="/diagnostico" className="w-full sm:w-auto px-8 py-4 text-center bg-green-500 text-white font-bold rounded-full shadow-lg hover:bg-green-400 hover:shadow-xl transition-all">
                                 Diagnóstico Gratuito
                             </Link>
-                            <a href="https://wa.me/5492645438114" target="_blank" className="btn-secondary w-full sm:w-auto px-8 py-4 flex items-center justify-center gap-2 border border-gray-200 shadow-sm bg-white hover:bg-gray-50 text-gray-900">
-                                <i className="fab fa-whatsapp text-green-500 text-lg"></i> WhatsApp
+                            <a href="https://wa.me/5492645438114" target="_blank" className="w-full sm:w-auto px-8 py-4 flex items-center justify-center gap-2 border border-white/20 shadow-sm bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full font-semibold transition-all">
+                                <i className="fab fa-whatsapp text-green-400 text-lg"></i> WhatsApp
                             </a>
+                        </div>
+
+                        {/* Build status — subtle indicator */}
+                        <div className="mt-12 md:mt-16">
+                            <p className="text-xs font-mono text-green-400/40 tracking-wider">
+                                BUILD: STABLE │ STATUS: PRODUCTION │ UPTIME: 99.9%
+                            </p>
                         </div>
                     </div>
                 </section>
 
-                {/* ━━━ IMMERSIVE "CÓDIGO QUE CONSTRUYE" SECTION ━━━ */}
-                <section className="relative bg-gray-950 text-white overflow-hidden">
-                    {/* Grid pattern overlay */}
-                    <div className="absolute inset-0 opacity-[0.03]" style={{
-                        backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
-                        backgroundSize: '40px 40px'
-                    }} />
-                    
-                    {/* Ambient glow */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-green-500/5 blur-[120px] pointer-events-none" />
-
-                    <div className="relative z-10 container mx-auto px-4 md:px-6 py-20 md:py-32">
-                        {/* Title */}
-                        <div className="text-center mb-12 md:mb-16">
-                            <span className="inline-block px-4 py-1.5 mb-4 rounded-full border border-green-500/20 bg-green-500/5 text-green-400 text-xs font-semibold uppercase tracking-widest">
-                                Nuestra Metodología
-                            </span>
-                            <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
-                                Código que <span className="text-green-400">Construye</span>
-                            </h2>
-                            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                                Cada línea de código que escribimos levanta un piso más de tu negocio digital. 
-                                Así trabajamos: con precisión, velocidad y visión.
-                            </p>
-                        </div>
-
-                        {/* Terminal + Building Image */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl mx-auto">
-                            {/* Terminal */}
-                            <div className="bg-[#0f172a] border border-gray-700/50 rounded-2xl p-5 md:p-6 shadow-2xl">
-                                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-700/50">
-                                    <span className="w-3 h-3 rounded-full bg-red-500/80"></span>
-                                    <span className="w-3 h-3 rounded-full bg-yellow-500/80"></span>
-                                    <span className="w-3 h-3 rounded-full bg-green-500/80"></span>
-                                    <span className="ml-3 text-xs text-gray-500 font-mono">grow-labs — terminal</span>
-                                </div>
-                                <div className="font-mono text-sm leading-relaxed space-y-1.5">
-                                    <div><span className="text-purple-400">$</span> <span className="text-gray-300">grow-labs init --project=&quot;Tu Negocio&quot;</span></div>
-                                    <div className="text-gray-500">  → Initializing workspace...</div>
-                                    <div className="text-green-400">  ✓ Core engine loaded</div>
-                                    <div className="text-green-400">  ✓ AI pipeline connected</div>
-                                    <div className="text-gray-600">  // Installing modules...</div>
-                                    <div><span className="text-purple-400">$</span> <span className="text-gray-300">grow-labs install --modules</span></div>
-                                    <div className="text-green-400">  ✓ @grow/crm-engine <span className="text-gray-600">........</span> installed</div>
-                                    <div className="text-green-400">  ✓ @grow/ai-bot <span className="text-gray-600">...........</span> installed</div>
-                                    <div className="text-green-400">  ✓ @grow/dashboard-bi <span className="text-gray-600">.....</span> installed</div>
-                                    <div className="text-green-400">  ✓ @grow/ecommerce <span className="text-gray-600">........</span> installed</div>
-                                    <div className="text-green-400">  ✓ @grow/web-platform <span className="text-gray-600">.....</span> installed</div>
-                                    <div className="text-gray-600">  // Running tests...</div>
-                                    <div className="text-green-400">  ✓ All 12 tests passed</div>
-                                    <div><span className="text-purple-400">$</span> <span className="text-gray-300">grow-labs deploy --production</span></div>
-                                    <div className="text-green-400 font-bold">  ✓ Deploy successful ✨</div>
-                                    <div className="text-yellow-400 mt-1">  🚀 Your software is live!</div>
-                                </div>
-                            </div>
-
-                            {/* AI-Generated Building Image */}
-                            <div className="relative group">
-                                <div className="absolute -inset-4 bg-gradient-to-r from-green-500/10 to-green-600/5 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                                <div className="relative rounded-2xl overflow-hidden border border-gray-700/30 shadow-2xl">
-                                    <Image 
-                                        src="/building-construction.png" 
-                                        alt="Software que construye tu negocio digital — Grow Labs" 
-                                        width={600} 
-                                        height={500}
-                                        className="w-full h-auto object-cover"
-                                    />
-                                    {/* Overlay gradient */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-gray-950/60 via-transparent to-transparent" />
-                                    {/* Caption */}
-                                    <div className="absolute bottom-4 left-4 right-4">
-                                        <p className="text-xs font-mono text-green-400/70 tracking-wider">
-                                            BUILD: STABLE │ FLOORS: 12/12 │ STATUS: PRODUCTION
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Process steps */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto mt-12 md:mt-16">
+                {/* PROCESS STEPS — compact strip over video */}
+                <section className="py-8 md:py-12 relative">
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+                    <div className="relative z-10 container mx-auto px-4">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 max-w-4xl mx-auto">
                             {[
                                 { step: '01', title: 'Diagnóstico', desc: 'Escaneamos tu operación', icon: '🔍' },
                                 { step: '02', title: 'Arquitectura', desc: 'Diseñamos la solución', icon: '📐' },
                                 { step: '03', title: 'Desarrollo', desc: 'Construimos con IA', icon: '⚡' },
                                 { step: '04', title: 'Deploy', desc: 'Lo ponemos en producción', icon: '🚀' },
                             ].map((p) => (
-                                <div key={p.step} className="text-center p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:border-green-500/20 transition-colors">
-                                    <span className="text-2xl mb-2 block">{p.icon}</span>
-                                    <span className="text-[10px] font-mono text-green-400/60 tracking-wider">STEP {p.step}</span>
-                                    <h4 className="font-bold text-white text-sm mt-1">{p.title}</h4>
-                                    <p className="text-xs text-gray-500 mt-1">{p.desc}</p>
+                                <div key={p.step} className="text-center p-3 md:p-4 rounded-xl bg-white/5 border border-white/10 hover:border-green-500/30 transition-colors">
+                                    <span className="text-xl md:text-2xl mb-1 block">{p.icon}</span>
+                                    <span className="text-[9px] md:text-[10px] font-mono text-green-400/60 tracking-wider">STEP {p.step}</span>
+                                    <h4 className="font-bold text-white text-xs md:text-sm mt-0.5">{p.title}</h4>
+                                    <p className="text-[10px] md:text-xs text-gray-400 mt-0.5 hidden sm:block">{p.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* SOLUCIONES APLICADAS (2ND SCREEN) */}
+                <section className="py-16 md:py-24 px-4 md:px-6 relative overflow-hidden reveal-section">
+                    <div className="absolute bottom-0 left-1/4 w-[500px] h-[300px] bg-green-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+                    <div className="container mx-auto max-w-6xl relative z-10">
+                        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
+                            <div>
+                                <span className="text-xs font-semibold text-green-400 uppercase tracking-widest mb-3 block">Nuestras soluciones</span>
+                                <h2 className="text-3xl md:text-5xl font-bold text-white">Tecnología aplicada a<br /><span className="text-green-400">problemas concretos</span></h2>
+                            </div>
+                            <p className="text-gray-400 max-w-md text-sm md:text-base">Desarrollamos soluciones que combinan automatización, análisis de datos e inteligencia artificial para generar resultados medibles.</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            {[
+                                { icon: 'fa-building', title: 'Sistemas empresariales a medida', desc: 'Diseñamos plataformas que ordenan tus procesos, centralizan la información y eliminan el caos operativo de tu empresa.', tags: ['ERP','Gestión de procesos','Control operativo','Organización'] },
+                                { icon: 'fa-chart-bar', title: 'Business Intelligence y dashboards', desc: 'Convertimos datos dispersos en tableros claros para medir, comparar y decidir mejor.', tags: ['KPIs','Reportes ejecutivos','Métricas operativas','Paneles de gestión'] },
+                                { icon: 'fa-robot', title: 'Automatización e inteligencia artificial', desc: 'Integramos IA y automatizaciones para reducir tareas manuales, acelerar respuestas y mejorar seguimiento.', tags: ['Agentes IA','WhatsApp','Flujos automáticos','Carga inteligente'] },
+                            ].map((s, i) => (
+                                <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-7 flex flex-col group hover:shadow-lg hover:border-green-400/30 transition-all h-full reveal-child backdrop-blur-sm">
+                                    <div className="w-11 h-11 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 text-lg mb-5 group-hover:border-green-400/40 group-hover:bg-green-500/15 transition-all">
+                                        <i className={`fas ${s.icon}`}></i>
+                                    </div>
+                                    <h3 className="text-base font-bold text-white mb-2">{s.title}</h3>
+                                    <p className="text-sm text-gray-400 leading-relaxed mb-5 flex-1">{s.desc}</p>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {s.tags.map((t, j) => (
+                                            <span key={j} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-500/10 text-green-400 border border-green-500/20">
+                                                <i className="fas fa-check text-green-500 text-[7px]"></i>{t}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* CÓMO TRABAJAMOS (3RD SCREEN) */}
+                <section className="py-16 md:py-24 px-4 md:px-6 reveal-section relative">
+                    <div className="container mx-auto max-w-6xl relative z-10">
+                        <div className="mb-12">
+                            <span className="text-xs font-semibold text-green-400 uppercase tracking-widest mb-3 block">Cómo trabajamos</span>
+                            <h2 className="text-3xl md:text-5xl font-bold mb-3 text-white">No entregamos tecnología.<br />Entregamos <span className="text-green-400">resultados sostenibles.</span></h2>
+                            <p className="text-gray-400 max-w-2xl text-base md:text-lg">Combinamos pensamiento estratégico, conocimiento del negocio y tecnología para diseñar sistemas que transforman.</p>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {[
+                                { icon: 'fa-link', title: 'No vendemos herramientas sueltas', desc: 'Diseñamos soluciones conectadas con el problema real de cada empresa.' },
+                                { icon: 'fa-crosshairs', title: 'Escuchamos el fondo del negocio', desc: 'Analizamos procesos, prioridades, datos y objetivos antes de implementar nada.' },
+                                { icon: 'fa-sliders', title: 'Diseñamos sistemas a medida', desc: 'Cada empresa necesita una solución aplicable a su realidad concreta.' },
+                                { icon: 'fa-microchip', title: 'Implementamos tecnología real', desc: 'Software, IA y automatizaciones cuando realmente aportan valor medible.' },
+                                { icon: 'fa-handshake', title: 'Acompañamos la adopción', desc: 'Ajustamos y seguimos la implementación para que funcione en el día a día.' },
+                                { icon: 'fa-puzzle-piece', title: 'Estrategia, procesos y tecnología', desc: 'La diferencia está en convertir una necesidad empresarial en una solución concreta.' },
+                            ].map((p, i) => (
+                                <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-6 group hover:shadow-md hover:border-green-400/30 transition-all backdrop-blur-sm reveal-child">
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 group-hover:text-green-400 group-hover:border-green-500/20 group-hover:bg-green-500/10 transition-all flex-shrink-0">
+                                            <i className={`fas ${p.icon}`}></i>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-white text-sm mb-1.5">{p.title}</h3>
+                                            <p className="text-xs text-gray-500 leading-relaxed">{p.desc}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -257,18 +286,19 @@ export default function Home() {
                 </section>
 
                 {/* INTEGRATIONS MARQUEE */}
-                <section className="py-8 md:py-10 border-y border-gray-200 bg-white overflow-hidden relative">
-                    <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-white to-transparent z-10"></div>
-                    <div className="absolute right-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-l from-white to-transparent z-10"></div>
+                <section className="py-8 md:py-10 border-y border-white/10 overflow-hidden relative reveal-section">
+                    <div className="absolute inset-0 bg-black/50 backdrop-blur-md" />
+                    <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-black to-transparent z-10"></div>
+                    <div className="absolute right-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-l from-black to-transparent z-10"></div>
                     
-                    <div className="text-center text-xs md:text-sm font-semibold text-gray-400 mb-6 md:mb-8 uppercase tracking-widest px-4">
+                    <div className="text-center text-xs md:text-sm font-semibold text-gray-400 mb-6 md:mb-8 uppercase tracking-widest px-4 relative z-10">
                         Herramientas de automatización que usamos
                     </div>
 
                     <div className="marquee-container">
                         <div className="marquee-content flex gap-8 md:gap-12 px-4 md:px-6">
                             {[...INTEGRATIONS, ...INTEGRATIONS].map((tool, idx) => (
-                                <div key={idx} className="flex items-center gap-2 md:gap-3 text-gray-700 whitespace-nowrap min-w-max">
+                                <div key={idx} className="flex items-center gap-2 md:gap-3 text-gray-300 whitespace-nowrap min-w-max">
                                     <i className={`${tool.icon} text-xl md:text-2xl ${tool.color}`}></i>
                                     <span className="font-semibold text-sm md:text-base">{tool.name}</span>
                                 </div>
@@ -278,18 +308,19 @@ export default function Home() {
                 </section>
 
                 {/* STATS SECTION */}
-                <section className="py-12 md:py-16 bg-gray-50 border-b border-gray-200">
-                    <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-                        <div className="grid grid-cols-1 sm:grid-cols-4 gap-8 text-center divide-y sm:divide-y-0 sm:divide-x divide-gray-200">
+                <section className="py-12 md:py-16 border-b border-white/10 reveal-section relative">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+                    <div className="container mx-auto px-4 md:px-6 max-w-6xl relative z-10">
+                        <div className="grid grid-cols-1 sm:grid-cols-4 gap-8 text-center divide-y sm:divide-y-0 sm:divide-x divide-white/10">
                             {[
                                 { label: "Reducción de Errores", value: "85%" },
                                 { label: "Más Rápido", value: "10x" },
                                 { label: "Disponibilidad", value: "24/7" },
                                 { label: "Crecimiento", value: "+245%" }
                             ].map((stat, i) => (
-                                <div key={i} className="py-2">
-                                    <h3 className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</h3>
-                                    <p className="text-sm text-gray-500 uppercase tracking-widest">{stat.label}</p>
+                                <div key={i} className="py-2 reveal-child">
+                                    <h3 className="text-3xl font-bold text-white mb-1">{stat.value}</h3>
+                                    <p className="text-sm text-gray-400 uppercase tracking-widest">{stat.label}</p>
                                 </div>
                             ))}
                         </div>
@@ -297,38 +328,39 @@ export default function Home() {
                 </section>
 
                 {/* MISION / VISION SECTION (Restored & Light Theme adapted) */}
-                <section className="py-20 bg-white border-b border-gray-200">
-                    <div className="container mx-auto px-6 max-w-4xl text-center">
-                        <h2 className="text-sm font-bold text-green-600 uppercase tracking-widest mb-4">Quiénes Somos</h2>
-                        <h3 className="text-3xl md:text-4xl font-bold mb-8 text-gray-900">Expertos en Tecnología para la Realidad Empresarial de LATAM</h3>
-                        <p className="text-gray-600 text-lg mb-12 leading-relaxed">
+                <section className="py-20 border-b border-white/10 reveal-section relative">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+                    <div className="container mx-auto px-6 max-w-4xl text-center relative z-10">
+                        <h2 className="text-sm font-bold text-green-400 uppercase tracking-widest mb-4">Quiénes Somos</h2>
+                        <h3 className="text-3xl md:text-4xl font-bold mb-8 text-white">Expertos en Tecnología para la Realidad Empresarial de LATAM</h3>
+                        <p className="text-gray-400 text-lg mb-12 leading-relaxed">
                             Grow Labs nace de la experiencia directa en la complejidad operativa de las empresas. Entendemos profundamente los desafíos de burocracia, ineficiencia y falta de datos claros. Nuestra misión es transformar esa fricción en eficiencia mediante tecnología de punta adaptada a tus necesidades.
                         </p>
 
                         <div className="grid md:grid-cols-3 gap-8 text-left">
-                            <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
-                                <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-4 text-green-600"><i className="fas fa-rocket"></i></div>
-                                <h4 className="font-bold text-gray-900 mb-2">Misión</h4>
-                                <p className="text-sm text-gray-600">Eliminar la fricción operativa para que los equipos se enfoquen en lo que realmente importa: el crecimiento.</p>
+                            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm reveal-child">
+                                <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center mb-4 text-green-400"><i className="fas fa-rocket"></i></div>
+                                <h4 className="font-bold text-white mb-2">Misión</h4>
+                                <p className="text-sm text-gray-400">Eliminar la fricción operativa para que los equipos se enfoquen en lo que realmente importa: el crecimiento.</p>
                             </div>
-                            <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
-                                <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-4 text-green-600"><i className="fas fa-brain"></i></div>
-                                <h4 className="font-bold text-gray-900 mb-2">Visión</h4>
-                                <p className="text-sm text-gray-600">Ser el cerebro digital que impulsa las operaciones ágiles de las empresas modernas líderes en LATAM.</p>
+                            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm reveal-child">
+                                <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center mb-4 text-green-400"><i className="fas fa-brain"></i></div>
+                                <h4 className="font-bold text-white mb-2">Visión</h4>
+                                <p className="text-sm text-gray-400">Ser el cerebro digital que impulsa las operaciones ágiles de las empresas modernas líderes en LATAM.</p>
                             </div>
-                            <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
-                                <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-4 text-green-600"><i className="fas fa-gem"></i></div>
-                                <h4 className="font-bold text-gray-900 mb-2">Valores</h4>
-                                <p className="text-sm text-gray-600">Precisión Operativa • Adaptación Local • Innovación Transparente y Escalabilidad garantizada.</p>
+                            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm reveal-child">
+                                <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center mb-4 text-green-400"><i className="fas fa-gem"></i></div>
+                                <h4 className="font-bold text-white mb-2">Valores</h4>
+                                <p className="text-sm text-gray-400">Precisión Operativa • Adaptación Local • Innovación Transparente y Escalabilidad garantizada.</p>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 {/* CLIENTS MARQUEE (Moved above Solutions) */}
-                <section className="py-8 md:py-12 border-b border-gray-200 bg-white overflow-hidden relative">
-                    <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
-                    <div className="absolute right-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+                <section className="py-8 md:py-12 border-b border-white/10 overflow-hidden relative reveal-section">
+                    <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none"></div>
+                    <div className="absolute right-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none"></div>
                     
                     <div className="text-center text-xs md:text-sm font-semibold text-gray-400 mb-8 uppercase tracking-widest px-4">
                         Más de 30 empresas ya confían y escalan con nosotros
@@ -340,7 +372,7 @@ export default function Home() {
                                 <div 
                                     key={idx} 
                                     onClick={() => setSelectedLogo(logo)}
-                                    className="cursor-pointer relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center p-2 group overflow-hidden"
+                                    className="cursor-pointer relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 rounded-full bg-white/10 border border-white/10 flex items-center justify-center p-2 group overflow-hidden"
                                 >
                                     <div className="relative w-full h-full transform group-hover:scale-110 transition-transform duration-300">
                                         <Image src={logo} alt={`Cliente ${idx}`} fill className="object-contain" />
@@ -352,7 +384,7 @@ export default function Home() {
                 </section>
 
                 {/* PRODUCTS/SOLUTIONS SECTION */}
-                <section id="solutions" className="py-16 md:py-24 px-4 md:px-6 bg-gray-50 relative border-b border-gray-200">
+                <section id="solutions" className="py-16 md:py-24 px-4 md:px-6 bg-gray-50 relative border-b border-gray-200 reveal-section">
                     <div className="container mx-auto max-w-6xl">
                         <div className="mb-10 md:mb-16 text-center md:text-left">
                             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">Servicios y <span className="text-green-600">Soluciones</span></h2>
@@ -366,7 +398,7 @@ export default function Home() {
                                     href={`https://wa.me/5492645438114?text=${encodeURIComponent(`Hola, estaba viendo su sitio web y me interesa saber más sobre el servicio de ${s.title}.`)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="bg-white border border-gray-200 shadow-sm rounded-2xl p-6 md:p-8 flex flex-col hover:shadow-xl hover:border-green-400 transition-all cursor-pointer group hover:-translate-y-1 block"
+                                    className="bg-white border border-gray-200 shadow-sm rounded-2xl p-6 md:p-8 flex flex-col hover:shadow-xl hover:border-green-400 transition-all cursor-pointer group hover:-translate-y-1 block reveal-child"
                                 >
                                     <span className="text-green-600 font-bold text-sm mb-4 bg-green-50 border border-green-100 w-8 h-8 flex items-center justify-center rounded-full group-hover:bg-green-100 transition-colors">
                                         {idx + 1}
@@ -384,7 +416,7 @@ export default function Home() {
                 </section>
 
                 {/* PROBLEMAS / COMPARACION (Restored & Light Theme adapted) */}
-                <section className="py-20 bg-white border-b border-gray-200">
+                <section className="py-20 bg-white border-b border-gray-200 reveal-section">
                     <div className="container mx-auto px-6 max-w-6xl">
                         <div className="flex flex-col md:flex-row gap-16">
                             {/* Problemas */}
@@ -451,7 +483,7 @@ export default function Home() {
                 </section>
 
                 {/* ROI, DATA & TECH SECTION (Restored moving SVG & Light Theme adapted) */}
-                <section id="data" className="py-20 bg-gray-900 border-b border-gray-800 text-white relative overflow-hidden">
+                <section id="data" className="py-20 bg-gray-900 border-b border-gray-800 text-white relative overflow-hidden reveal-section">
                     <div className="container mx-auto px-6">
                         <div className="flex flex-col md:flex-row items-center gap-16 relative z-10">
                             {/* Texto BI */}
@@ -552,7 +584,7 @@ export default function Home() {
                 </section>
 
                 {/* ROI SECTION SIMPLE (Restored) */}
-                <section className="py-20 bg-green-500 text-white">
+                <section className="py-20 bg-green-500 text-white reveal-section">
                     <div className="container mx-auto px-6 text-center">
                         <h2 className="text-3xl md:text-5xl font-black mb-6 drop-shadow-sm">Garantía Asegurada</h2>
                         <p className="text-xl font-medium max-w-2xl mx-auto mb-10 text-green-50">
@@ -565,8 +597,92 @@ export default function Home() {
                 </section>
 
 
+                {/* NUESTRO PROCESO (4 ETAPAS) */}
+                <section className="py-16 md:py-24 px-4 md:px-6 bg-white border-b border-gray-200 reveal-section">
+                    <div className="container mx-auto max-w-6xl">
+                        <div className="text-center mb-12 md:mb-16">
+                            <span className="text-green-600 font-bold tracking-widest text-xs uppercase mb-3 block">Nuestro proceso</span>
+                            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900">Del <span className="text-green-600">desorden</span> al sistema</h2>
+                            <p className="text-gray-600 max-w-2xl mx-auto text-base md:text-lg">No vendemos herramientas sueltas. Diseñamos un proceso de transformación con acompañamiento real.</p>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                            {[
+                                { icon: 'fa-search-plus', title: 'Diagnóstico Digital', desc: 'Analizamos tu operación actual, identificamos cuellos de botella y diseñamos un mapa de prioridades claro.', color: 'text-blue-500', bg: 'bg-blue-50' },
+                                { icon: 'fa-sitemap', title: 'Ordenamiento de Procesos', desc: 'Documentamos y estructuramos los procesos clave para que tu equipo trabaje con claridad y trazabilidad.', color: 'text-green-500', bg: 'bg-green-50' },
+                                { icon: 'fa-cogs', title: 'Implementación Tecnológica', desc: 'Desarrollamos e integramos las soluciones digitales que tu empresa necesita: software, automatizaciones, dashboards.', color: 'text-purple-500', bg: 'bg-purple-50' },
+                                { icon: 'fa-chart-line', title: 'Seguimiento y Evolución', desc: 'Acompañamos la adopción, medimos resultados y ajustamos el sistema para que crezca con tu empresa.', color: 'text-amber-500', bg: 'bg-amber-50' },
+                            ].map((s, i) => (
+                                <div key={i} className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 flex flex-col group hover:shadow-lg hover:-translate-y-1 transition-all shadow-sm reveal-child">
+                                    <div className="flex items-center gap-3 mb-5">
+                                        <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center ${s.color} text-lg border border-gray-100`}>
+                                            <i className={`fas ${s.icon}`}></i>
+                                        </div>
+                                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Etapa {i + 1}</span>
+                                    </div>
+                                    <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors">{s.title}</h3>
+                                    <p className="text-sm text-gray-600 leading-relaxed flex-1">{s.desc}</p>
+                                    {i < 3 && (
+                                        <div className="hidden lg:flex justify-end mt-4">
+                                            <i className="fas fa-arrow-right text-green-500/30 text-sm"></i>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+
+                {/* EQUIPO DIRECTIVO */}
+                <section className="py-16 md:py-24 px-4 md:px-6 bg-gray-50 border-b border-gray-200 reveal-section">
+                    <div className="container mx-auto max-w-5xl">
+                        <div className="mb-12">
+                            <span className="text-xs font-semibold text-green-600 uppercase tracking-widest mb-3 block">Equipo directivo</span>
+                            <h2 className="text-3xl md:text-4xl font-bold mb-3 text-gray-900">Dirección de Grow Labs</h2>
+                            <p className="text-gray-600 max-w-2xl text-base">Combinamos visión tecnológica, pensamiento estratégico y capacidad real de implementación.</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+                            <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 text-center group shadow-sm hover:shadow-lg transition-all">
+                                <div className="w-28 h-28 md:w-36 md:h-36 mx-auto mb-5 rounded-full overflow-hidden border-2 border-green-200 relative group-hover:border-green-400 transition-all">
+                                    <Image src="/lucas.jpeg" alt="Lucas Marinero" fill className="object-cover" />
+                                </div>
+                                <h3 className="text-lg font-bold text-gray-900">Lucas Marinero</h3>
+                                <p className="text-green-600 text-sm font-medium mb-3">Cofundador · Dirección Técnica y Producto</p>
+                                <p className="text-gray-600 text-sm leading-relaxed mb-4">Lidera la visión tecnológica, el desarrollo de soluciones digitales, automatizaciones y software a medida.</p>
+                                <div className="flex flex-wrap justify-center gap-2">
+                                    {['Producto','IA','Automatización','Software'].map(t => (
+                                        <span key={t} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100">
+                                            <i className="fas fa-code text-green-500/60 text-[8px]"></i>{t}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 text-center group shadow-sm hover:shadow-lg transition-all">
+                                <div className="w-28 h-28 md:w-36 md:h-36 mx-auto mb-5 rounded-full overflow-hidden border-2 border-green-200 relative bg-green-50 flex items-center justify-center group-hover:border-green-400 transition-all">
+                                    <span className="text-3xl font-bold text-green-600/60">GR</span>
+                                </div>
+                                <h3 className="text-lg font-bold text-gray-900">Gustavo Regalado</h3>
+                                <p className="text-green-600 text-sm font-medium mb-3">Socio · Dirección Estratégica, Operativa y Comercial</p>
+                                <p className="text-gray-600 text-sm leading-relaxed mb-4">Fortalece la estrategia empresarial, el orden operativo, el desarrollo comercial y la implementación en empresas reales.</p>
+                                <div className="flex flex-wrap justify-center gap-2">
+                                    {['Estrategia','Gestión','Procesos','Comercial'].map(t => (
+                                        <span key={t} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100">
+                                            <i className="fas fa-briefcase text-green-500/60 text-[8px]"></i>{t}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 text-center shadow-sm">
+                            <p className="text-base md:text-lg text-gray-700 max-w-2xl mx-auto">
+                                La fortaleza de Grow Labs está en la complementariedad: <span className="text-green-600 font-semibold">visión técnica para construir soluciones</span> y <span className="text-green-600 font-semibold">visión empresarial para aplicarlas correctamente.</span>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
                 {/* HERRAMIENTAS GRATUITAS (TOOLKIT) */}
-                <section id="tools" className="py-16 md:py-24 px-4 md:px-6 bg-white border-b border-gray-200 overflow-hidden">
+                <section id="tools" className="py-16 md:py-24 px-4 md:px-6 bg-white border-b border-gray-200 overflow-hidden reveal-section">
                     <div className="container mx-auto max-w-6xl">
                         <div className="flex flex-col md:flex-row items-center gap-12 mb-16">
                             {/* Texto y Título */}
@@ -587,7 +703,7 @@ export default function Home() {
 
                             {/* THE RESTORED SOCIAL CARD */}
                             <div className="md:w-1/2 w-full flex justify-center perspective-1000">
-                                <div className="bg-white p-6 rounded-2xl max-w-sm w-full transform md:rotate-3 hover:rotate-0 transition-all duration-500 shadow-xl border border-gray-200 relative group-card">
+                                <div className="bg-white/5 backdrop-blur-sm p-6 rounded-2xl max-w-sm w-full transform md:rotate-3 hover:rotate-0 transition-all duration-500 shadow-xl border border-white/10 relative group-card">
                                     {/* Header */}
                                     <div className="flex items-center gap-4 mb-5 border-b border-gray-100 pb-4">
                                         <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 p-0.5">
@@ -655,7 +771,7 @@ export default function Home() {
                 </section>
 
                 {/* FAQ SECTION */}
-                <section id="faq" className="py-16 md:py-24 px-4 md:px-6 bg-gray-50 border-b border-gray-200">
+                <section id="faq" className="py-16 md:py-24 px-4 md:px-6 bg-gray-50 border-b border-gray-200 reveal-section">
                     <div className="container mx-auto max-w-3xl">
                         <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-900">Preguntas Frecuentes</h2>
                         <div className="space-y-3 md:space-y-4 px-2 sm:px-0">
@@ -681,17 +797,17 @@ export default function Home() {
             </main>
 
             {/* FOOTER */}
-            <footer className="bg-white py-10 md:py-12 relative z-10">
+            <footer className="bg-black/80 backdrop-blur-xl py-10 md:py-12 relative z-10 border-t border-white/10">
                 <div className="container mx-auto px-6 text-center">
-                    <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gray-200 mx-auto mb-6">
+                    <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/20 mx-auto mb-6">
                         <Image src="/logogrow.png" alt="Grow Labs" fill className="object-cover" />
                     </div>
                     <div className="flex justify-center gap-6 md:gap-8 mb-6 md:mb-8 text-xs md:text-sm font-medium flex-wrap">
-                        <Link href="#solutions" className="text-gray-500 hover:text-gray-900 transition-colors">Funcionalidades</Link>
-                        <Link href="#tools" className="text-gray-500 hover:text-gray-900 transition-colors">Herramientas</Link>
-                        <a href="https://wa.me/5492645438114" target="_blank" className="text-gray-500 hover:text-gray-900 transition-colors">Contacto Técnico</a>
+                        <Link href="#solutions" className="text-gray-400 hover:text-green-400 transition-colors">Funcionalidades</Link>
+                        <Link href="#tools" className="text-gray-400 hover:text-green-400 transition-colors">Herramientas</Link>
+                        <a href="https://wa.me/5492645438114" target="_blank" className="text-gray-400 hover:text-green-400 transition-colors">Contacto Técnico</a>
                     </div>
-                    <div className="text-gray-400 text-xs text-center border-t border-gray-100 pt-6 max-w-sm mx-auto">
+                    <div className="text-gray-500 text-xs text-center border-t border-white/10 pt-6 max-w-sm mx-auto">
                         &copy; {new Date().getFullYear()} Grow Labs. Todos los derechos reservados.
                     </div>
                 </div>
@@ -699,10 +815,10 @@ export default function Home() {
 
             {/* FLOATING SOCIAL BAR */}
             <div className="fixed right-4 md:right-6 bottom-4 md:bottom-8 flex flex-col gap-3 z-50">
-                <a href="https://www.linkedin.com/in/lucas-marinero-182521308/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-teal-700 text-xl shadow-[0_4px_15px_rgba(0,0,0,0.1)] border border-gray-100/50 hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition-all duration-300">
+                <a href="https://www.linkedin.com/in/lucas-marinero-182521308/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white text-xl shadow-[0_4px_15px_rgba(0,0,0,0.3)] border border-white/10 hover:-translate-y-1 hover:bg-white/20 hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)] transition-all duration-300">
                     <i className="fab fa-linkedin-in"></i>
                 </a>
-                <a href="https://www.instagram.com/growsanjuan/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-teal-700 text-xl shadow-[0_4px_15px_rgba(0,0,0,0.1)] border border-gray-100/50 hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition-all duration-300">
+                <a href="https://www.instagram.com/growsanjuan/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white text-xl shadow-[0_4px_15px_rgba(0,0,0,0.3)] border border-white/10 hover:-translate-y-1 hover:bg-white/20 hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)] transition-all duration-300">
                     <i className="fab fa-instagram"></i>
                 </a>
                 <a href="https://api.whatsapp.com/send/?phone=5492645438114&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-[#25D366] rounded-full flex items-center justify-center text-white text-2xl shadow-[0_4px_15px_rgba(37,211,102,0.3)] border border-[#25D366] hover:bg-[#1ebc59] hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(37,211,102,0.4)] transition-all duration-300">

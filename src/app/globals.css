@@ -10,7 +10,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: white;
+  background: #000;
   min-height: 100vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
@@ -54,16 +54,16 @@ body {
 }
 
 .light-card {
-  background: white;
-  border: 1px solid #E5E7EB;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
 }
 
 .light-card:hover {
-  border-color: #D1D5DB;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
   transform: translateY(-2px);
 }
 
@@ -112,4 +112,187 @@ body {
   backface-visibility: visible !important;
   animation: flipInX 0.8s ease-out both;
   display: inline-block;
+}
+
+/* ━━━ Scroll Reveal Animation System ━━━ */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ━━━ Global Dark Video Overlay — all sections ━━━ */
+/* Force transparent BG so video shows through, not gray */
+main > section {
+  position: relative;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+main > section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 0;
+}
+
+main > section > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Override text colors for dark background readability */
+main section h2,
+main section h3,
+main section h4 {
+  color: white !important;
+}
+
+main section .text-gray-900 { color: #f3f4f6 !important; }
+main section .text-gray-800 { color: #e5e7eb !important; }
+main section .text-gray-700 { color: #d1d5db !important; }
+main section .text-gray-600 { color: #9ca3af !important; }
+main section .text-gray-500 { color: #6b7280 !important; }
+main section .text-green-600 { color: #4ade80 !important; }
+main section .text-green-700 { color: #4ade80 !important; }
+
+/* Override card backgrounds for dark theme */
+main section .bg-white {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+main section .bg-gray-50 {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+main section .bg-gray-100\/50 {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Also override shadow colors for cards */
+main section .shadow-sm {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Override borders for dark theme */
+main section .border-gray-200 {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+main section .border-gray-100 {
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Override green backgrounds for tags/badges */
+main section .bg-green-50 {
+  background: rgba(34, 197, 94, 0.1) !important;
+}
+
+main section .bg-green-100 {
+  background: rgba(34, 197, 94, 0.15) !important;
+}
+
+main section .border-green-100 {
+  border-color: rgba(34, 197, 94, 0.2) !important;
+}
+
+main section .border-green-200 {
+  border-color: rgba(34, 197, 94, 0.25) !important;
+}
+
+/* Marquee edge gradients — dark */
+main section .bg-gradient-to-r.from-white {
+  --tw-gradient-from: rgba(0, 0, 0, 0.9) !important;
+}
+
+main section .bg-gradient-to-l.from-white {
+  --tw-gradient-from: rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Base state for all revealable sections */
+.reveal-section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-section.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Children stagger — cards, grid items, etc. */
+.reveal-section.revealed .reveal-child {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.reveal-child {
+  opacity: 0;
+  transform: translateY(20px) scale(0.97);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Staggered delays for children */
+.reveal-child:nth-child(1) { transition-delay: 0.05s; }
+.reveal-child:nth-child(2) { transition-delay: 0.12s; }
+.reveal-child:nth-child(3) { transition-delay: 0.19s; }
+.reveal-child:nth-child(4) { transition-delay: 0.26s; }
+.reveal-child:nth-child(5) { transition-delay: 0.33s; }
+.reveal-child:nth-child(6) { transition-delay: 0.40s; }
+
+/* Slide from left variant */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-section.revealed .reveal-left {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Slide from right variant */
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-section.revealed .reveal-right {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Scale up variant */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-section.revealed .reveal-scale {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-section,
+  .reveal-child,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
