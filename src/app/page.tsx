@@ -116,9 +116,9 @@ export default function Home() {
                 >
                     <source src="/building-hero-2.mp4" type="video/mp4" />
                 </video>
-                {/* Heavy dark overlay */}
-                <div className="absolute inset-0 bg-black/75" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
+                {/* Dark overlay — lighter to let video show through */}
+                <div className="absolute inset-0 bg-black/55" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/50" />
             </div>
 
             {/* HEADER / NAVIGATION */}
