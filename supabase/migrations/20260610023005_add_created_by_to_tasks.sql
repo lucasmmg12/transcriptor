@@ -1,0 +1,1 @@
+-- noop (fields integrated in consolidado migration)

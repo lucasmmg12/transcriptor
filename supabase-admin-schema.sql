@@ -1,6 +1,15 @@
 -- =======================================================
--- MIGRACIÓN INICIAL CONSOLIDADA (GROW LABS)
+-- SCRIPT DE BASE DE DATOS DE ADMINISTRACIÓN (GROW LABS)
 -- =======================================================
+-- Ejecuta este script en la consola de SQL de tu panel de Supabase
+-- para crear las tablas y las políticas de acceso (RLS) necesarias.
+
+-- Eliminar tablas si ya existen
+DROP TABLE IF EXISTS public.tasks CASCADE;
+DROP TABLE IF EXISTS public.leads CASCADE;
+DROP TABLE IF EXISTS public.projects CASCADE;
+DROP TABLE IF EXISTS public.team_members CASCADE;
+DROP TABLE IF EXISTS public.meetings CASCADE;
 
 -- 1. Tabla de Tareas (tasks)
 CREATE TABLE IF NOT EXISTS public.tasks (
@@ -17,13 +26,10 @@ CREATE TABLE IF NOT EXISTS public.tasks (
   "closeDate" TEXT,
   "progress" NUMERIC DEFAULT 0,
   "observations" TEXT,
-  "createdByEmail" TEXT,
-  "createdByName" TEXT,
   "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
 ALTER TABLE public.tasks ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "Permitir todas las operaciones tasks" ON public.tasks;
 CREATE POLICY "Permitir todas las operaciones tasks" ON public.tasks FOR ALL USING (true) WITH CHECK (true);
 
 -- 2. Tabla de Leads (leads)
@@ -45,7 +51,6 @@ CREATE TABLE IF NOT EXISTS public.leads (
 );
 
 ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "Permitir todas las operaciones leads" ON public.leads;
 CREATE POLICY "Permitir todas las operaciones leads" ON public.leads FOR ALL USING (true) WITH CHECK (true);
 
 -- 3. Tabla de Proyectos (projects)
@@ -67,7 +72,6 @@ CREATE TABLE IF NOT EXISTS public.projects (
 );
 
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "Permitir todas las operaciones projects" ON public.projects;
 CREATE POLICY "Permitir todas las operaciones projects" ON public.projects FOR ALL USING (true) WITH CHECK (true);
 
 -- 4. Tabla de Miembros de Equipo (team_members)
@@ -85,7 +89,6 @@ CREATE TABLE IF NOT EXISTS public.team_members (
 );
 
 ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "Permitir todas las operaciones team_members" ON public.team_members;
 CREATE POLICY "Permitir todas las operaciones team_members" ON public.team_members FOR ALL USING (true) WITH CHECK (true);
 
 -- 5. Tabla de Reuniones (meetings)
@@ -103,7 +106,6 @@ CREATE TABLE IF NOT EXISTS public.meetings (
 );
 
 ALTER TABLE public.meetings ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "Permitir todas las operaciones meetings" ON public.meetings;
 CREATE POLICY "Permitir todas las operaciones meetings" ON public.meetings FOR ALL USING (true) WITH CHECK (true);
 
 -- 6. Tabla de Propuestas Comerciales (proposals)
@@ -123,5 +125,4 @@ CREATE TABLE IF NOT EXISTS public.proposals (
 );
 
 ALTER TABLE public.proposals ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "Permitir todas las operaciones proposals" ON public.proposals;
 CREATE POLICY "Permitir todas las operaciones proposals" ON public.proposals FOR ALL USING (true) WITH CHECK (true);
