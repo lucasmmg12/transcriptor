@@ -16,6 +16,7 @@ import {
   ChevronRight,
   Zap,
   Menu,
+  FileText,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -23,6 +24,7 @@ import { usePathname } from 'next/navigation';
 const menuItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/leads', label: 'Leads & CRM', icon: Users },
+  { href: '/admin/propuestas', label: 'Propuestas', icon: FileText },
   { href: '/admin/projects', label: 'Proyectos', icon: FolderKanban },
   { href: '/admin/tasks', label: 'Matriz de Control', icon: ListChecks },
   { href: '/admin/team', label: 'Equipo', icon: UserCog },
@@ -33,13 +35,19 @@ const menuItems = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, currentUser, logout, sidebarCollapsed, toggleSidebar } = useAdminStore();
+  const { isAuthenticated, currentUser, logout, sidebarCollapsed, toggleSidebar, fetchAllData, isLoading, error } = useAdminStore();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (hydrated && isAuthenticated) {
+      fetchAllData().catch(console.error);
+    }
+  }, [hydrated, isAuthenticated, fetchAllData]);
 
   useEffect(() => {
     if (hydrated && !isAuthenticated && pathname !== '/admin') {
@@ -159,14 +167,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         `}
       >
         {/* Logo */}
-        <div className={`p-4 border-b border-gray-800/60 flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-3'}`}>
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/20">
-            <Zap size={18} className="text-white" />
+        <div className={`p-4 border-b border-gray-800/60 flex items-center justify-between ${sidebarCollapsed ? 'justify-center' : ''}`}>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/20">
+              <Zap size={18} className="text-white" />
+            </div>
+            {!sidebarCollapsed && (
+              <div className="overflow-hidden">
+                <h1 className="font-black text-white text-sm tracking-tight">GROW LABS</h1>
+                <p className="text-[10px] text-gray-500 font-medium tracking-widest uppercase">Admin Panel</p>
+              </div>
+            )}
           </div>
           {!sidebarCollapsed && (
-            <div className="overflow-hidden">
-              <h1 className="font-black text-white text-sm tracking-tight">GROW LABS</h1>
-              <p className="text-[10px] text-gray-500 font-medium tracking-widest uppercase">Admin Panel</p>
+            <div className="flex items-center gap-1.5 bg-gray-950/40 border border-gray-800/40 rounded-full px-2 py-0.5">
+              <span className={`w-1.5 h-1.5 rounded-full ${isLoading ? 'bg-amber-400 animate-pulse' : error ? 'bg-red-500' : 'bg-emerald-500'}`} />
+              <span className="text-[8px] font-bold text-gray-500 uppercase tracking-widest">
+                {isLoading ? 'Sinc' : error ? 'Error' : 'Live'}
+              </span>
             </div>
           )}
         </div>
@@ -248,7 +266,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
             <span className="font-black text-sm tracking-tight text-white">GROW LABS</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 bg-gray-900/60 border border-gray-800/60 rounded-full px-2 py-0.5">
+              <span className={`w-1.5 h-1.5 rounded-full ${isLoading ? 'bg-amber-400 animate-pulse' : error ? 'bg-red-500' : 'bg-emerald-500'}`} />
+              <span className="text-[8px] font-bold text-gray-500 uppercase tracking-widest">
+                {isLoading ? 'Sinc' : error ? 'Error' : 'Live'}
+              </span>
+            </div>
             <div className="w-7 h-7 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs font-bold">
               {currentUser?.name?.[0] || 'A'}
             </div>

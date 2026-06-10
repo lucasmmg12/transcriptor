@@ -3,12 +3,12 @@
 import { useAdminStore } from '../../../lib/store';
 import {
   TrendingUp, Clock, AlertTriangle, CheckCircle2, Users,
-  Calendar, ArrowRight, Activity, BarChart3,
+  Calendar, ArrowRight, Activity, BarChart3, FileText,
 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DashboardPage() {
-  const { tasks, leads, projects, meetings, team } = useAdminStore();
+  const { tasks, leads, projects, meetings, team, proposals } = useAdminStore();
   const today = new Date();
   const todayStr = today.toISOString().split('T')[0];
 
@@ -36,11 +36,12 @@ export default function DashboardPage() {
 
   const activeLeads = leads.filter((l) => !['Cerrado Ganado', 'Cerrado Perdido'].includes(l.stage)).length;
   const pipelineValue = leads.filter((l) => !['Cerrado Ganado', 'Cerrado Perdido'].includes(l.stage)).reduce((s, l) => s + l.estimatedValue, 0);
+  const totalProposalValue = proposals.reduce((s, p) => s + p.valueArs, 0);
 
   const kpis = [
     { label: 'Completadas', value: `${completedTasks}/${totalTasks}`, sub: `${completionRate}% Tasa de éxito`, icon: CheckCircle2, grad: 'from-emerald-500 to-emerald-600', textColor: 'text-emerald-400' },
     { label: 'En Progreso', value: `${inProgressTasks}`, sub: `${blockedTasks} bloqueadas`, icon: Activity, grad: 'from-blue-500 to-blue-600', textColor: 'text-blue-400' },
-    { label: 'Vencidas', value: `${overdueTasks}`, sub: 'requieren atención urgente', icon: AlertTriangle, grad: 'from-red-500 to-red-600', textColor: 'text-red-400' },
+    { label: 'Propuestas IA', value: `${proposals.length}`, sub: totalProposalValue > 0 ? `$${totalProposalValue.toLocaleString('es-AR')}` : 'Sin propuestas', icon: FileText, grad: 'from-indigo-500 to-indigo-600', textColor: 'text-indigo-400' },
     { label: 'Pipeline CRM', value: `${activeLeads} leads`, sub: pipelineValue > 0 ? `$${pipelineValue.toLocaleString('es-AR')}` : 'Sin leads activos', icon: TrendingUp, grad: 'from-violet-500 to-violet-600', textColor: 'text-violet-400' },
   ];
 
@@ -153,6 +154,31 @@ export default function DashboardPage() {
             <div className="border-t border-white/5 mt-4 pt-3">
               <Link href="/admin/meetings" className="text-xs text-emerald-400 font-bold flex items-center gap-1 hover:text-emerald-300 transition-colors w-max">
                 <span>Ver calendario de reuniones</span> 
+                <ArrowRight size={12} />
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-white/[0.03] rounded-2xl border border-white/10 p-5">
+            <h3 className="font-bold text-white flex items-center gap-2 text-sm mb-4">
+              <FileText size={16} className="text-indigo-400" /> Últimas Propuestas (IA)
+            </h3>
+            <div className="space-y-3 max-h-[220px] overflow-y-auto pr-1">
+              {proposals.length > 0 ? proposals.slice(0, 3).map((p) => (
+                <div key={p.id} className="text-sm border-l-2 border-indigo-500/40 pl-3 py-0.5">
+                  <p className="font-semibold text-gray-200 truncate">{p.clientName}</p>
+                  <p className="text-[10px] text-gray-500 truncate">{p.projectName}</p>
+                  <p className="text-[11px] font-mono text-emerald-400 font-bold mt-0.5">
+                    ${Number(p.valueArs).toLocaleString('es-AR')} ARS
+                  </p>
+                </div>
+              )) : (
+                <p className="text-xs text-gray-500 italic py-2">Sin propuestas generadas</p>
+              )}
+            </div>
+            <div className="border-t border-white/5 mt-4 pt-3">
+              <Link href="/admin/propuestas" className="text-xs text-indigo-400 font-bold flex items-center gap-1 hover:text-indigo-300 transition-colors w-max">
+                <span>Ir a Propuestas</span> 
                 <ArrowRight size={12} />
               </Link>
             </div>

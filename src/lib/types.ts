@@ -133,3 +133,30 @@ export interface Meeting {
   status: MeetingStatus;
   notes?: string;
 }
+
+// === PROPOSALS ===
+export interface ProposalDetailModule {
+  concept: string;
+  detail: string;
+}
+
+export interface ProposalDetail {
+  objectives: string[];
+  scope: string[];
+  investmentDetails: ProposalDetailModule[];
+}
+
+export interface Proposal {
+  id: string;
+  title: string;
+  clientName: string;
+  projectName: string;
+  object: string;
+  date: string;
+  location: string;
+  mainIdea: string;
+  valueArs: number;
+  detailsJson: ProposalDetail;
+  createdAt: string;
+  updatedAt: string;
+}
