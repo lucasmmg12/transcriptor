@@ -290,9 +290,42 @@ main section .bg-gradient-to-l.from-white {
   .reveal-child,
   .reveal-left,
   .reveal-right,
-  .reveal-scale {
+  .reveal-scale,
+  .card-3d {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
   }
 }
+
+/* ━━━ Lenis Smooth Scroll Core Rules ━━━ */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ━━━ 3D Card GPU Optimizations ━━━ */
+.card-3d {
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transform: translateZ(0); /* Force GPU acceleration */
+  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}

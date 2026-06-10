@@ -2,9 +2,12 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { gsap } from '@/lib/gsap-config';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const VERBOS_HERO = ["escala", "potencia", "automatiza", "transforma", "revoluciona"];
+
+const VERBOS_HERO = ["ordena", "estructura", "automatiza", "simplifica", "potencia"];
 
 const CLIENT_LOGOS = [
     '/absorbpad.webp',
@@ -23,33 +26,33 @@ const CLIENT_LOGOS = [
 const SOLUTIONS = [
     {
         id: 'crm',
-        title: "CRM a Medida",
-        description: "El caballito de batalla. Desarrollamos sistemas de gestión de clientes (CRM) 100% adaptados a tu flujo de ventas, sin licencias costosas ni funciones que no necesitas."
+        title: "Modelado de Flujo de Ventas & CRM",
+        description: "Antes de instalar un CRM, estructuramos tus etapas comerciales reales. Luego desarrollamos un sistema de ventas a medida que siga ese flujo exacto sin licencias rígidas."
     },
     {
         id: 'sistemas',
-        title: "Sistemas a Medida",
-        description: "Si tu empresa tiene una operación única, construimos el software exacto para resolverla. Desde portales operativos internos hasta plataformas corporativas."
+        title: "Ordenamiento de Operaciones a Medida",
+        description: "Si tu operación es única, primero diseñamos el flujo de información óptimo y luego creamos el sistema que lo controla. Portales internos, inventario y control de stock."
     },
     {
         id: 'ecommerce',
-        title: "E-Commerce Personalizado",
-        description: "Tiendas online de alto rendimiento. Optimizadas para velocidad, conversiones y con pasarelas de pago integradas exactamente para las necesidades de tu negocio."
+        title: "Conexión de Canales de Venta",
+        description: "Sincronizamos tus ventas online directamente con tus procesos de facturación, stock y logística. Menos intervención humana, menos errores y datos consistentes."
     },
     {
         id: 'automations',
-        title: "Automatización con IA",
-        description: "Eliminamos el trabajo manual repetitivo. Conectamos tus plataformas para que los datos viajen solos y ahorres cientos de horas operativas al mes."
+        title: "Automatización Operativa",
+        description: "Eliminamos tareas repetitivas conectando tus sistemas. Estructuramos flujos lógicos automáticos para que la información viaje sola y libre de errores."
     },
     {
         id: 'chatbot',
-        title: "Agentes IA en WhatsApp",
-        description: "Tu negocio atiende 24/7. Creamos asistentes de Inteligencia Artificial que entienden texto y audio, vendiendo y respondiendo directo en WhatsApp."
+        title: "Procesos Guiados por IA en WhatsApp",
+        description: "Creamos asistentes de IA integrados a tus sistemas que entienden texto y audio. Resuelven consultas de clientes y cargan datos directamente en tu base operativa."
     },
     {
         id: 'web-design',
-        title: "Desarrollo Web Elite",
-        description: "Tu carta de presentación en internet. Diseñamos con estética premium, velocidad extrema (Next.js) y principios que convierten visitantes en clientes confiados."
+        title: "Estrategia Digital y Captación",
+        description: "Diseñamos y desarrollamos el canal digital de tu empresa con estética premium y velocidad extrema, pensado exclusivamente para captar prospectos calificados."
     }
 ];
 
@@ -96,6 +99,177 @@ export default function Home() {
         sections.forEach((s) => observer.observe(s));
         return () => observer.disconnect();
     }, []);
+
+    // GSAP 3D Scroll Animations & interactive tilt
+    useEffect(() => {
+        // Obtenemos todas las tarjetas que tienen la clase .card-3d
+        const cards = gsap.utils.toArray('.card-3d') as HTMLElement[];
+        if (cards.length === 0) return;
+
+        // Registrar plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. Reveal Animation en scroll (van apareciendo de abajo hacia arriba con rotación 3D)
+        cards.forEach((card) => {
+            gsap.set(card, {
+                transformPerspective: 1000,
+                transformStyle: "preserve-3d",
+                rotationX: 15,
+                y: 80,
+                opacity: 0,
+                scale: 0.95
+            });
+
+            gsap.to(card, {
+                rotationX: 0,
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                duration: 1.2,
+                ease: "power3.out",
+                onStart: () => {
+                    card.style.willChange = "transform, opacity";
+                },
+                onComplete: () => {
+                    card.style.willChange = "auto";
+                },
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 92%", // empieza un poco antes de entrar para mayor fluidez
+                    toggleActions: "play none none none",
+                }
+            });
+        });
+
+        // 2. Velocity Bending: Las tarjetas se "doblan" / inclinan según la velocidad del scroll
+        const quickTransforms = cards.map(card => {
+            return {
+                card,
+                rotateX: gsap.quickTo(card, "rotationX", { duration: 0.5, ease: "power2.out" }),
+                skewY: gsap.quickTo(card, "skewY", { duration: 0.5, ease: "power2.out" }),
+                y: gsap.quickTo(card, "y", { duration: 0.6, ease: "power3.out" })
+            };
+        });
+
+        const scrollTriggerInstance = ScrollTrigger.create({
+            onUpdate: (self) => {
+                const velocity = self.getVelocity();
+                
+                // Mapeamos la velocidad a la rotación 3D (eje X)
+                let tilt = velocity / 350;
+                tilt = Math.max(-8, Math.min(8, tilt)); // Clamp entre -8 y 8 grados
+                
+                // Mapeamos también a un ligero skew en el eje Y
+                let skew = velocity / 1000;
+                skew = Math.max(-2, Math.min(2, skew));
+
+                // Mapeamos a un ligero desplazamiento en el eje Y
+                let yOffset = velocity / 120;
+                yOffset = Math.max(-15, Math.min(15, yOffset));
+
+                // Aplicamos solo a las tarjetas en pantalla para ahorrar recursos (CPU/GPU)
+                quickTransforms.forEach((qt) => {
+                    const rect = qt.card.getBoundingClientRect();
+                    const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
+                    
+                    if (inViewport) {
+                        qt.card.style.willChange = "transform";
+                        qt.rotateX(-tilt); // el tilt es negativo para inclinar hacia atrás al bajar
+                        qt.skewY(skew);
+                        qt.y(yOffset);
+                    }
+                });
+            }
+        });
+
+        // 3. Hover & Touch 3D Tilt Interactivo
+        const cleanupListeners: (() => void)[] = [];
+
+        cards.forEach((card) => {
+            const handleMouseMove = (e: MouseEvent) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const xc = x / rect.width - 0.5;
+                const yc = y / rect.height - 0.5;
+                
+                const rotX = -yc * 20;
+                const rotY = xc * 20;
+                
+                card.style.willChange = "transform";
+                gsap.to(card, {
+                    rotationX: rotX,
+                    rotationY: rotY,
+                    scale: 1.03,
+                    z: 10, // Elevación en el espacio 3D
+                    duration: 0.3,
+                    ease: "power2.out",
+                    overwrite: "auto"
+                });
+            };
+
+            const handleMouseLeave = () => {
+                gsap.to(card, {
+                    rotationX: 0,
+                    rotationY: 0,
+                    scale: 1,
+                    z: 0,
+                    skewY: 0,
+                    y: 0,
+                    duration: 0.7,
+                    ease: "power3.out",
+                    overwrite: "auto",
+                    onComplete: () => {
+                        card.style.willChange = "auto";
+                    }
+                });
+            };
+
+            const handleTouchMove = (e: TouchEvent) => {
+                const touch = e.touches[0];
+                const rect = card.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                
+                if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                    const xc = x / rect.width - 0.5;
+                    const yc = y / rect.height - 0.5;
+                    
+                    const rotX = -yc * 14;
+                    const rotY = xc * 14;
+                    
+                    card.style.willChange = "transform";
+                    gsap.to(card, {
+                        rotationX: rotX,
+                        rotationY: rotY,
+                        scale: 1.02,
+                        duration: 0.3,
+                        ease: "power2.out",
+                        overwrite: "auto"
+                    });
+                }
+            };
+
+            card.addEventListener('mousemove', handleMouseMove);
+            card.addEventListener('mouseleave', handleMouseLeave);
+            card.addEventListener('touchmove', handleTouchMove, { passive: true });
+            card.addEventListener('touchend', handleMouseLeave);
+
+            cleanupListeners.push(() => {
+                card.removeEventListener('mousemove', handleMouseMove);
+                card.removeEventListener('mouseleave', handleMouseLeave);
+                card.removeEventListener('touchmove', handleTouchMove);
+                card.removeEventListener('touchend', handleMouseLeave);
+            });
+        });
+
+        return () => {
+            scrollTriggerInstance.kill();
+            cleanupListeners.forEach(cleanup => cleanup());
+        };
+    }, []);
+
 
     const toggleFaq = (index: number) => {
         setOpenFaq(openFaq === index ? null : index);
@@ -174,7 +348,7 @@ export default function Home() {
                             <span>tu negocio</span>
                         </h1>
                         <p className="text-lg sm:text-xl text-gray-300 mb-8 md:mb-10 max-w-3xl mx-auto px-2 leading-relaxed drop-shadow-md">
-                            <strong className="text-white">Ingeniería de software Full-Stack.</strong> Desarrollamos programas empresariales a medida, automatizamos tareas repetitivas y atendemos a tus clientes 24/7 integrando IA nativa en tus procesos.
+                            <strong className="text-white">Nuestra misión es ordenar y escalar empresas.</strong> No desarrollamos software genérico; reestructuramos la lógica de tus flujos de trabajo y creamos la tecnología e IA a medida necesarias para desbloquear tu crecimiento y eliminar el caos operativo.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
                             <Link href="/diagnostico" className="w-full sm:w-auto px-8 py-4 text-center bg-green-500 text-white font-bold rounded-full shadow-lg hover:bg-green-400 hover:shadow-xl transition-all">
@@ -225,15 +399,15 @@ export default function Home() {
                                 <span className="text-xs font-semibold text-green-400 uppercase tracking-widest mb-3 block">Nuestras soluciones</span>
                                 <h2 className="text-3xl md:text-5xl font-bold text-white">Tecnología aplicada a<br /><span className="text-green-400">problemas concretos</span></h2>
                             </div>
-                            <p className="text-gray-400 max-w-md text-sm md:text-base">Desarrollamos soluciones que combinan automatización, análisis de datos e inteligencia artificial para generar resultados medibles.</p>
+                            <p className="text-gray-400 max-w-md text-sm md:text-base">Analizamos y reestructuramos los flujos de tu empresa, aplicando tecnología a medida e inteligencia artificial para que tu operación funcione sola.</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                             {[
-                                { icon: 'fa-building', title: 'Sistemas empresariales a medida', desc: 'Diseñamos plataformas que ordenan tus procesos, centralizan la información y eliminan el caos operativo de tu empresa.', tags: ['ERP','Gestión de procesos','Control operativo','Organización'] },
-                                { icon: 'fa-chart-bar', title: 'Business Intelligence y dashboards', desc: 'Convertimos datos dispersos en tableros claros para medir, comparar y decidir mejor.', tags: ['KPIs','Reportes ejecutivos','Métricas operativas','Paneles de gestión'] },
-                                { icon: 'fa-robot', title: 'Automatización e inteligencia artificial', desc: 'Integramos IA y automatizaciones para reducir tareas manuales, acelerar respuestas y mejorar seguimiento.', tags: ['Agentes IA','WhatsApp','Flujos automáticos','Carga inteligente'] },
+                                { icon: 'fa-sitemap', title: 'Estructuración y Sistemas a medida', desc: 'Antes de escribir código, organizamos tu flujo de trabajo lógico. Luego construimos el sistema exacto que consolida y controla tu operación.', tags: ['Orden de Procesos','Control operativo','ERP a medida','Trazabilidad'] },
+                                { icon: 'fa-chart-bar', title: 'Control Operativo y Dashboards', desc: 'Centralizamos tus datos operativos dispersos en tableros de control para que puedas medir, optimizar y liderar con claridad.', tags: ['Métricas en vivo','Reportes reales','KPIs de procesos','Visibilidad'] },
+                                { icon: 'fa-robot', title: 'Automatización Lógica de Flujos', desc: 'Eliminamos las tareas manuales repetitivas conectando tus sistemas. Estructuramos flujos para que la información viaje sin fricciones.', tags: ['Flujos automáticos','Integración de sistemas','Agentes de procesos','Cero caos'] },
                             ].map((s, i) => (
-                                <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-7 flex flex-col group hover:shadow-lg hover:border-green-400/30 transition-all h-full reveal-child backdrop-blur-sm">
+                                <div key={i} className="card-3d bg-white/5 border border-white/10 rounded-2xl p-6 md:p-7 flex flex-col group hover:shadow-lg hover:border-green-400/30 transition-all h-full reveal-child backdrop-blur-sm">
                                     <div className="w-11 h-11 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 text-lg mb-5 group-hover:border-green-400/40 group-hover:bg-green-500/15 transition-all">
                                         <i className={`fas ${s.icon}`}></i>
                                     </div>
@@ -257,19 +431,19 @@ export default function Home() {
                     <div className="container mx-auto max-w-6xl relative z-10">
                         <div className="mb-12">
                             <span className="text-xs font-semibold text-green-400 uppercase tracking-widest mb-3 block">Cómo trabajamos</span>
-                            <h2 className="text-3xl md:text-5xl font-bold mb-3 text-white">No entregamos tecnología.<br />Entregamos <span className="text-green-400">resultados sostenibles.</span></h2>
-                            <p className="text-gray-400 max-w-2xl text-base md:text-lg">Combinamos pensamiento estratégico, conocimiento del negocio y tecnología para diseñar sistemas que transforman.</p>
+                            <h2 className="text-3xl md:text-5xl font-bold mb-3 text-white">La tecnología no arregla<br />un <span className="text-green-400">proceso roto.</span></h2>
+                            <p className="text-gray-400 max-w-2xl text-base md:text-lg">Diseñamos soluciones partiendo de la raíz del negocio: primero ordenamos la lógica del proceso y después la sellamos en código automatizado.</p>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {[
-                                { icon: 'fa-link', title: 'No vendemos herramientas sueltas', desc: 'Diseñamos soluciones conectadas con el problema real de cada empresa.' },
-                                { icon: 'fa-crosshairs', title: 'Escuchamos el fondo del negocio', desc: 'Analizamos procesos, prioridades, datos y objetivos antes de implementar nada.' },
-                                { icon: 'fa-sliders', title: 'Diseñamos sistemas a medida', desc: 'Cada empresa necesita una solución aplicable a su realidad concreta.' },
-                                { icon: 'fa-microchip', title: 'Implementamos tecnología real', desc: 'Software, IA y automatizaciones cuando realmente aportan valor medible.' },
-                                { icon: 'fa-handshake', title: 'Acompañamos la adopción', desc: 'Ajustamos y seguimos la implementación para que funcione en el día a día.' },
-                                { icon: 'fa-puzzle-piece', title: 'Estrategia, procesos y tecnología', desc: 'La diferencia está en convertir una necesidad empresarial en una solución concreta.' },
+                                { icon: 'fa-sitemap', title: 'Procesos antes que código', desc: 'Escribir software sobre un proceso desordenado solo acelera el caos. Primero diagramamos y ordenamos.' },
+                                { icon: 'fa-crosshairs', title: 'Diagnóstico de raíz', desc: 'Nos metemos a fondo en tu operación diaria para entender dónde se pierde tiempo y dónde se duplica información.' },
+                                { icon: 'fa-sliders', title: 'Sistemas a medida reales', desc: 'No te adaptas al software; diseñamos la herramienta para que soporte tu flujo operativo optimizado.' },
+                                { icon: 'fa-microchip', title: 'Tecnología como un medio', desc: 'Implementamos IA, bases de datos o integraciones solo si simplifican y blindan el flujo de trabajo.' },
+                                { icon: 'fa-handshake', title: 'Adopción asegurada', desc: 'Acompañamos a tu equipo en el cambio de hábitos para asegurar que el nuevo orden de procesos funcione siempre.' },
+                                { icon: 'fa-puzzle-piece', title: 'Trazabilidad absoluta', desc: 'Hacemos que cada acción de tu negocio quede registrada de forma lógica y transparente sin depender de planillas informales.' },
                             ].map((p, i) => (
-                                <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-6 group hover:shadow-md hover:border-green-400/30 transition-all backdrop-blur-sm reveal-child">
+                                <div key={i} className="card-3d bg-white/5 border border-white/10 rounded-xl p-6 group hover:shadow-md hover:border-green-400/30 transition-all backdrop-blur-sm reveal-child">
                                     <div className="flex items-start gap-4">
                                         <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 group-hover:text-green-400 group-hover:border-green-500/20 group-hover:bg-green-500/10 transition-all flex-shrink-0">
                                             <i className={`fas ${p.icon}`}></i>
@@ -338,17 +512,17 @@ export default function Home() {
                         </p>
 
                         <div className="grid md:grid-cols-3 gap-8 text-left">
-                            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm reveal-child">
+                            <div className="card-3d p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm reveal-child">
                                 <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center mb-4 text-green-400"><i className="fas fa-rocket"></i></div>
                                 <h4 className="font-bold text-white mb-2">Misión</h4>
                                 <p className="text-sm text-gray-400">Eliminar la fricción operativa para que los equipos se enfoquen en lo que realmente importa: el crecimiento.</p>
                             </div>
-                            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm reveal-child">
+                            <div className="card-3d p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm reveal-child">
                                 <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center mb-4 text-green-400"><i className="fas fa-brain"></i></div>
                                 <h4 className="font-bold text-white mb-2">Visión</h4>
                                 <p className="text-sm text-gray-400">Ser el cerebro digital que impulsa las operaciones ágiles de las empresas modernas líderes en LATAM.</p>
                             </div>
-                            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm reveal-child">
+                            <div className="card-3d p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm reveal-child">
                                 <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center mb-4 text-green-400"><i className="fas fa-gem"></i></div>
                                 <h4 className="font-bold text-white mb-2">Valores</h4>
                                 <p className="text-sm text-gray-400">Precisión Operativa • Adaptación Local • Innovación Transparente y Escalabilidad garantizada.</p>
@@ -398,7 +572,7 @@ export default function Home() {
                                     href={`https://wa.me/5492645438114?text=${encodeURIComponent(`Hola, estaba viendo su sitio web y me interesa saber más sobre el servicio de ${s.title}.`)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="bg-white border border-gray-200 shadow-sm rounded-2xl p-6 md:p-8 flex flex-col hover:shadow-xl hover:border-green-400 transition-all cursor-pointer group hover:-translate-y-1 block reveal-child"
+                                    className="card-3d bg-white border border-gray-200 shadow-sm rounded-2xl p-6 md:p-8 flex flex-col hover:shadow-xl hover:border-green-400 transition-all cursor-pointer group hover:-translate-y-1 block reveal-child"
                                 >
                                     <span className="text-green-600 font-bold text-sm mb-4 bg-green-50 border border-green-100 w-8 h-8 flex items-center justify-center rounded-full group-hover:bg-green-100 transition-colors">
                                         {idx + 1}
@@ -448,7 +622,7 @@ export default function Home() {
                             </div>
 
                             {/* Comparacion */}
-                            <div className="w-full md:w-1/2 bg-gray-50 rounded-2xl p-8 border border-gray-200 shadow-sm">
+                            <div className="card-3d w-full md:w-1/2 bg-gray-50 rounded-2xl p-8 border border-gray-200 shadow-sm">
                                 <h3 className="text-xl font-bold mb-6 text-center text-gray-900">Por qué Grow Labs es diferente</h3>
                                 <div className="space-y-4">
                                     <div className="grid grid-cols-3 gap-4 text-sm font-bold text-gray-500 border-b border-gray-200 pb-3">
@@ -457,24 +631,24 @@ export default function Home() {
                                         <span className="text-center">Tradicional</span>
                                     </div>
                                     <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
+                                        <span className="text-gray-700 font-medium">Enfoque Primario</span>
+                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">Procesos y Orden</span>
+                                        <span className="text-center text-gray-500">Software Listo</span>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
+                                        <span className="text-gray-700 font-medium">Flexibilidad</span>
+                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">Flujo a Medida</span>
+                                        <span className="text-center text-gray-500">Plantillas Rígidas</span>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
                                         <span className="text-gray-700 font-medium">Implementación</span>
-                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">Días/Semanas</span>
-                                        <span className="text-center text-gray-500">6-12 meses</span>
+                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">Semanas (Ágil)</span>
+                                        <span className="text-center text-gray-500">Largo Plazo (Meses)</span>
                                     </div>
                                     <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
-                                        <span className="text-gray-700 font-medium">Tecnología</span>
-                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">IA Inteligente</span>
-                                        <span className="text-center text-gray-500">Software Rígido</span>
-                                    </div>
-                                    <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
-                                        <span className="text-gray-700 font-medium">Soporte</span>
-                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">24/7 Asesoría</span>
+                                        <span className="text-gray-700 font-medium">Soporte y Adopción</span>
+                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">Acompañamiento</span>
                                         <span className="text-center text-gray-500">Tickets Lentos</span>
-                                    </div>
-                                    <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
-                                        <span className="text-gray-700 font-medium">ROI (Retorno)</span>
-                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">Inmediato</span>
-                                        <span className="text-center text-gray-500">Incierto</span>
                                     </div>
                                 </div>
                             </div>
@@ -502,7 +676,7 @@ export default function Home() {
 
                             {/* SVG Line Chart */}
                             <div className="w-full md:w-1/2">
-                                <div className="bg-black/50 p-8 rounded-3xl border border-gray-700 relative group overflow-hidden shadow-2xl backdrop-blur-sm">
+                                <div className="card-3d bg-black/50 p-8 rounded-3xl border border-gray-700 relative group overflow-hidden shadow-2xl backdrop-blur-sm">
                                     <div className="flex justify-between items-end mb-8 relative z-10">
                                         <div>
                                             <p className="text-gray-400 text-sm uppercase tracking-wider mb-1">Crecimiento Eficiencia</p>
@@ -607,12 +781,12 @@ export default function Home() {
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                             {[
-                                { icon: 'fa-search-plus', title: 'Diagnóstico Digital', desc: 'Analizamos tu operación actual, identificamos cuellos de botella y diseñamos un mapa de prioridades claro.', color: 'text-blue-500', bg: 'bg-blue-50' },
+                                { icon: 'fa-search-plus', title: 'Diagnóstico Digital', desc: 'Analizamos tu operation actual, identificamos cuellos de botella y diseñamos un mapa de prioridades claro.', color: 'text-blue-500', bg: 'bg-blue-50' },
                                 { icon: 'fa-sitemap', title: 'Ordenamiento de Procesos', desc: 'Documentamos y estructuramos los procesos clave para que tu equipo trabaje con claridad y trazabilidad.', color: 'text-green-500', bg: 'bg-green-50' },
                                 { icon: 'fa-cogs', title: 'Implementación Tecnológica', desc: 'Desarrollamos e integramos las soluciones digitales que tu empresa necesita: software, automatizaciones, dashboards.', color: 'text-purple-500', bg: 'bg-purple-50' },
                                 { icon: 'fa-chart-line', title: 'Seguimiento y Evolución', desc: 'Acompañamos la adopción, medimos resultados y ajustamos el sistema para que crezca con tu empresa.', color: 'text-amber-500', bg: 'bg-amber-50' },
                             ].map((s, i) => (
-                                <div key={i} className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 flex flex-col group hover:shadow-lg hover:-translate-y-1 transition-all shadow-sm reveal-child">
+                                <div key={i} className="card-3d bg-white border border-gray-200 rounded-2xl p-6 md:p-8 flex flex-col group hover:shadow-lg hover:-translate-y-1 transition-all shadow-sm reveal-child">
                                     <div className="flex items-center gap-3 mb-5">
                                         <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center ${s.color} text-lg border border-gray-100`}>
                                             <i className={`fas ${s.icon}`}></i>
@@ -642,13 +816,13 @@ export default function Home() {
                             <p className="text-gray-600 max-w-2xl text-base">Combinamos visión tecnológica, pensamiento estratégico y capacidad real de implementación.</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-                            <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 text-center group shadow-sm hover:shadow-lg transition-all">
+                            <div className="card-3d bg-white border border-gray-200 rounded-2xl p-6 md:p-8 text-center group shadow-sm hover:shadow-lg transition-all">
                                 <div className="w-28 h-28 md:w-36 md:h-36 mx-auto mb-5 rounded-full overflow-hidden border-2 border-green-200 relative group-hover:border-green-400 transition-all">
                                     <Image src="/lucas.jpeg" alt="Lucas Marinero" fill className="object-cover" />
                                 </div>
                                 <h3 className="text-lg font-bold text-gray-900">Lucas Marinero</h3>
                                 <p className="text-green-600 text-sm font-medium mb-3">Cofundador · Dirección Técnica y Producto</p>
-                                <p className="text-gray-600 text-sm leading-relaxed mb-4">Lidera la visión tecnológica, el desarrollo de soluciones digitales, automatizaciones y software a medida.</p>
+                                <p className="text-gray-600 text-sm leading-relaxed mb-4">Lidera la traducción de procesos de negocio complejos a sistemas automatizados robustos, integrando tecnología e IA a medida.</p>
                                 <div className="flex flex-wrap justify-center gap-2">
                                     {['Producto','IA','Automatización','Software'].map(t => (
                                         <span key={t} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100">
@@ -657,7 +831,7 @@ export default function Home() {
                                     ))}
                                 </div>
                             </div>
-                            <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 text-center group shadow-sm hover:shadow-lg transition-all">
+                            <div className="card-3d bg-white border border-gray-200 rounded-2xl p-6 md:p-8 text-center group shadow-sm hover:shadow-lg transition-all">
                                 <div className="w-28 h-28 md:w-36 md:h-36 mx-auto mb-5 rounded-full overflow-hidden border-2 border-green-200 relative bg-green-50 flex items-center justify-center group-hover:border-green-400 transition-all">
                                     <span className="text-3xl font-bold text-green-600/60">GR</span>
                                 </div>
@@ -673,9 +847,9 @@ export default function Home() {
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 text-center shadow-sm">
+                        <div className="card-3d bg-white border border-gray-200 rounded-2xl p-6 md:p-8 text-center shadow-sm">
                             <p className="text-base md:text-lg text-gray-700 max-w-2xl mx-auto">
-                                La fortaleza de Grow Labs está en la complementariedad: <span className="text-green-600 font-semibold">visión técnica para construir soluciones</span> y <span className="text-green-600 font-semibold">visión empresarial para aplicarlas correctamente.</span>
+                                La fortaleza de Grow Labs está en la complementariedad: <span className="text-green-600 font-semibold">visión y orden de procesos de negocio</span> para estructurar la operación, combinada con la <span className="text-green-600 font-semibold">capacidad técnica para automatizarlos</span> de forma robusta.
                             </p>
                         </div>
                     </div>
@@ -737,7 +911,7 @@ export default function Home() {
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6 text-left">
-                            <div className="light-card p-6 md:p-8 flex flex-col relative overflow-hidden group hover:border-green-300">
+                            <div className="card-3d light-card p-6 md:p-8 flex flex-col relative overflow-hidden group hover:border-green-300">
                                 <div className="absolute top-0 right-0 p-1.5 px-3 md:p-2 md:px-4 bg-green-50 border-b border-l border-green-100 text-green-600 text-[10px] md:text-xs font-bold rounded-bl-lg">
                                     POPULAR
                                 </div>
@@ -749,7 +923,7 @@ export default function Home() {
                                 </Link>
                             </div>
 
-                            <div className="light-card p-6 md:p-8 flex flex-col group hover:border-green-300">
+                            <div className="card-3d light-card p-6 md:p-8 flex flex-col group hover:border-green-300">
                                 <div className="mb-4 md:mb-6"><i className="fas fa-microphone-lines text-2xl md:text-3xl text-gray-700 group-hover:text-green-600 transition-colors"></i></div>
                                 <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">Transcriptor IA</h3>
                                 <p className="text-xs md:text-sm text-gray-600 mb-6 md:mb-8 flex-1">Convierte reuniones en resúmenes estructurados usando IA. Transcripciones puras.</p>
@@ -758,7 +932,7 @@ export default function Home() {
                                 </Link>
                             </div>
 
-                            <div className="light-card p-6 md:p-8 flex flex-col group hover:border-green-300">
+                            <div className="card-3d light-card p-6 md:p-8 flex flex-col group hover:border-green-300">
                                 <div className="mb-4 md:mb-6"><i className="fas fa-images text-2xl md:text-3xl text-gray-700 group-hover:text-green-600 transition-colors"></i></div>
                                 <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">Image to PDF</h3>
                                 <p className="text-xs md:text-sm text-gray-600 mb-6 md:mb-8 flex-1">Convierte fotografías de documentos directamente a PDFs ligeros. 100% privado.</p>
