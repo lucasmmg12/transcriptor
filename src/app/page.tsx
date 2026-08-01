@@ -447,10 +447,74 @@ export default function Home() {
                             ))}
                         </div>
 
-                        <div className="card-3d bg-green-500/10 border border-green-500/30 rounded-2xl p-8 text-center max-w-4xl mx-auto reveal-child backdrop-blur-sm shadow-[0_0_30px_rgba(34,197,94,0.1)]">
-                            <p className="text-xl text-white font-medium">
+                        <div className="card-3d bg-green-500/10 border border-green-500/30 rounded-2xl p-6 md:p-8 text-center max-w-4xl mx-auto reveal-child backdrop-blur-sm shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+                            <p className="text-lg md:text-xl text-white font-medium">
                                 Grow Labs convierte esa operación fragmentada en un <strong className="text-green-400">sistema centralizado, trazable y diseñado alrededor de la lógica real</strong> de cada organización.
                             </p>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 3. CASOS Y PROYECTOS DE ÉXITO */}
+                <section id="casos" className="py-12 md:py-24 bg-gray-950 text-white reveal-section border-t border-white/5">
+                    <div className="container mx-auto px-4 md:px-6 max-w-6xl relative z-10">
+                        <div className="text-center mb-10 md:mb-16">
+                            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 md:mb-6">Proyectos reales, <span className="text-green-400">resultados concretos</span></h2>
+                            <p className="text-base md:text-lg text-gray-400">Empresas que ya transformaron su operación con Grow Labs.</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-10 md:mb-16">
+                            {CASES.map((caso, i) => {
+                                if (caso.featured) {
+                                    return (
+                                        <div 
+                                            key={i} 
+                                            className="card-3d bg-gradient-to-br from-gray-950 via-gray-900 to-emerald-950/80 border border-green-500/40 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center shadow-[0_0_30px_rgba(34,197,94,0.12)] hover:border-green-400 hover:shadow-[0_0_40px_rgba(34,197,94,0.22)] transition-all md:col-span-2 reveal-child backdrop-blur-md relative overflow-hidden group"
+                                        >
+                                            <div className="absolute -top-12 -right-12 w-48 h-48 bg-green-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-green-500/20 transition-all"></div>
+                                            
+                                            {caso.image && (
+                                                <div className="relative w-20 h-20 md:w-28 md:h-28 rounded-full border-2 border-green-400/50 bg-white p-2 shrink-0 shadow-[0_0_20px_rgba(34,197,94,0.2)] flex items-center justify-center overflow-hidden">
+                                                    <Image src={caso.image} alt={caso.title} fill className="object-contain p-2 rounded-full" />
+                                                </div>
+                                            )}
+                                            
+                                            <div className="flex-1">
+                                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight">{caso.title}</h3>
+                                                <p className="text-gray-300 text-base md:text-lg leading-relaxed">{caso.description}</p>
+                                            </div>
+                                        </div>
+                                    );
+                                }
+
+                                return (
+                                    <div 
+                                        key={i} 
+                                        className="card-3d bg-gray-900/80 border border-white/10 rounded-2xl p-6 flex flex-col reveal-child hover:border-green-500/40 hover:bg-gray-900 transition-all relative group backdrop-blur-md shadow-lg"
+                                    >
+                                        <div className="flex items-center gap-4 mb-4">
+                                            {caso.image ? (
+                                                <div className="relative w-14 h-14 rounded-full border border-white/20 bg-white p-1.5 shrink-0 shadow-md overflow-hidden flex items-center justify-center">
+                                                    <Image src={caso.image} alt={caso.title} fill className="object-contain p-1.5 rounded-full" />
+                                                </div>
+                                            ) : (
+                                                <div className="w-14 h-14 rounded-full bg-green-500/20 border border-green-500/30 text-green-400 font-bold flex items-center justify-center shrink-0 text-xl shadow-sm">
+                                                    {caso.title.charAt(0)}
+                                                </div>
+                                            )}
+                                            <h3 className="text-xl font-bold text-white leading-snug">{caso.title}</h3>
+                                        </div>
+
+                                        <p className="text-gray-300 text-sm leading-relaxed flex-1">{caso.description}</p>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <div className="text-center">
+                            <a href="https://wa.me/5492645438114" target="_blank" className="inline-flex items-center gap-3 px-8 py-4 bg-gray-900 text-white font-bold rounded-full hover:bg-black border border-white/10 transition-colors">
+                                Quiero analizar un proceso de mi empresa <i className="fab fa-whatsapp text-green-400 text-lg"></i>
+                            </a>
                         </div>
                     </div>
                 </section>
@@ -607,69 +671,7 @@ export default function Home() {
                     </div>
                 </section>
 
-                {/* 7. CASOS Y PROYECTOS */}
-                <section id="casos" className="py-24 bg-gray-950 text-white reveal-section border-t border-white/5">
-                    <div className="container mx-auto px-4 md:px-6 max-w-6xl relative z-10">
-                        <div className="text-center mb-16">
-                            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Proyectos reales, <span className="text-green-400">resultados concretos</span></h2>
-                            <p className="text-lg text-gray-400">Convertimos problemas operativos en casos de éxito.</p>
-                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-16">
-                            {CASES.map((caso, i) => {
-                                if (caso.featured) {
-                                    return (
-                                        <div 
-                                            key={i} 
-                                            className="card-3d bg-gradient-to-br from-gray-950 via-gray-900 to-emerald-950/80 border border-green-500/40 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center shadow-[0_0_30px_rgba(34,197,94,0.12)] hover:border-green-400 hover:shadow-[0_0_40px_rgba(34,197,94,0.22)] transition-all md:col-span-2 reveal-child backdrop-blur-md relative overflow-hidden group"
-                                        >
-                                            <div className="absolute -top-12 -right-12 w-48 h-48 bg-green-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-green-500/20 transition-all"></div>
-                                            
-                                            {caso.image && (
-                                                <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-full border-2 border-green-400/50 bg-white p-2 shrink-0 shadow-[0_0_20px_rgba(34,197,94,0.2)] flex items-center justify-center overflow-hidden">
-                                                    <Image src={caso.image} alt={caso.title} fill className="object-contain p-2 rounded-full" />
-                                                </div>
-                                            )}
-                                            
-                                            <div className="flex-1">
-                                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight">{caso.title}</h3>
-                                                <p className="text-gray-300 text-base md:text-lg leading-relaxed">{caso.description}</p>
-                                            </div>
-                                        </div>
-                                    );
-                                }
-
-                                return (
-                                    <div 
-                                        key={i} 
-                                        className="card-3d bg-gray-900/80 border border-white/10 rounded-2xl p-6 flex flex-col reveal-child hover:border-green-500/40 hover:bg-gray-900 transition-all relative group backdrop-blur-md shadow-lg"
-                                    >
-                                        <div className="flex items-center gap-4 mb-4">
-                                            {caso.image ? (
-                                                <div className="relative w-14 h-14 rounded-full border border-white/20 bg-white p-1.5 shrink-0 shadow-md overflow-hidden flex items-center justify-center">
-                                                    <Image src={caso.image} alt={caso.title} fill className="object-contain p-1.5 rounded-full" />
-                                                </div>
-                                            ) : (
-                                                <div className="w-14 h-14 rounded-full bg-green-500/20 border border-green-500/30 text-green-400 font-bold flex items-center justify-center shrink-0 text-xl shadow-sm">
-                                                    {caso.title.charAt(0)}
-                                                </div>
-                                            )}
-                                            <h3 className="text-xl font-bold text-white leading-snug">{caso.title}</h3>
-                                        </div>
-
-                                        <p className="text-gray-300 text-sm leading-relaxed flex-1">{caso.description}</p>
-                                    </div>
-                                );
-                            })}
-                        </div>
-
-                        <div className="text-center">
-                            <a href="https://wa.me/5492645438114" target="_blank" className="inline-flex items-center gap-3 px-8 py-4 bg-gray-900 text-white font-bold rounded-full hover:bg-black transition-colors">
-                                Quiero analizar un proceso de mi empresa <i className="fab fa-whatsapp text-green-400 text-lg"></i>
-                            </a>
-                        </div>
-                    </div>
-                </section>
 
                 {/* 8. DIFERENCIAL */}
                 <section className="py-20 px-4 md:px-6 bg-gray-950 text-white relative reveal-section border-t border-white/10">
