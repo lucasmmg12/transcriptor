@@ -94,7 +94,7 @@ const CASES = [
     },
     {
         title: 'Estilo Apple',
-        image: null,
+        image: '/ea.png',
         featured: false,
         description: 'Sistema de gestión de punta a punta que maneja a todos sus clientes, sus ventas y bots de WhatsApp integrados.'
     },
@@ -615,23 +615,52 @@ export default function Home() {
                             <p className="text-lg text-gray-600">Convertimos problemas operativos en casos de éxito.</p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                            {CASES.map((caso, i) => (
-                                <div key={i} className={`card-3d bg-gray-50 border border-gray-200 rounded-2xl overflow-hidden flex flex-col reveal-child hover:shadow-xl hover:border-green-300 transition-all ${caso.featured ? 'md:col-span-2' : ''}`}>
-                                    {caso.image && (
-                                        <div className="relative w-full h-48 md:h-64 bg-white border-b border-gray-200">
-                                            <Image src={caso.image} alt={caso.title} fill className="object-contain p-6" />
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-16">
+                            {CASES.map((caso, i) => {
+                                if (caso.featured) {
+                                    return (
+                                        <div 
+                                            key={i} 
+                                            className="card-3d bg-gradient-to-br from-gray-950 via-gray-900 to-emerald-950/80 border border-green-500/40 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center shadow-[0_0_30px_rgba(34,197,94,0.12)] hover:border-green-400 hover:shadow-[0_0_40px_rgba(34,197,94,0.22)] transition-all md:col-span-2 reveal-child backdrop-blur-md relative overflow-hidden group"
+                                        >
+                                            <div className="absolute -top-12 -right-12 w-48 h-48 bg-green-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-green-500/20 transition-all"></div>
+                                            
+                                            {caso.image && (
+                                                <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-full border-2 border-green-400/50 bg-white p-2 shrink-0 shadow-[0_0_20px_rgba(34,197,94,0.2)] flex items-center justify-center overflow-hidden">
+                                                    <Image src={caso.image} alt={caso.title} fill className="object-contain p-2 rounded-full" />
+                                                </div>
+                                            )}
+                                            
+                                            <div className="flex-1">
+                                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight">{caso.title}</h3>
+                                                <p className="text-gray-300 text-base md:text-lg leading-relaxed">{caso.description}</p>
+                                            </div>
                                         </div>
-                                    )}
-                                    <div className="p-8 flex flex-col flex-1">
-                                        {caso.featured && (
-                                            <span className="inline-block px-3 py-1 bg-green-100 text-green-700 font-bold text-[10px] uppercase tracking-widest rounded-full self-start mb-4">Caso Destacado</span>
-                                        )}
-                                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">{caso.title}</h3>
-                                        <p className="text-gray-700 leading-relaxed">{caso.description}</p>
+                                    );
+                                }
+
+                                return (
+                                    <div 
+                                        key={i} 
+                                        className="card-3d bg-gray-50/80 border border-gray-200/80 rounded-2xl p-6 flex flex-col reveal-child hover:shadow-xl hover:border-green-400/60 transition-all relative group backdrop-blur-sm"
+                                    >
+                                        <div className="flex items-center gap-4 mb-4">
+                                            {caso.image ? (
+                                                <div className="relative w-16 h-16 rounded-full border-2 border-gray-200 bg-white p-1.5 shrink-0 shadow-sm overflow-hidden flex items-center justify-center">
+                                                    <Image src={caso.image} alt={caso.title} fill className="object-contain p-1.5 rounded-full" />
+                                                </div>
+                                            ) : (
+                                                <div className="w-16 h-16 rounded-full bg-green-100 border-2 border-green-200 text-green-700 font-bold flex items-center justify-center shrink-0 text-xl shadow-sm">
+                                                    {caso.title.charAt(0)}
+                                                </div>
+                                            )}
+                                            <h3 className="text-xl font-bold text-gray-900 leading-snug">{caso.title}</h3>
+                                        </div>
+
+                                        <p className="text-gray-600 text-sm leading-relaxed flex-1">{caso.description}</p>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
 
                         <div className="text-center">
