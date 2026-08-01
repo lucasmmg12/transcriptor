@@ -46,7 +46,7 @@ export interface Task {
 // === LEADS / CRM ===
 export type LeadStage = 'Nuevo' | 'Contactado' | 'Diagnóstico' | 'Propuesta' | 'Negociación' | 'Cerrado Ganado' | 'Cerrado Perdido';
 
-export type LeadSource = 'Referido' | 'Web' | 'Redes Sociales' | 'Evento' | 'WhatsApp' | 'Otro';
+export type LeadSource = 'Referido' | 'Web' | 'Redes Sociales' | 'Evento' | 'WhatsApp' | 'Diagnóstico Grow IQ' | 'Otro';
 
 export interface Lead {
   id: string;
