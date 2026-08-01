@@ -589,6 +589,31 @@ export default function Home() {
                     </div>
                 </section>
 
+                {/* GROW IQ B destacado */}
+                <section className="py-24 px-4 md:px-6 bg-[#0a0f0d] relative border-b border-white/10 reveal-section overflow-hidden">
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+                    <div className="container mx-auto max-w-4xl text-center relative z-10">
+                        <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold text-xs uppercase tracking-widest mb-6 border border-emerald-500/20">
+                            Diagnóstico Gratuito
+                        </span>
+                        <h2 className="text-4xl md:text-5xl font-black text-white mb-6">¿Qué tan preparada está tu empresa para crecer?</h2>
+                        <p className="text-lg md:text-xl text-gray-400 mb-10 leading-relaxed max-w-3xl mx-auto">
+                            Respondé un diagnóstico gratuito y descubrí el nivel de madurez operativa, digital y tecnológica de tu empresa.
+                        </p>
+                        
+                        <div className="flex flex-wrap justify-center gap-6 mb-12 text-gray-300">
+                            <div className="flex items-center gap-2"><i className="fas fa-check text-emerald-500"></i> Conocé tu Grow IQ</div>
+                            <div className="flex items-center gap-2"><i className="fas fa-check text-emerald-500"></i> Detectá cuellos de botella</div>
+                            <div className="flex items-center gap-2"><i className="fas fa-check text-emerald-500"></i> Descubrí procesos automatizables</div>
+                            <div className="flex items-center gap-2"><i className="fas fa-check text-emerald-500"></i> Recibí recomendaciones personalizadas</div>
+                        </div>
+
+                        <Link href="/grow-iq" className="btn-grow inline-flex px-10 py-4 text-lg shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:scale-105 transition-transform duration-300">
+                            Calcular mi Grow IQ
+                        </Link>
+                    </div>
+                </section>
+
                 {/* PROBLEMAS / COMPARACION (Restored & Light Theme adapted) */}
                 <section className="py-20 bg-white border-b border-gray-200 reveal-section">
                     <div className="container mx-auto px-6 max-w-6xl">
@@ -910,6 +935,39 @@ export default function Home() {
                             </div>
                         </div>
 
+                        {/* Herramientas para Empresas */}
+                        <div className="mb-10">
+                            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                <i className="fas fa-building text-green-600"></i> Herramientas para empresas
+                            </h3>
+                            <div className="card-3d bg-[#0a0f0d] p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden group hover:border-green-500/50 rounded-2xl shadow-xl transition-all">
+                                <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-green-500/20 rounded-full blur-[80px]"></div>
+                                <div className="flex-1 relative z-10 text-center md:text-left">
+                                    <span className="inline-block px-3 py-1 rounded-full bg-green-500/10 text-green-400 font-bold text-[10px] uppercase tracking-widest mb-4 border border-green-500/20">
+                                        Herramienta gratuita para empresas
+                                    </span>
+                                    <h3 className="text-3xl font-black text-white mb-3">Grow IQ</h3>
+                                    <p className="text-gray-400 text-lg mb-6 max-w-xl">
+                                        Descubrí el nivel de madurez operativa, digital y tecnológica de tu empresa.
+                                    </p>
+                                    <ul className="text-sm text-gray-500 space-y-2 mb-8 hidden md:block">
+                                        <li><i className="fas fa-check text-green-500 mr-2"></i> Resultado inmediato (puntaje 0-100)</li>
+                                        <li><i className="fas fa-check text-green-500 mr-2"></i> Comparación empresarial</li>
+                                        <li><i className="fas fa-check text-green-500 mr-2"></i> Recomendaciones personalizadas</li>
+                                    </ul>
+                                </div>
+                                <div className="relative z-10 w-full md:w-auto text-center">
+                                    <Link href="/grow-iq" className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(22,163,74,0.4)] transition-all">
+                                        Calcular mi Grow IQ <i className="fas fa-arrow-right"></i>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Herramientas para la Comunidad */}
+                        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                            <i className="fas fa-users text-blue-600"></i> Herramientas para la comunidad
+                        </h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6 text-left">
                             <div className="card-3d light-card p-6 md:p-8 flex flex-col relative overflow-hidden group hover:border-green-300">
                                 <div className="absolute top-0 right-0 p-1.5 px-3 md:p-2 md:px-4 bg-green-50 border-b border-l border-green-100 text-green-600 text-[10px] md:text-xs font-bold rounded-bl-lg">

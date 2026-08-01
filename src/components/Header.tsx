@@ -27,9 +27,9 @@ export default function Header() {
                     <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
                 </nav>
                 <div className="flex items-center gap-3">
-                    <a href="https://cal.com/lucas-marinero-ji1yyg/15min" target="_blank" className="hidden md:inline-flex text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition-colors items-center gap-1.5">
-                        Solicitar diagnóstico <i className="fas fa-arrow-right text-xs" />
-                    </a>
+                    <Link href="/grow-iq" className="hidden md:inline-flex text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition-colors items-center gap-1.5">
+                        Medí tu nivel digital <i className="fas fa-arrow-right text-xs" />
+                    </Link>
                     <button onClick={() => setOpen(!open)} className="md:hidden w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
                         <i className={`fas ${open ? 'fa-times' : 'fa-bars'} text-sm`} />
                     </button>
@@ -40,7 +40,7 @@ export default function Header() {
                     {['servicios', 'soluciones', 'direccion', 'faq'].map(s => (
                         <a key={s} href={`#${s}`} onClick={() => setOpen(false)} className="block text-gray-300 py-2 capitalize hover:text-emerald-400 transition-colors">{s === 'servicios' ? 'Cómo trabajamos' : s === 'soluciones' ? 'Soluciones' : s === 'direccion' ? 'Dirección' : 'FAQ'}</a>
                     ))}
-                    <a href="https://cal.com/lucas-marinero-ji1yyg/15min" target="_blank" className="btn-grow w-full justify-center mt-2">Solicitar diagnóstico</a>
+                    <Link href="/grow-iq" onClick={() => setOpen(false)} className="btn-grow w-full justify-center mt-2">Medí tu nivel digital</Link>
                 </div>
             )}
         </header>
