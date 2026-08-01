@@ -72,7 +72,7 @@ const CASES = [
         title: 'Sanatorio Argentino',
         image: '/sanatorio argentino.webp',
         featured: true,
-        description: 'Hemos creado el sistema integral con el que se maneja administración y facturación, además de crear proyectos como auditorías de historias clínicas, análisis de datos y desarrollo de un RAG institucional (un sistema de Inteligencia Artificial que permite consultar miles de documentos internos e historias clínicas de forma instantánea y precisa).'
+        description: 'Desarrollamos el ecosistema digital integral para la institución. Automatizamos completamente el área administrativa y el ciclo de facturación, eliminando la carga manual de datos y devolviéndole tiempo, trazabilidad y orden operativo a toda la organización.'
     },
     {
         title: 'Ecar',
