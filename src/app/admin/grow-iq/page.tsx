@@ -9,12 +9,16 @@ type DiagnosticLead = {
   id: string;
   created_at: string;
   company_name: string;
-  contact_name: string;
-  contact_email: string;
-  whatsapp: string;
-  contact_role: string;
-  industry: string;
-  score: number;
+  full_name?: string;
+  contact_name?: string;
+  email?: string;
+  contact_email?: string;
+  whatsapp?: string;
+  role?: string;
+  contact_role?: string;
+  industry?: string;
+  total_score?: number;
+  score?: number;
   maturity_level: string;
   token: string;
 };
@@ -42,11 +46,13 @@ export default function GrowIqAdminPage() {
     fetchLeads();
   }, []);
 
-  const filtered = leads.filter(l => 
-    l.company_name.toLowerCase().includes(search.toLowerCase()) || 
-    l.contact_name.toLowerCase().includes(search.toLowerCase()) ||
-    l.contact_email.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = leads.filter(l => {
+    const company = l.company_name || '';
+    const name = l.full_name || l.contact_name || '';
+    const email = l.email || l.contact_email || '';
+    const query = search.toLowerCase();
+    return company.toLowerCase().includes(query) || name.toLowerCase().includes(query) || email.toLowerCase().includes(query);
+  });
 
   const getMaturityColor = (level: string) => {
     switch(level) {
@@ -115,39 +121,47 @@ export default function GrowIqAdminPage() {
                 </td>
               </tr>
             ) : (
-              filtered.map((l) => (
-                <tr key={l.id} className="hover:bg-white/[0.01] transition-colors group">
-                  <td className="px-5 py-4">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Building2 size={14} className="text-gray-500" />
-                      <span className="font-bold text-white group-hover:text-emerald-400 transition-colors">{l.company_name}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <Briefcase size={12} />
-                      {l.industry}
-                    </div>
-                  </td>
-                  <td className="px-5 py-4">
-                    <div className="flex items-center gap-2 mb-1">
-                      <User size={14} className="text-gray-500" />
-                      <span className="text-gray-300 font-semibold">{l.contact_name}</span>
-                      <span className="text-[10px] bg-white/5 px-1.5 py-0.5 rounded text-gray-400 ml-1">{l.contact_role}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
-                      <Mail size={12} />
-                      <a href={`mailto:${l.contact_email}`} className="hover:text-emerald-400 transition-colors">{l.contact_email}</a>
-                    </div>
-                    {l.whatsapp && (
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <Zap size={12} />
-                        <a href={`https://wa.me/${l.whatsapp.replace(/\D/g, '')}`} target="_blank" className="hover:text-emerald-400 transition-colors">{l.whatsapp}</a>
+              filtered.map((l) => {
+                const contactName = l.full_name || l.contact_name || '-';
+                const contactEmail = l.email || l.contact_email || '-';
+                const contactRole = l.role || l.contact_role || '';
+                const score = l.total_score ?? l.score ?? 0;
+
+                return (
+                  <tr key={l.id} className="hover:bg-white/[0.01] transition-colors group">
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Building2 size={14} className="text-gray-500" />
+                        <span className="font-bold text-white group-hover:text-emerald-400 transition-colors">{l.company_name}</span>
                       </div>
-                    )}
-                  </td>
-                  <td className="px-5 py-4 text-center">
-                    <span className="text-lg font-black text-white">{l.score}</span>
-                    <span className="text-xs text-gray-500">/100</span>
-                  </td>
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <Briefcase size={12} />
+                        {l.industry || 'General'}
+                      </div>
+                    </td>
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-2 mb-1">
+                        <User size={14} className="text-gray-500" />
+                        <span className="text-gray-300 font-semibold">{contactName}</span>
+                        {contactRole && <span className="text-[10px] bg-white/5 px-1.5 py-0.5 rounded text-gray-400 ml-1">{contactRole}</span>}
+                      </div>
+                      {contactEmail !== '-' && (
+                        <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                          <Mail size={12} />
+                          <a href={`mailto:${contactEmail}`} className="hover:text-emerald-400 transition-colors">{contactEmail}</a>
+                        </div>
+                      )}
+                      {l.whatsapp && (
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <Zap size={12} />
+                          <a href={`https://wa.me/${l.whatsapp.replace(/\D/g, '')}`} target="_blank" className="hover:text-emerald-400 transition-colors">{l.whatsapp}</a>
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-5 py-4 text-center">
+                      <span className="text-lg font-black text-white">{score}</span>
+                      <span className="text-xs text-gray-500">/100</span>
+                    </td>
                   <td className="px-5 py-4">
                     <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${getMaturityColor(l.maturity_level)}`}>
                       {l.maturity_level}

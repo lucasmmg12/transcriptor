@@ -34,14 +34,16 @@ export default function GrowIqResults({ token, initialData }: { token: string, i
     }
   }, [token, initialData]);
 
-  const handleDownloadPdf = () => {
-    setGeneratingPdf(true);
-    // Para simplificar, la generación completa en jsPDF puede ser un script separado.
-    // Usaremos window.print() como fallback amigable para el frontend, o puedes implementar jsPDF completo.
-    setTimeout(() => {
-      window.print();
+  const handleDownloadPdf = async () => {
+    try {
+      setGeneratingPdf(true);
+      const { generateGrowIqPdf } = await import('@/lib/grow-iq/pdf-generator');
+      await generateGrowIqPdf(data, aiRecs);
+    } catch (err) {
+      console.error('Error al generar el PDF:', err);
+    } finally {
       setGeneratingPdf(false);
-    }, 500);
+    }
   };
 
   const whatsappMessage = `Hola, completé el diagnóstico Grow IQ de Grow Labs. Mi puntaje fue de \${data.total_score}/100 y me gustaría revisar los resultados.`;
