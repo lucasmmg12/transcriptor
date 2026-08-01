@@ -395,8 +395,9 @@ export default function Home() {
                 {/* 1. HERO PRINCIPAL */}
                 <section className="pt-16 pb-12 md:pt-32 md:pb-24 px-4 sm:px-6 relative text-center min-h-[85vh] md:min-h-[75vh] flex items-center justify-center">
                     <div className="container mx-auto max-w-4xl">
-                        <div className="inline-block px-4 py-1.5 mb-6 md:mb-8 rounded-full border border-green-400/30 bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest backdrop-blur-sm">
-                            Software Empresarial A Medida
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-green-500/10 border-l-2 border-green-400 text-green-400 text-xs font-semibold tracking-wide mb-6 md:mb-8">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+                            SOFTWARE EMPRESARIAL A MEDIDA
                         </div>
                         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white tracking-tight leading-tight flex flex-col drop-shadow-lg">
                             <span>Convertimos procesos</span>
@@ -524,9 +525,10 @@ export default function Home() {
                     <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none -translate-y-1/3 translate-x-1/3"></div>
                     <div className="container mx-auto max-w-6xl relative z-10 flex flex-col lg:flex-row items-center gap-16">
                         <div className="lg:w-1/2">
-                            <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold text-xs uppercase tracking-widest mb-6 border border-emerald-500/20">
+                            <div className="inline-flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider mb-4">
+                                <span className="w-2 h-2 rounded-sm bg-emerald-400"></span>
                                 DIAGNÓSTICO EMPRESARIAL GRATUITO
-                            </span>
+                            </div>
                             <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
                                 Antes de desarrollar software, entendé <span className="text-emerald-400">dónde está el problema</span>
                             </h2>
@@ -554,7 +556,8 @@ export default function Home() {
                                 <div className="text-center mb-8">
                                     <div className="text-xs text-gray-400 font-bold tracking-widest mb-2">GROW IQ</div>
                                     <div className="text-6xl font-black text-white mb-2">64<span className="text-3xl text-gray-500 font-medium">/100</span></div>
-                                    <div className="inline-block px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full text-xs font-bold uppercase">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 text-amber-400 rounded-lg text-xs font-semibold border border-amber-500/20">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
                                         Empresa en proceso de ordenamiento
                                     </div>
                                 </div>
@@ -677,9 +680,10 @@ export default function Home() {
                 <section className="py-20 px-4 md:px-6 bg-gray-950 text-white relative reveal-section border-t border-white/10">
                     <div className="container mx-auto max-w-5xl relative z-10">
                         <div className="text-center mb-12">
-                            <span className="inline-block px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-bold text-xs uppercase tracking-widest mb-4 border border-emerald-500/20">
+                            <div className="inline-flex items-center gap-2 justify-center text-emerald-400 font-bold text-xs uppercase tracking-wider mb-4">
+                                <span className="w-2 h-2 rounded-sm bg-emerald-400"></span>
                                 NUESTRO DIFERENCIAL
-                            </span>
+                            </div>
                             <h2 className="text-3xl md:text-5xl font-bold mb-4">No vendemos un sistema para que tu empresa se adapte</h2>
                             <p className="text-gray-400 text-lg">Diseñamos el sistema alrededor de la lógica real de tu organización.</p>
                         </div>
@@ -732,7 +736,7 @@ export default function Home() {
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="card-3d bg-white border border-green-200 shadow-[0_10px_30px_rgba(34,197,94,0.1)] rounded-2xl p-8 reveal-child relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 px-4 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-bl-xl border-l border-b border-green-200">RECOMENDADO</div>
+                                    <div className="absolute top-0 right-0 px-3 py-1 bg-green-600 text-white text-[11px] font-bold rounded-bl-lg">RECOMENDADO</div>
                                     <h4 className="text-2xl font-bold text-gray-900 mb-3">Grow IQ</h4>
                                     <p className="text-gray-600 mb-6 text-sm">Descubrí el nivel de madurez operativa, digital y tecnológica de tu empresa.</p>
                                     <Link href="/grow-iq" className="inline-block px-6 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-colors">

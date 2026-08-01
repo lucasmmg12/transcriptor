@@ -280,23 +280,27 @@ export default function GrowIqWizard() {
                 <div key={q.id} className="bg-white/[0.02] p-5 rounded-2xl border border-white/5">
                   <p className="text-lg text-white mb-4 font-medium"><span className="text-emerald-500 mr-2">{idx + 1}.</span>{q.text}</p>
                   <div className="flex flex-col gap-2">
-                    {OPTIONS.map(opt => (
-                      <label 
-                        key={opt.value} 
-                        className={`flex items-center p-3 rounded-xl cursor-pointer transition-all border \${
-                          formData.answers[q.id] === opt.value 
-                            ? 'bg-emerald-500/10 border-emerald-500/50 text-white' 
-                            : 'bg-white/5 border-transparent text-gray-400 hover:bg-white/10'
-                        }`}
-                      >
-                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 \${
-                          formData.answers[q.id] === opt.value ? 'border-emerald-500 bg-emerald-500' : 'border-gray-500'
-                        }`}>
-                          {formData.answers[q.id] === opt.value && <div className="w-2 h-2 bg-white rounded-full" />}
+                    {OPTIONS.map(opt => {
+                      const isSelected = formData.answers[q.id] === opt.value;
+                      return (
+                        <div 
+                          key={opt.value} 
+                          onClick={() => updateAnswer(q.id, opt.value)}
+                          className={`flex items-center p-3.5 rounded-xl cursor-pointer transition-all border select-none ${
+                            isSelected 
+                              ? 'bg-emerald-500/10 border-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.15)]' 
+                              : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:border-white/20'
+                          }`}
+                        >
+                          <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center mr-3.5 transition-all ${
+                            isSelected ? 'border-emerald-500 bg-emerald-500' : 'border-gray-500 bg-transparent'
+                          }`}>
+                            {isSelected && <Check className="w-4 h-4 text-white" strokeWidth={3} />}
+                          </div>
+                          <span className="text-sm font-medium">{opt.label}</span>
                         </div>
-                        <span className="text-sm font-medium">{opt.label}</span>
-                      </label>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               ))}
