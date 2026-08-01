@@ -608,11 +608,11 @@ export default function Home() {
                 </section>
 
                 {/* 7. CASOS Y PROYECTOS */}
-                <section id="casos" className="py-24 bg-white reveal-section">
-                    <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+                <section id="casos" className="py-24 bg-gray-950 text-white reveal-section border-t border-white/5">
+                    <div className="container mx-auto px-4 md:px-6 max-w-6xl relative z-10">
                         <div className="text-center mb-16">
-                            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Proyectos reales, <span className="text-green-600">resultados concretos</span></h2>
-                            <p className="text-lg text-gray-600">Convertimos problemas operativos en casos de éxito.</p>
+                            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Proyectos reales, <span className="text-green-400">resultados concretos</span></h2>
+                            <p className="text-lg text-gray-400">Convertimos problemas operativos en casos de éxito.</p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-16">
@@ -642,22 +642,22 @@ export default function Home() {
                                 return (
                                     <div 
                                         key={i} 
-                                        className="card-3d bg-gray-50/80 border border-gray-200/80 rounded-2xl p-6 flex flex-col reveal-child hover:shadow-xl hover:border-green-400/60 transition-all relative group backdrop-blur-sm"
+                                        className="card-3d bg-gray-900/80 border border-white/10 rounded-2xl p-6 flex flex-col reveal-child hover:border-green-500/40 hover:bg-gray-900 transition-all relative group backdrop-blur-md shadow-lg"
                                     >
                                         <div className="flex items-center gap-4 mb-4">
                                             {caso.image ? (
-                                                <div className="relative w-16 h-16 rounded-full border-2 border-gray-200 bg-white p-1.5 shrink-0 shadow-sm overflow-hidden flex items-center justify-center">
+                                                <div className="relative w-14 h-14 rounded-full border border-white/20 bg-white p-1.5 shrink-0 shadow-md overflow-hidden flex items-center justify-center">
                                                     <Image src={caso.image} alt={caso.title} fill className="object-contain p-1.5 rounded-full" />
                                                 </div>
                                             ) : (
-                                                <div className="w-16 h-16 rounded-full bg-green-100 border-2 border-green-200 text-green-700 font-bold flex items-center justify-center shrink-0 text-xl shadow-sm">
+                                                <div className="w-14 h-14 rounded-full bg-green-500/20 border border-green-500/30 text-green-400 font-bold flex items-center justify-center shrink-0 text-xl shadow-sm">
                                                     {caso.title.charAt(0)}
                                                 </div>
                                             )}
-                                            <h3 className="text-xl font-bold text-gray-900 leading-snug">{caso.title}</h3>
+                                            <h3 className="text-xl font-bold text-white leading-snug">{caso.title}</h3>
                                         </div>
 
-                                        <p className="text-gray-600 text-sm leading-relaxed flex-1">{caso.description}</p>
+                                        <p className="text-gray-300 text-sm leading-relaxed flex-1">{caso.description}</p>
                                     </div>
                                 );
                             })}
