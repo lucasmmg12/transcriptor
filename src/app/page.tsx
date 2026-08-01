@@ -511,12 +511,6 @@ export default function Home() {
                                 );
                             })}
                         </div>
-
-                        <div className="text-center">
-                            <a href="https://wa.me/5492645438114" target="_blank" className="inline-flex items-center gap-3 px-8 py-4 bg-gray-900 text-white font-bold rounded-full hover:bg-black border border-white/10 transition-colors">
-                                Quiero analizar un proceso de mi empresa <i className="fab fa-whatsapp text-green-400 text-lg"></i>
-                            </a>
-                        </div>
                     </div>
                 </section>
 
