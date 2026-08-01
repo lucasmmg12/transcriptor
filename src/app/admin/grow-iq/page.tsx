@@ -183,8 +183,9 @@ export default function GrowIqAdminPage() {
                       Reporte
                     </Link>
                   </td>
-                </tr>
-              ))
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
