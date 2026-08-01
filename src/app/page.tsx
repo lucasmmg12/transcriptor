@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { gsap } from '@/lib/gsap-config';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import WebGLIcon from '@/components/WebGLIcon';
+import WebGLGreenIcon from '@/components/WebGLGreenIcon';
 
 const SOLUTIONS = [
     {
@@ -67,22 +69,58 @@ const WORK_STAGES = [
 
 const CASES = [
     {
-        title: 'Sistema de auditoría de historias clínicas',
-        problem: 'Documentación incompleta, controles manuales y riesgo de pérdida de facturación.',
-        solution: 'Sistema automatizado que cruza admisiones, evoluciones y documentación clínica para detectar inconsistencias.',
-        result: 'Mayor capacidad de control, detección temprana de faltantes y mejor trazabilidad administrativa.'
+        title: 'Sanatorio Argentino',
+        image: '/sanatorio argentino.webp',
+        featured: true,
+        description: 'Hemos creado el sistema integral con el que se maneja administración y facturación, además de crear proyectos como auditorías de historias clínicas, análisis de datos y desarrollo de un RAG institucional (un sistema de Inteligencia Artificial que permite consultar miles de documentos internos e historias clínicas de forma instantánea y precisa).'
     },
     {
-        title: 'Plataforma operativa de logística',
-        problem: 'Viajes, vehículos, combustible, entregas y stock gestionados mediante mensajes y registros separados.',
-        solution: 'Software centralizado con responsables, estados, ubicación, evidencia de entrega y auditoría.',
-        result: 'Mayor visibilidad de la operación y reducción de dependencia de comunicaciones informales.'
+        title: 'Ecar',
+        image: '/rombo.jpeg',
+        featured: true,
+        description: 'Sistema de gestión completo para una empresa constructora, integrando módulos de logística y de obra, con un desarrollo muy avanzado que incluye un apartado para conocer el estado crediticio de cada cliente.'
     },
     {
-        title: 'Sistema de gestión comercial y financiera',
-        problem: 'Ventas, costos, egresos y seguimiento comercial distribuidos en diferentes archivos y planillas.',
-        solution: 'Plataforma centralizada con indicadores, rentabilidad, seguimiento de clientes y alertas.',
-        result: 'Información disponible para tomar decisiones en tiempo real sin depender de reportes manuales.'
+        title: 'Absorbpad',
+        image: '/absorbpad.webp',
+        featured: false,
+        description: 'Página web que ahora tracciona y convierte visitantes en clientes de forma automática.'
+    },
+    {
+        title: 'Adventure Pro',
+        image: '/adventure pro.webp',
+        featured: false,
+        description: 'Desarrollo e integración de chatbots inteligentes para atención al cliente y ventas.'
+    },
+    {
+        title: 'Estilo Apple',
+        image: null,
+        featured: false,
+        description: 'Sistema de gestión de punta a punta que maneja a todos sus clientes, sus ventas y bots de WhatsApp integrados.'
+    },
+    {
+        title: 'Rustik',
+        image: '/rustik.webp',
+        featured: false,
+        description: 'Implementación de un chatbot automatizado para gestión de consultas.'
+    },
+    {
+        title: 'Neumáticos Gallo',
+        image: '/neumaticos gallo.webp',
+        featured: false,
+        description: 'CRM integrado con chatbot que se utiliza estratégicamente para convertir mensajes en ventas.'
+    },
+    {
+        title: 'Centro Médico de Especialidades',
+        image: '/centro medico de especialidades.webp',
+        featured: false,
+        description: 'Software personalizado para gestionar, organizar y entregar estudios cardiológicos.'
+    },
+    {
+        title: 'Vyper Suplementos',
+        image: '/vyper suplementos.webp',
+        featured: false,
+        description: 'Sistema de gestión integral con ecommerce mayorista y minorista incluido en la misma plataforma.'
     }
 ];
 
@@ -400,8 +438,8 @@ export default function Home() {
                                 { title: 'Errores tardíos', desc: 'Se detectan cuando ya impactaron al cliente o al dinero.' }
                             ].map((item, idx) => (
                                 <div key={idx} className="card-3d bg-white/5 border border-red-500/20 rounded-2xl p-6 reveal-child backdrop-blur-sm hover:border-red-500/40 transition-colors">
-                                    <div className="w-10 h-10 rounded-full bg-red-500/10 text-red-400 flex items-center justify-center mb-4 border border-red-500/20">
-                                        <i className="fas fa-exclamation-triangle"></i>
+                                    <div className="w-10 h-10 rounded-full text-red-400 flex items-center justify-center mb-4 border border-red-500/20 overflow-hidden relative">
+                                        <WebGLIcon type={idx} className="absolute inset-0" />
                                     </div>
                                     <h3 className="text-white font-bold mb-2">{item.title}</h3>
                                     <p className="text-sm text-gray-400">{item.desc}</p>
@@ -483,29 +521,29 @@ export default function Home() {
                 </section>
 
                 {/* 4. QUÉ CONSTRUIMOS (SOLUCIONES) */}
-                <section id="soluciones" className="py-20 md:py-28 px-4 md:px-6 bg-white reveal-section">
-                    <div className="container mx-auto max-w-6xl">
+                <section id="soluciones" className="py-20 md:py-28 px-4 md:px-6 bg-gray-950 border-t border-white/5 reveal-section">
+                    <div className="container mx-auto max-w-6xl relative z-10">
                         <div className="text-center md:text-left mb-16">
-                            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Software diseñado alrededor de <span className="text-green-600">tu operación</span></h2>
-                            <p className="text-lg text-gray-600 max-w-3xl">
+                            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Software diseñado alrededor de <span className="text-green-400">tu operación</span></h2>
+                            <p className="text-lg text-gray-400 max-w-3xl">
                                 No ofrecemos un paquete cerrado. Diseñamos sistemas que representan los procesos reales, responsables, controles e indicadores de cada empresa.
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                            {SOLUTIONS.map((s) => (
-                                <div key={s.id} className="card-3d bg-gray-50 border border-gray-200 rounded-3xl p-8 flex flex-col hover:shadow-xl hover:border-green-400 transition-all reveal-child group">
-                                    <div className="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 text-2xl mb-6 group-hover:scale-110 transition-transform">
-                                        <i className={`fas ${s.icon}`}></i>
+                            {SOLUTIONS.map((s, idx) => (
+                                <div key={s.id} className="card-3d bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col hover:border-green-500/30 hover:bg-white/10 transition-all reveal-child group backdrop-blur-sm">
+                                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-green-400 text-2xl mb-6 overflow-hidden relative group-hover:scale-110 transition-transform">
+                                        <WebGLGreenIcon type={idx} className="absolute inset-0" />
                                     </div>
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-4">{s.title}</h3>
-                                    <p className="text-gray-600 leading-relaxed mb-8 flex-1">{s.description}</p>
+                                    <h3 className="text-2xl font-bold text-white mb-4">{s.title}</h3>
+                                    <p className="text-gray-400 leading-relaxed mb-8 flex-1">{s.description}</p>
                                     
-                                    <div className="space-y-3 pt-6 border-t border-gray-200">
-                                        <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Ejemplos</div>
+                                    <div className="space-y-3 pt-6 border-t border-white/10">
+                                        <div className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Ejemplos</div>
                                         {s.tags.map(tag => (
-                                            <div key={tag} className="flex items-center gap-2 text-sm text-gray-700 font-medium">
-                                                <i className="fas fa-check text-green-500"></i> {tag}
+                                            <div key={tag} className="flex items-center gap-2 text-sm text-gray-300 font-medium">
+                                                <i className="fas fa-check text-green-400"></i> {tag}
                                             </div>
                                         ))}
                                     </div>
@@ -577,24 +615,20 @@ export default function Home() {
                             <p className="text-lg text-gray-600">Convertimos problemas operativos en casos de éxito.</p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
                             {CASES.map((caso, i) => (
-                                <div key={i} className="card-3d bg-gray-50 border border-gray-200 rounded-2xl p-8 flex flex-col reveal-child hover:shadow-xl hover:border-green-300 transition-all">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-6 border-b border-gray-200 pb-4">{caso.title}</h3>
-                                    
-                                    <div className="mb-4">
-                                        <div className="text-xs font-bold text-red-500 uppercase tracking-widest mb-1">Problema</div>
-                                        <p className="text-sm text-gray-700">{caso.problem}</p>
-                                    </div>
-                                    
-                                    <div className="mb-4">
-                                        <div className="text-xs font-bold text-blue-500 uppercase tracking-widest mb-1">Solución</div>
-                                        <p className="text-sm text-gray-700">{caso.solution}</p>
-                                    </div>
-                                    
-                                    <div className="mt-auto bg-green-50 p-4 rounded-xl border border-green-100">
-                                        <div className="text-xs font-bold text-green-700 uppercase tracking-widest mb-1">Resultado</div>
-                                        <p className="text-sm text-gray-900 font-medium">{caso.result}</p>
+                                <div key={i} className={`card-3d bg-gray-50 border border-gray-200 rounded-2xl overflow-hidden flex flex-col reveal-child hover:shadow-xl hover:border-green-300 transition-all ${caso.featured ? 'md:col-span-2' : ''}`}>
+                                    {caso.image && (
+                                        <div className="relative w-full h-48 md:h-64 bg-white border-b border-gray-200">
+                                            <Image src={caso.image} alt={caso.title} fill className="object-contain p-6" />
+                                        </div>
+                                    )}
+                                    <div className="p-8 flex flex-col flex-1">
+                                        {caso.featured && (
+                                            <span className="inline-block px-3 py-1 bg-green-100 text-green-700 font-bold text-[10px] uppercase tracking-widest rounded-full self-start mb-4">Caso Destacado</span>
+                                        )}
+                                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">{caso.title}</h3>
+                                        <p className="text-gray-700 leading-relaxed">{caso.description}</p>
                                     </div>
                                 </div>
                             ))}
