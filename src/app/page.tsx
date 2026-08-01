@@ -78,7 +78,7 @@ const CASES = [
         title: 'Ecar',
         image: '/rombo.jpeg',
         featured: true,
-        description: 'Sistema de gestión completo para una empresa constructora, integrando módulos de logística y de obra, con un desarrollo muy avanzado que incluye un apartado para conocer el estado crediticio de cada cliente.'
+        description: 'Sistema de gestión de punta a punta para la industria de la construcción. Unificamos en tiempo real la operación de obra, logística de insumos, flota vehicular y finanzas, incorporando un avanzado módulo de scoring crediticio para clientes e inversores.'
     },
     {
         title: 'Absorbpad',
@@ -96,7 +96,7 @@ const CASES = [
         title: 'Estilo Apple',
         image: '/ea.png',
         featured: false,
-        description: 'Sistema de gestión de punta a punta que maneja a todos sus clientes, sus ventas y bots de WhatsApp integrados.'
+        description: 'Sistema de gestión comercial de punta a punta. Integra CRM omnicanal con bots de WhatsApp e Instagram asistidos por IA, embudo de ventas automatizado y cotizador en tiempo real para plan canje de dispositivos.'
     },
     {
         title: 'Rustik',
@@ -108,7 +108,7 @@ const CASES = [
         title: 'Neumáticos Gallo',
         image: '/neumaticos gallo.webp',
         featured: false,
-        description: 'CRM integrado con chatbot que se utiliza estratégicamente para convertir mensajes en ventas.'
+        description: 'CRM comercial integrado con chatbots inteligentes de conversión. Transforma consultas masivas de WhatsApp e Instagram en clientes efectivos, optimizando la atención de taller y ventas en tiempo real.'
     },
     {
         title: 'Centro Médico de Especialidades',
