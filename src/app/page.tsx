@@ -319,8 +319,8 @@ export default function Home() {
                         <Link href="/tools/transcriptor" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-green-400 transition-colors mr-2">
                             Transcriptor
                         </Link>
-                        <Link href="/diagnostico" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-green-400 transition-colors mr-2">
-                            Diagnóstico
+                        <Link href="/grow-iq" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-green-400 transition-colors mr-2">
+                            Grow IQ
                         </Link>
                         <a href="https://cal.com/lucas-marinero-ji1yyg/15min" target="_blank" className="px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm bg-green-500 text-white font-semibold rounded-full shadow-lg hover:bg-green-400 transition-all">
                             <span className="hidden sm:inline">Agendar Demo</span>
@@ -351,8 +351,8 @@ export default function Home() {
                             <strong className="text-white">Nuestra misión es ordenar y escalar empresas.</strong> No desarrollamos software genérico; reestructuramos la lógica de tus flujos de trabajo y creamos la tecnología e IA a medida necesarias para desbloquear tu crecimiento y eliminar el caos operativo.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
-                            <Link href="/diagnostico" className="w-full sm:w-auto px-8 py-4 text-center bg-green-500 text-white font-bold rounded-full shadow-lg hover:bg-green-400 hover:shadow-xl transition-all">
-                                Diagnóstico Gratuito
+                            <Link href="/grow-iq" className="w-full sm:w-auto px-8 py-4 text-center bg-green-500 text-white font-bold rounded-full shadow-lg hover:bg-green-400 hover:shadow-xl transition-all">
+                                Calcular Grow IQ
                             </Link>
                             <a href="https://wa.me/5492645438114" target="_blank" className="w-full sm:w-auto px-8 py-4 flex items-center justify-center gap-2 border border-white/20 shadow-sm bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full font-semibold transition-all">
                                 <i className="fab fa-whatsapp text-green-400 text-lg"></i> WhatsApp
@@ -789,7 +789,7 @@ export default function Home() {
                         <p className="text-xl font-medium max-w-2xl mx-auto mb-10 text-green-50">
                             Nuestros desarrollos no son gastos, son inversiones que recuperan dinero desde el primer trimestre.
                         </p>
-                        <Link href="/diagnostico" className="inline-block px-8 py-4 bg-gray-900 border border-gray-800 text-white font-bold rounded-xl hover:bg-black transition-colors shadow-lg">
+                        <Link href="/grow-iq" className="inline-block px-8 py-4 bg-gray-900 border border-gray-800 text-white font-bold rounded-xl hover:bg-black transition-colors shadow-lg">
                             Comenzar Diagnóstico
                         </Link>
                     </div>

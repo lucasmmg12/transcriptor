@@ -24,6 +24,7 @@ import { usePathname } from 'next/navigation';
 const menuItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/leads', label: 'Leads & CRM', icon: Users },
+  { href: '/admin/grow-iq', label: 'Diagnósticos Grow IQ', icon: Zap },
   { href: '/admin/propuestas', label: 'Propuestas', icon: FileText },
   { href: '/admin/projects', label: 'Proyectos', icon: FolderKanban },
   { href: '/admin/tasks', label: 'Matriz de Control', icon: ListChecks },
@@ -80,6 +81,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const mobileNavItems = [
     { href: '/admin/dashboard', label: 'Inicio', icon: LayoutDashboard },
     { href: '/admin/leads', label: 'Leads', icon: Users },
+    { href: '/admin/grow-iq', label: 'Grow IQ', icon: Zap },
     { href: '/admin/projects', label: 'Proyectos', icon: FolderKanban },
     { href: '/admin/tasks', label: 'Tareas', icon: ListChecks },
   ];
