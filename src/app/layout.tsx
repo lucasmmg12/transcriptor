@@ -10,8 +10,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-    title: 'Grow Labs - Sistema Operativo Inteligente',
-    description: 'Automatización + Inteligencia Artificial + Gestión del Conocimiento para empresas. Potencia tus operaciones con Grow Labs.',
+    title: 'Grow Labs | Software empresarial a medida',
+    description: 'Diseñamos software empresarial a medida para ordenar procesos, centralizar información, automatizar tareas y mejorar el control operativo.',
     icons: {
         icon: '/logogrow.png',
         apple: '/logogrow.png',

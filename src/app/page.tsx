@@ -2,90 +2,125 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { gsap } from '@/lib/gsap-config';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-
-const VERBOS_HERO = ["ordena", "estructura", "automatiza", "simplifica", "potencia"];
-
-const CLIENT_LOGOS = [
-    '/absorbpad.webp',
-    '/adventure pro.webp',
-    '/brico supermercados.webp',
-    '/centro medico de especialidades.webp',
-    '/jerpro.webp',
-    '/lomos emi.webp',
-    '/neumaticos gallo.webp',
-    '/rustik.webp',
-    '/sanatorio argentino.webp',
-    '/todo alarmas.webp',
-    '/vyper suplementos.webp'
-];
-
 const SOLUTIONS = [
     {
-        id: 'crm',
-        title: "Modelado de Flujo de Ventas & CRM",
-        description: "Antes de instalar un CRM, estructuramos tus etapas comerciales reales. Luego desarrollamos un sistema de ventas a medida que siga ese flujo exacto sin licencias rígidas."
+        id: 'sistemas-operativos',
+        icon: 'fa-sitemap',
+        title: "Sistemas operativos personalizados",
+        description: "Software para controlar procesos, solicitudes, documentación, inventario, producción, logística, atención, administración o cualquier operación específica.",
+        tags: ['Gestión de procesos', 'Flujos de aprobación', 'Trazabilidad', 'Roles y permisos']
     },
     {
-        id: 'sistemas',
-        title: "Ordenamiento de Operaciones a Medida",
-        description: "Si tu operación es única, primero diseñamos el flujo de información óptimo y luego creamos el sistema que lo controla. Portales internos, inventario y control de stock."
+        id: 'sistemas-gestion',
+        icon: 'fa-chart-bar',
+        title: "Sistemas de gestión y decisión",
+        description: "Herramientas para transformar información operativa en control gerencial. Tableros diseñados para líderes que necesitan ver la realidad de su empresa.",
+        tags: ['Dashboards', 'Indicadores', 'Alertas', 'Reportes automáticos', 'Rentabilidad']
     },
     {
-        id: 'ecommerce',
-        title: "Conexión de Canales de Venta",
-        description: "Sincronizamos tus ventas online directamente con tus procesos de facturación, stock y logística. Menos intervención humana, menos errores y datos consistentes."
-    },
-    {
-        id: 'automations',
-        title: "Automatización Operativa",
-        description: "Eliminamos tareas repetitivas conectando tus sistemas. Estructuramos flujos lógicos automáticos para que la información viaje sola y libre de errores."
-    },
-    {
-        id: 'chatbot',
-        title: "Procesos Guiados por IA en WhatsApp",
-        description: "Creamos asistentes de IA integrados a tus sistemas que entienden texto y audio. Resuelven consultas de clientes y cargan datos directamente en tu base operativa."
-    },
-    {
-        id: 'web-design',
-        title: "Estrategia Digital y Captación",
-        description: "Diseñamos y desarrollamos el canal digital de tu empresa con estética premium y velocidad extrema, pensado exclusivamente para captar prospectos calificados."
+        id: 'automatizacion-ia',
+        icon: 'fa-robot',
+        title: "Automatización e inteligencia aplicada",
+        description: "Tecnología integrada dentro de los procesos reales de la organización para eliminar trabajo repetitivo y potenciar la capacidad de tus equipos.",
+        tags: ['Integraciones', 'Procesamiento de datos', 'Asistentes internos', 'IA controlada']
     }
 ];
 
-const INTEGRATIONS = [
-    { name: 'Chatwoot', icon: 'fas fa-comment-dots', color: 'text-blue-500' },
-    { name: 'Meta Tech Provider', icon: 'fab fa-meta', color: 'text-blue-600' },
-    { name: 'Make', icon: 'fas fa-project-diagram', color: 'text-purple-600' },
-    { name: 'Telegram', icon: 'fab fa-telegram', color: 'text-blue-400' },
-    { name: 'OpenAI', icon: 'fas fa-robot', color: 'text-gray-800' },
-    { name: 'VAPI', icon: 'fas fa-microphone', color: 'text-gray-800' },
-    { name: 'Claude', icon: 'fas fa-brain', color: 'text-orange-800' },
-    { name: 'n8n', icon: 'fas fa-code-branch', color: 'text-red-500' },
-    { name: 'WhatsApp', icon: 'fab fa-whatsapp', color: 'text-green-500' },
-    { name: 'Grok', icon: 'fas fa-bolt', color: 'text-gray-800' },
-    { name: 'Zapier', icon: 'fas fa-bolt', color: 'text-orange-500' },
-    { name: 'Gemini', icon: 'fas fa-sparkles', color: 'text-blue-500' },
-    { name: 'Calendar', icon: 'far fa-calendar-alt', color: 'text-blue-500' },
-    { name: 'HighLevel', icon: 'fas fa-arrow-up', color: 'text-blue-800' },
+const INDUSTRIES = [
+    {
+        id: 'salud',
+        icon: 'fa-hospital',
+        title: 'Salud',
+        items: ['Auditoría de historias clínicas.', 'Seguimiento de internaciones.', 'Gestión documental.', 'Control de facturación.', 'Indicadores clínicos.']
+    },
+    {
+        id: 'logistica',
+        icon: 'fa-truck',
+        title: 'Logística',
+        items: ['Gestión de viajes.', 'Seguimiento de vehículos.', 'Control de entregas.', 'Recepción con evidencia.', 'Mantenimiento y combustible.']
+    },
+    {
+        id: 'comercio',
+        icon: 'fa-store',
+        title: 'Comercio e industria',
+        items: ['Compras e inventario.', 'Control de costos.', 'Producción y trazabilidad.', 'Ventas y rentabilidad.', 'Tableros gerenciales.']
+    },
+    {
+        id: 'servicios',
+        icon: 'fa-users-cog',
+        title: 'Empresas de servicios',
+        items: ['Gestión de clientes y proyectos.', 'Tareas y responsables.', 'Seguimiento comercial.', 'Documentación.', 'Automatización de comunicaciones.']
+    }
+];
+
+const WORK_STAGES = [
+    { num: '01', title: 'Diagnóstico operativo', desc: 'Entendemos los procesos, responsables, información, problemas, dependencias y objetivos de la empresa.' },
+    { num: '02', title: 'Diseño del sistema', desc: 'Definimos módulos, flujos, permisos, reglas, indicadores e integraciones.' },
+    { num: '03', title: 'Desarrollo por etapas', desc: 'Construimos módulos funcionales y los validamos junto con los usuarios reales.' },
+    { num: '04', title: 'Implementación y adopción', desc: 'Capacitamos al equipo, migramos información y acompañamos el uso de la herramienta.' },
+    { num: '05', title: 'Evolución continua', desc: 'Medimos resultados y ampliamos el sistema según las nuevas necesidades de la organización.' },
+];
+
+const CASES = [
+    {
+        title: 'Sistema de auditoría de historias clínicas',
+        problem: 'Documentación incompleta, controles manuales y riesgo de pérdida de facturación.',
+        solution: 'Sistema automatizado que cruza admisiones, evoluciones y documentación clínica para detectar inconsistencias.',
+        result: 'Mayor capacidad de control, detección temprana de faltantes y mejor trazabilidad administrativa.'
+    },
+    {
+        title: 'Plataforma operativa de logística',
+        problem: 'Viajes, vehículos, combustible, entregas y stock gestionados mediante mensajes y registros separados.',
+        solution: 'Software centralizado con responsables, estados, ubicación, evidencia de entrega y auditoría.',
+        result: 'Mayor visibilidad de la operación y reducción de dependencia de comunicaciones informales.'
+    },
+    {
+        title: 'Sistema de gestión comercial y financiera',
+        problem: 'Ventas, costos, egresos y seguimiento comercial distribuidos en diferentes archivos y planillas.',
+        solution: 'Plataforma centralizada con indicadores, rentabilidad, seguimiento de clientes y alertas.',
+        result: 'Información disponible para tomar decisiones en tiempo real sin depender de reportes manuales.'
+    }
+];
+
+const FAQS = [
+    {
+        q: '¿Qué tipo de software desarrolla Grow Labs?',
+        a: 'Desarrollamos sistemas empresariales personalizados para ordenar procesos, centralizar información, automatizar tareas y mejorar el control operativo.'
+    },
+    {
+        q: '¿Trabajan con software prearmado?',
+        a: 'No ofrecemos un producto genérico que obligue a todas las empresas a trabajar de la misma forma. Cada proyecto se diseña alrededor de los procesos reales de la organización.'
+    },
+    {
+        q: '¿Debo reemplazar todos mis sistemas actuales?',
+        a: 'No necesariamente. Podemos integrar herramientas existentes, reemplazar únicamente procesos críticos o desarrollar nuevos módulos de manera progresiva.'
+    },
+    {
+        q: '¿Cuánto demora un desarrollo?',
+        a: 'Depende del alcance, la complejidad y la cantidad de módulos. El trabajo se organiza por etapas para entregar funcionalidades utilizables durante el proyecto.'
+    },
+    {
+        q: '¿Qué empresas pueden trabajar con Grow Labs?',
+        a: 'Empresas que ya tienen una operación activa y necesitan mejorar el control, reducir tareas manuales, integrar información o desarrollar herramientas específicas.'
+    },
+    {
+        q: '¿Utilizan inteligencia artificial?',
+        a: 'Sí, cuando aporta valor real al proceso. La inteligencia artificial puede integrarse para analizar información, procesar documentos, asistir usuarios o automatizar decisiones controladas.'
+    },
+    {
+        q: '¿Qué es Grow IQ?',
+        a: 'Es un diagnóstico automatizado que evalúa la madurez operativa, digital y tecnológica de una empresa y genera un puntaje de 0 a 100.'
+    }
 ];
 
 export default function Home() {
     const [openFaq, setOpenFaq] = useState<number | null>(null);
-    const [wordIndex, setWordIndex] = useState(0);
-    const [selectedLogo, setSelectedLogo] = useState<string | null>(null);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setWordIndex((current) => (current + 1) % VERBOS_HERO.length);
-        }, 4000);
-        return () => clearInterval(interval);
-    }, []);
-
-    // Scroll Reveal Observer — animates sections as they enter viewport
+    // Scroll Reveal Observer
     useEffect(() => {
         const sections = document.querySelectorAll('.reveal-section');
         const observer = new IntersectionObserver((entries) => {
@@ -102,14 +137,11 @@ export default function Home() {
 
     // GSAP 3D Scroll Animations & interactive tilt
     useEffect(() => {
-        // Obtenemos todas las tarjetas que tienen la clase .card-3d
         const cards = gsap.utils.toArray('.card-3d') as HTMLElement[];
         if (cards.length === 0) return;
 
-        // Registrar plugin
         gsap.registerPlugin(ScrollTrigger);
 
-        // 1. Reveal Animation en scroll (van apareciendo de abajo hacia arriba con rotación 3D)
         cards.forEach((card) => {
             gsap.set(card, {
                 transformPerspective: 1000,
@@ -135,13 +167,12 @@ export default function Home() {
                 },
                 scrollTrigger: {
                     trigger: card,
-                    start: "top 92%", // empieza un poco antes de entrar para mayor fluidez
+                    start: "top 92%",
                     toggleActions: "play none none none",
                 }
             });
         });
 
-        // 2. Velocity Bending: Las tarjetas se "doblan" / inclinan según la velocidad del scroll
         const quickTransforms = cards.map(card => {
             return {
                 card,
@@ -154,27 +185,19 @@ export default function Home() {
         const scrollTriggerInstance = ScrollTrigger.create({
             onUpdate: (self) => {
                 const velocity = self.getVelocity();
-                
-                // Mapeamos la velocidad a la rotación 3D (eje X)
                 let tilt = velocity / 350;
-                tilt = Math.max(-8, Math.min(8, tilt)); // Clamp entre -8 y 8 grados
-                
-                // Mapeamos también a un ligero skew en el eje Y
+                tilt = Math.max(-8, Math.min(8, tilt));
                 let skew = velocity / 1000;
                 skew = Math.max(-2, Math.min(2, skew));
-
-                // Mapeamos a un ligero desplazamiento en el eje Y
                 let yOffset = velocity / 120;
                 yOffset = Math.max(-15, Math.min(15, yOffset));
 
-                // Aplicamos solo a las tarjetas en pantalla para ahorrar recursos (CPU/GPU)
                 quickTransforms.forEach((qt) => {
                     const rect = qt.card.getBoundingClientRect();
                     const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
-                    
                     if (inViewport) {
                         qt.card.style.willChange = "transform";
-                        qt.rotateX(-tilt); // el tilt es negativo para inclinar hacia atrás al bajar
+                        qt.rotateX(-tilt);
                         qt.skewY(skew);
                         qt.y(yOffset);
                     }
@@ -182,7 +205,6 @@ export default function Home() {
             }
         });
 
-        // 3. Hover & Touch 3D Tilt Interactivo
         const cleanupListeners: (() => void)[] = [];
 
         cards.forEach((card) => {
@@ -190,10 +212,8 @@ export default function Home() {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                
                 const xc = x / rect.width - 0.5;
                 const yc = y / rect.height - 0.5;
-                
                 const rotX = -yc * 20;
                 const rotY = xc * 20;
                 
@@ -202,7 +222,7 @@ export default function Home() {
                     rotationX: rotX,
                     rotationY: rotY,
                     scale: 1.03,
-                    z: 10, // Elevación en el espacio 3D
+                    z: 10,
                     duration: 0.3,
                     ease: "power2.out",
                     overwrite: "auto"
@@ -235,7 +255,6 @@ export default function Home() {
                 if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
                     const xc = x / rect.width - 0.5;
                     const yc = y / rect.height - 0.5;
-                    
                     const rotX = -yc * 14;
                     const rotY = xc * 14;
                     
@@ -270,15 +289,22 @@ export default function Home() {
         };
     }, []);
 
-
     const toggleFaq = (index: number) => {
         setOpenFaq(openFaq === index ? null : index);
+    };
+
+    const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+        e.preventDefault();
+        const element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
     };
 
     return (
         <div className="font-sans text-gray-900 bg-gray-950 selection:bg-green-100 scroll-smooth overflow-x-hidden">
             
-            {/* ━━━ FIXED VIDEO BACKGROUND — visible across entire page ━━━ */}
+            {/* BACKGROUND VIDEO */}
             <div className="fixed inset-0 z-0">
                 <video
                     autoPlay
@@ -290,13 +316,12 @@ export default function Home() {
                 >
                     <source src="/building-hero-2.mp4" type="video/mp4" />
                 </video>
-                {/* Dark overlay — lighter to let video show through */}
-                <div className="absolute inset-0 bg-black/55" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/50" />
+                <div className="absolute inset-0 bg-black/60" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/80" />
             </div>
 
-            {/* HEADER / NAVIGATION */}
-            <header className="fixed top-0 w-full z-50 bg-black/40 backdrop-blur-xl border-b border-white/10">
+            {/* HEADER */}
+            <header className="fixed top-0 w-full z-50 bg-black/60 backdrop-blur-xl border-b border-white/10">
                 <div className="container mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
                     <div className="flex items-center gap-3 relative z-50">
                         <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20">
@@ -305,119 +330,183 @@ export default function Home() {
                         <span className="font-bold text-lg tracking-tight text-white">Grow Labs</span>
                     </div>
 
-                    <div className="hidden lg:flex gap-8 text-sm font-medium text-gray-300">
-                        <Link href="#solutions" className="hover:text-green-400 transition-colors">Funcionalidades</Link>
-                        <Link href="#why" className="hover:text-green-400 transition-colors">Ventajas</Link>
-                        <Link href="#tools" className="hover:text-green-400 transition-colors">Herramientas</Link>
-                        <Link href="#faq" className="hover:text-green-400 transition-colors">FAQ</Link>
+                    <div className="hidden lg:flex gap-6 xl:gap-8 text-sm font-medium text-gray-300">
+                        <a href="#soluciones" onClick={(e) => scrollToSection(e, 'soluciones')} className="hover:text-green-400 transition-colors">Soluciones</a>
+                        <a href="#como-trabajamos" onClick={(e) => scrollToSection(e, 'como-trabajamos')} className="hover:text-green-400 transition-colors">Cómo trabajamos</a>
+                        <a href="#casos" onClick={(e) => scrollToSection(e, 'casos')} className="hover:text-green-400 transition-colors">Casos</a>
+                        <Link href="/grow-iq" className="hover:text-green-400 transition-colors">Grow IQ</Link>
+                        <a href="#herramientas" onClick={(e) => scrollToSection(e, 'herramientas')} className="hover:text-green-400 transition-colors">Herramientas</a>
+                        <a href="#nosotros" onClick={(e) => scrollToSection(e, 'nosotros')} className="hover:text-green-400 transition-colors">Nosotros</a>
+                        <a href="https://wa.me/5492645438114" target="_blank" className="hover:text-green-400 transition-colors">Contacto</a>
                     </div>
 
                     <div className="flex gap-3 items-center relative z-50">
-                        <Link href="/cv-maker" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-green-400 transition-colors">
-                            CV Maker
+                        <Link href="/grow-iq" className="px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm bg-green-500 text-white font-semibold rounded-full shadow-[0_0_15px_rgba(34,197,94,0.3)] hover:bg-green-400 transition-all">
+                            Calcular Grow IQ
                         </Link>
-                        <Link href="/tools/transcriptor" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-green-400 transition-colors mr-2">
-                            Transcriptor
-                        </Link>
-                        <Link href="/grow-iq" className="hidden lg:inline-flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-green-400 transition-colors mr-2">
-                            Grow IQ
-                        </Link>
-                        <a href="https://cal.com/lucas-marinero-ji1yyg/15min" target="_blank" className="px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm bg-green-500 text-white font-semibold rounded-full shadow-lg hover:bg-green-400 transition-all">
-                            <span className="hidden sm:inline">Agendar Demo</span>
-                            <span className="sm:hidden">Agendar</span>
-                        </a>
-                        <a href="https://wa.me/5492645438114" target="_blank" className="flex items-center justify-center w-9 h-9 rounded-full bg-green-500 text-white shadow-md hover:bg-green-600 transition-colors lg:hidden">
+                        <a href="https://wa.me/5492645438114" target="_blank" className="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 text-white shadow-md hover:bg-white/20 transition-colors lg:hidden">
                             <i className="fab fa-whatsapp"></i>
                         </a>
                     </div>
                 </div>
             </header>
 
-            {/* HERO SECTION — video visible behind */}
+            {/* MAIN CONTENT */}
             <main className="relative z-10 w-full pt-20">
+                
+                {/* 1. HERO PRINCIPAL */}
                 <section className="pt-16 pb-12 md:pt-32 md:pb-24 px-4 sm:px-6 relative text-center min-h-[85vh] md:min-h-[75vh] flex items-center justify-center">
                     <div className="container mx-auto max-w-4xl">
-                        <div className="inline-block px-4 py-1.5 mb-6 md:mb-8 rounded-full border border-green-400/30 bg-green-500/10 text-green-400 text-xs font-semibold uppercase tracking-widest backdrop-blur-sm">
-                            Business Intelligence & IA Empresarial
+                        <div className="inline-block px-4 py-1.5 mb-6 md:mb-8 rounded-full border border-green-400/30 bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest backdrop-blur-sm">
+                            Software Empresarial A Medida
                         </div>
-                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 text-white tracking-tight leading-tight flex flex-col md:block items-center justify-center drop-shadow-lg">
-                            <span>El sistema operativo que</span>
-                            <span key={wordIndex} className="text-green-400 animate-flip px-2 md:px-3">
-                                {VERBOS_HERO[wordIndex]}
-                            </span>
-                            <span>tu negocio</span>
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white tracking-tight leading-tight flex flex-col drop-shadow-lg">
+                            <span>Convertimos procesos</span>
+                            <span>desordenados en <span className="text-green-400">software que controla</span> tu empresa</span>
                         </h1>
                         <p className="text-lg sm:text-xl text-gray-300 mb-8 md:mb-10 max-w-3xl mx-auto px-2 leading-relaxed drop-shadow-md">
-                            <strong className="text-white">Nuestra misión es ordenar y escalar empresas.</strong> No desarrollamos software genérico; reestructuramos la lógica de tus flujos de trabajo y creamos la tecnología e IA a medida necesarias para desbloquear tu crecimiento y eliminar el caos operativo.
+                            <strong className="text-white">Analizamos cómo trabaja tu organización, ordenamos sus procesos</strong> y desarrollamos un sistema personalizado para centralizar la operación, reducir errores y acompañar su crecimiento.
+                        </p>
+                        <p className="text-sm text-gray-400 mb-8 max-w-2xl mx-auto italic">
+                            Sistemas diseñados alrededor de tu empresa, no empresas obligadas a adaptarse a un software genérico.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
-                            <Link href="/grow-iq" className="w-full sm:w-auto px-8 py-4 text-center bg-green-500 text-white font-bold rounded-full shadow-lg hover:bg-green-400 hover:shadow-xl transition-all">
-                                Calcular Grow IQ
+                            <Link href="/grow-iq" className="w-full sm:w-auto px-8 py-4 text-center bg-green-500 text-white font-bold rounded-full shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:bg-green-400 hover:scale-105 transition-all">
+                                Conocer el nivel digital de mi empresa
                             </Link>
-                            <a href="https://wa.me/5492645438114" target="_blank" className="w-full sm:w-auto px-8 py-4 flex items-center justify-center gap-2 border border-white/20 shadow-sm bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full font-semibold transition-all">
-                                <i className="fab fa-whatsapp text-green-400 text-lg"></i> WhatsApp
+                            <a href="#como-trabajamos" onClick={(e) => scrollToSection(e, 'como-trabajamos')} className="w-full sm:w-auto px-8 py-4 flex items-center justify-center gap-2 border border-white/20 shadow-sm bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full font-semibold transition-all">
+                                Ver cómo trabajamos <i className="fas fa-arrow-down ml-2 text-sm text-green-400"></i>
                             </a>
                         </div>
+                    </div>
+                </section>
 
-                        {/* Build status — subtle indicator */}
-                        <div className="mt-12 md:mt-16">
-                            <p className="text-xs font-mono text-green-400/40 tracking-wider">
-                                BUILD: STABLE │ STATUS: PRODUCTION │ UPTIME: 99.9%
+                {/* 2. EL PROBLEMA QUE RESOLVEMOS */}
+                <section className="py-20 px-4 md:px-6 relative reveal-section bg-gray-950 border-t border-white/5">
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/80 to-gray-950 pointer-events-none"></div>
+                    <div className="container mx-auto max-w-6xl relative z-10">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Tu empresa creció.<br/><span className="text-green-400">Sus sistemas no.</span></h2>
+                            <p className="text-gray-400 max-w-3xl mx-auto text-lg">
+                                Cuando una empresa crece sin una estructura tecnológica adecuada, la información se fragmenta, los controles dependen de personas y los errores se detectan demasiado tarde.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-16">
+                            {[
+                                { title: 'Información fragmentada', desc: 'Repartida entre Excel, WhatsApp y sistemas aislados.' },
+                                { title: 'Doble carga', desc: 'Los mismos datos se ingresan varias veces manualmente.' },
+                                { title: 'Ceguera gerencial', desc: 'La dirección no puede ver la operación en tiempo real.' },
+                                { title: 'Errores tardíos', desc: 'Se detectan cuando ya impactaron al cliente o al dinero.' }
+                            ].map((item, idx) => (
+                                <div key={idx} className="card-3d bg-white/5 border border-red-500/20 rounded-2xl p-6 reveal-child backdrop-blur-sm hover:border-red-500/40 transition-colors">
+                                    <div className="w-10 h-10 rounded-full bg-red-500/10 text-red-400 flex items-center justify-center mb-4 border border-red-500/20">
+                                        <i className="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <h3 className="text-white font-bold mb-2">{item.title}</h3>
+                                    <p className="text-sm text-gray-400">{item.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="card-3d bg-green-500/10 border border-green-500/30 rounded-2xl p-8 text-center max-w-4xl mx-auto reveal-child backdrop-blur-sm shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+                            <p className="text-xl text-white font-medium">
+                                Grow Labs convierte esa operación fragmentada en un <strong className="text-green-400">sistema centralizado, trazable y diseñado alrededor de la lógica real</strong> de cada organización.
                             </p>
                         </div>
                     </div>
                 </section>
 
-                {/* PROCESS STEPS — compact strip over video */}
-                <section className="py-8 md:py-12 relative">
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-                    <div className="relative z-10 container mx-auto px-4">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 max-w-4xl mx-auto">
-                            {[
-                                { step: '01', title: 'Diagnóstico', desc: 'Escaneamos tu operación', icon: '🔍' },
-                                { step: '02', title: 'Arquitectura', desc: 'Diseñamos la solución', icon: '📐' },
-                                { step: '03', title: 'Desarrollo', desc: 'Construimos con IA', icon: '⚡' },
-                                { step: '04', title: 'Deploy', desc: 'Lo ponemos en producción', icon: '🚀' },
-                            ].map((p) => (
-                                <div key={p.step} className="text-center p-3 md:p-4 rounded-xl bg-white/5 border border-white/10 hover:border-green-500/30 transition-colors">
-                                    <span className="text-xl md:text-2xl mb-1 block">{p.icon}</span>
-                                    <span className="text-[9px] md:text-[10px] font-mono text-green-400/60 tracking-wider">STEP {p.step}</span>
-                                    <h4 className="font-bold text-white text-xs md:text-sm mt-0.5">{p.title}</h4>
-                                    <p className="text-[10px] md:text-xs text-gray-400 mt-0.5 hidden sm:block">{p.desc}</p>
+                {/* 3. GROW IQ DESTACADO */}
+                <section className="py-24 px-4 md:px-6 bg-[#0a0f0d] relative border-y border-white/10 reveal-section overflow-hidden">
+                    <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none -translate-y-1/3 translate-x-1/3"></div>
+                    <div className="container mx-auto max-w-6xl relative z-10 flex flex-col lg:flex-row items-center gap-16">
+                        <div className="lg:w-1/2">
+                            <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold text-xs uppercase tracking-widest mb-6 border border-emerald-500/20">
+                                DIAGNÓSTICO EMPRESARIAL GRATUITO
+                            </span>
+                            <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
+                                Antes de desarrollar software, entendé <span className="text-emerald-400">dónde está el problema</span>
+                            </h2>
+                            <p className="text-lg text-gray-400 mb-8 leading-relaxed">
+                                Completá el diagnóstico Grow IQ y descubrí el nivel de madurez operativa, digital y tecnológica de tu empresa.
+                            </p>
+                            
+                            <ul className="space-y-4 mb-10 text-gray-300">
+                                <li className="flex items-start gap-3"><i className="fas fa-check-circle text-emerald-500 mt-1"></i> Puntaje empresarial de 0 a 100.</li>
+                                <li className="flex items-start gap-3"><i className="fas fa-check-circle text-emerald-500 mt-1"></i> Evaluación de procesos, datos y automatización.</li>
+                                <li className="flex items-start gap-3"><i className="fas fa-check-circle text-emerald-500 mt-1"></i> Identificación de cuellos de botella.</li>
+                                <li className="flex items-start gap-3"><i className="fas fa-check-circle text-emerald-500 mt-1"></i> Recomendaciones personalizadas al instante.</li>
+                            </ul>
+
+                            <Link href="/grow-iq" className="inline-flex px-8 py-4 text-center bg-emerald-500 text-white font-bold rounded-full shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:bg-emerald-400 hover:scale-105 transition-all">
+                                Calcular mi Grow IQ
+                            </Link>
+                        </div>
+
+                        <div className="lg:w-1/2 w-full">
+                            <div className="card-3d bg-gray-900/80 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-3 bg-white/5 rounded-bl-2xl text-[10px] text-gray-500 font-mono tracking-widest uppercase border-b border-l border-white/5">
+                                    Ejemplo Visual
                                 </div>
-                            ))}
+                                <div className="text-center mb-8">
+                                    <div className="text-xs text-gray-400 font-bold tracking-widest mb-2">GROW IQ</div>
+                                    <div className="text-6xl font-black text-white mb-2">64<span className="text-3xl text-gray-500 font-medium">/100</span></div>
+                                    <div className="inline-block px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full text-xs font-bold uppercase">
+                                        Empresa en proceso de ordenamiento
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    {[
+                                        { label: 'Procesos y organización', score: 71, color: 'bg-emerald-500' },
+                                        { label: 'Datos e indicadores', score: 48, color: 'bg-red-500' },
+                                        { label: 'Automatización', score: 42, color: 'bg-red-500' },
+                                        { label: 'Gestión comercial', score: 69, color: 'bg-amber-500' },
+                                        { label: 'Tecnología e IA', score: 55, color: 'bg-amber-500' },
+                                        { label: 'Escalabilidad', score: 58, color: 'bg-amber-500' },
+                                    ].map((dim, idx) => (
+                                        <div key={idx} className="flex items-center justify-between">
+                                            <span className="text-sm text-gray-300">{dim.label}</span>
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-24 md:w-32 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                                    <div className={`h-full ${dim.color}`} style={{ width: `${dim.score}%` }}></div>
+                                                </div>
+                                                <span className="text-sm font-bold text-white w-6 text-right">{dim.score}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                {/* SOLUCIONES APLICADAS (2ND SCREEN) */}
-                <section className="py-16 md:py-24 px-4 md:px-6 relative overflow-hidden reveal-section">
-                    <div className="absolute bottom-0 left-1/4 w-[500px] h-[300px] bg-green-500/5 rounded-full blur-[100px] pointer-events-none"></div>
-                    <div className="container mx-auto max-w-6xl relative z-10">
-                        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
-                            <div>
-                                <span className="text-xs font-semibold text-green-400 uppercase tracking-widest mb-3 block">Nuestras soluciones</span>
-                                <h2 className="text-3xl md:text-5xl font-bold text-white">Tecnología aplicada a<br /><span className="text-green-400">problemas concretos</span></h2>
-                            </div>
-                            <p className="text-gray-400 max-w-md text-sm md:text-base">Analizamos y reestructuramos los flujos de tu empresa, aplicando tecnología a medida e inteligencia artificial para que tu operación funcione sola.</p>
+                {/* 4. QUÉ CONSTRUIMOS (SOLUCIONES) */}
+                <section id="soluciones" className="py-20 md:py-28 px-4 md:px-6 bg-white reveal-section">
+                    <div className="container mx-auto max-w-6xl">
+                        <div className="text-center md:text-left mb-16">
+                            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Software diseñado alrededor de <span className="text-green-600">tu operación</span></h2>
+                            <p className="text-lg text-gray-600 max-w-3xl">
+                                No ofrecemos un paquete cerrado. Diseñamos sistemas que representan los procesos reales, responsables, controles e indicadores de cada empresa.
+                            </p>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                            {[
-                                { icon: 'fa-sitemap', title: 'Estructuración y Sistemas a medida', desc: 'Antes de escribir código, organizamos tu flujo de trabajo lógico. Luego construimos el sistema exacto que consolida y controla tu operación.', tags: ['Orden de Procesos','Control operativo','ERP a medida','Trazabilidad'] },
-                                { icon: 'fa-chart-bar', title: 'Control Operativo y Dashboards', desc: 'Centralizamos tus datos operativos dispersos en tableros de control para que puedas medir, optimizar y liderar con claridad.', tags: ['Métricas en vivo','Reportes reales','KPIs de procesos','Visibilidad'] },
-                                { icon: 'fa-robot', title: 'Automatización Lógica de Flujos', desc: 'Eliminamos las tareas manuales repetitivas conectando tus sistemas. Estructuramos flujos para que la información viaje sin fricciones.', tags: ['Flujos automáticos','Integración de sistemas','Agentes de procesos','Cero caos'] },
-                            ].map((s, i) => (
-                                <div key={i} className="card-3d bg-white/5 border border-white/10 rounded-2xl p-6 md:p-7 flex flex-col group hover:shadow-lg hover:border-green-400/30 transition-all h-full reveal-child backdrop-blur-sm">
-                                    <div className="w-11 h-11 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 text-lg mb-5 group-hover:border-green-400/40 group-hover:bg-green-500/15 transition-all">
+
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+                            {SOLUTIONS.map((s) => (
+                                <div key={s.id} className="card-3d bg-gray-50 border border-gray-200 rounded-3xl p-8 flex flex-col hover:shadow-xl hover:border-green-400 transition-all reveal-child group">
+                                    <div className="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 text-2xl mb-6 group-hover:scale-110 transition-transform">
                                         <i className={`fas ${s.icon}`}></i>
                                     </div>
-                                    <h3 className="text-base font-bold text-white mb-2">{s.title}</h3>
-                                    <p className="text-sm text-gray-400 leading-relaxed mb-5 flex-1">{s.desc}</p>
-                                    <div className="flex flex-wrap gap-1.5">
-                                        {s.tags.map((t, j) => (
-                                            <span key={j} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-500/10 text-green-400 border border-green-500/20">
-                                                <i className="fas fa-check text-green-500 text-[7px]"></i>{t}
-                                            </span>
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-4">{s.title}</h3>
+                                    <p className="text-gray-600 leading-relaxed mb-8 flex-1">{s.description}</p>
+                                    
+                                    <div className="space-y-3 pt-6 border-t border-gray-200">
+                                        <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Ejemplos</div>
+                                        {s.tags.map(tag => (
+                                            <div key={tag} className="flex items-center gap-2 text-sm text-gray-700 font-medium">
+                                                <i className="fas fa-check text-green-500"></i> {tag}
+                                            </div>
                                         ))}
                                     </div>
                                 </div>
@@ -426,663 +515,330 @@ export default function Home() {
                     </div>
                 </section>
 
-                {/* CÓMO TRABAJAMOS (3RD SCREEN) */}
-                <section className="py-16 md:py-24 px-4 md:px-6 reveal-section relative">
-                    <div className="container mx-auto max-w-6xl relative z-10">
-                        <div className="mb-12">
-                            <span className="text-xs font-semibold text-green-400 uppercase tracking-widest mb-3 block">Cómo trabajamos</span>
-                            <h2 className="text-3xl md:text-5xl font-bold mb-3 text-white">La tecnología no arregla<br />un <span className="text-green-400">proceso roto.</span></h2>
-                            <p className="text-gray-400 max-w-2xl text-base md:text-lg">Diseñamos soluciones partiendo de la raíz del negocio: primero ordenamos la lógica del proceso y después la sellamos en código automatizado.</p>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {[
-                                { icon: 'fa-sitemap', title: 'Procesos antes que código', desc: 'Escribir software sobre un proceso desordenado solo acelera el caos. Primero diagramamos y ordenamos.' },
-                                { icon: 'fa-crosshairs', title: 'Diagnóstico de raíz', desc: 'Nos metemos a fondo en tu operación diaria para entender dónde se pierde tiempo y dónde se duplica información.' },
-                                { icon: 'fa-sliders', title: 'Sistemas a medida reales', desc: 'No te adaptas al software; diseñamos la herramienta para que soporte tu flujo operativo optimizado.' },
-                                { icon: 'fa-microchip', title: 'Tecnología como un medio', desc: 'Implementamos IA, bases de datos o integraciones solo si simplifican y blindan el flujo de trabajo.' },
-                                { icon: 'fa-handshake', title: 'Adopción asegurada', desc: 'Acompañamos a tu equipo en el cambio de hábitos para asegurar que el nuevo orden de procesos funcione siempre.' },
-                                { icon: 'fa-puzzle-piece', title: 'Trazabilidad absoluta', desc: 'Hacemos que cada acción de tu negocio quede registrada de forma lógica y transparente sin depender de planillas informales.' },
-                            ].map((p, i) => (
-                                <div key={i} className="card-3d bg-white/5 border border-white/10 rounded-xl p-6 group hover:shadow-md hover:border-green-400/30 transition-all backdrop-blur-sm reveal-child">
-                                    <div className="flex items-start gap-4">
-                                        <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 group-hover:text-green-400 group-hover:border-green-500/20 group-hover:bg-green-500/10 transition-all flex-shrink-0">
-                                            <i className={`fas ${p.icon}`}></i>
-                                        </div>
-                                        <div>
-                                            <h3 className="font-bold text-white text-sm mb-1.5">{p.title}</h3>
-                                            <p className="text-xs text-gray-500 leading-relaxed">{p.desc}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* INTEGRATIONS MARQUEE */}
-                <section className="py-8 md:py-10 border-y border-white/10 overflow-hidden relative reveal-section">
-                    <div className="absolute inset-0 bg-black/50 backdrop-blur-md" />
-                    <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-black to-transparent z-10"></div>
-                    <div className="absolute right-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-l from-black to-transparent z-10"></div>
-                    
-                    <div className="text-center text-xs md:text-sm font-semibold text-gray-400 mb-6 md:mb-8 uppercase tracking-widest px-4 relative z-10">
-                        Herramientas de automatización que usamos
-                    </div>
-
-                    <div className="marquee-container">
-                        <div className="marquee-content flex gap-8 md:gap-12 px-4 md:px-6">
-                            {[...INTEGRATIONS, ...INTEGRATIONS].map((tool, idx) => (
-                                <div key={idx} className="flex items-center gap-2 md:gap-3 text-gray-300 whitespace-nowrap min-w-max">
-                                    <i className={`${tool.icon} text-xl md:text-2xl ${tool.color}`}></i>
-                                    <span className="font-semibold text-sm md:text-base">{tool.name}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* STATS SECTION */}
-                <section className="py-12 md:py-16 border-b border-white/10 reveal-section relative">
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
-                    <div className="container mx-auto px-4 md:px-6 max-w-6xl relative z-10">
-                        <div className="grid grid-cols-1 sm:grid-cols-4 gap-8 text-center divide-y sm:divide-y-0 sm:divide-x divide-white/10">
-                            {[
-                                { label: "Reducción de Errores", value: "85%" },
-                                { label: "Más Rápido", value: "10x" },
-                                { label: "Disponibilidad", value: "24/7" },
-                                { label: "Crecimiento", value: "+245%" }
-                            ].map((stat, i) => (
-                                <div key={i} className="py-2 reveal-child">
-                                    <h3 className="text-3xl font-bold text-white mb-1">{stat.value}</h3>
-                                    <p className="text-sm text-gray-400 uppercase tracking-widest">{stat.label}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* MISION / VISION SECTION (Restored & Light Theme adapted) */}
-                <section className="py-20 border-b border-white/10 reveal-section relative">
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
-                    <div className="container mx-auto px-6 max-w-4xl text-center relative z-10">
-                        <h2 className="text-sm font-bold text-green-400 uppercase tracking-widest mb-4">Quiénes Somos</h2>
-                        <h3 className="text-3xl md:text-4xl font-bold mb-8 text-white">Expertos en Tecnología para la Realidad Empresarial de LATAM</h3>
-                        <p className="text-gray-400 text-lg mb-12 leading-relaxed">
-                            Grow Labs nace de la experiencia directa en la complejidad operativa de las empresas. Entendemos profundamente los desafíos de burocracia, ineficiencia y falta de datos claros. Nuestra misión es transformar esa fricción en eficiencia mediante tecnología de punta adaptada a tus necesidades.
-                        </p>
-
-                        <div className="grid md:grid-cols-3 gap-8 text-left">
-                            <div className="card-3d p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm reveal-child">
-                                <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center mb-4 text-green-400"><i className="fas fa-rocket"></i></div>
-                                <h4 className="font-bold text-white mb-2">Misión</h4>
-                                <p className="text-sm text-gray-400">Eliminar la fricción operativa para que los equipos se enfoquen en lo que realmente importa: el crecimiento.</p>
-                            </div>
-                            <div className="card-3d p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm reveal-child">
-                                <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center mb-4 text-green-400"><i className="fas fa-brain"></i></div>
-                                <h4 className="font-bold text-white mb-2">Visión</h4>
-                                <p className="text-sm text-gray-400">Ser el cerebro digital que impulsa las operaciones ágiles de las empresas modernas líderes en LATAM.</p>
-                            </div>
-                            <div className="card-3d p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm reveal-child">
-                                <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center mb-4 text-green-400"><i className="fas fa-gem"></i></div>
-                                <h4 className="font-bold text-white mb-2">Valores</h4>
-                                <p className="text-sm text-gray-400">Precisión Operativa • Adaptación Local • Innovación Transparente y Escalabilidad garantizada.</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* CLIENTS MARQUEE (Moved above Solutions) */}
-                <section className="py-8 md:py-12 border-b border-white/10 overflow-hidden relative reveal-section">
-                    <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none"></div>
-                    <div className="absolute right-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none"></div>
-                    
-                    <div className="text-center text-xs md:text-sm font-semibold text-gray-400 mb-8 uppercase tracking-widest px-4">
-                        Más de 30 empresas ya confían y escalan con nosotros
-                    </div>
-
-                    <div className="marquee-container">
-                        <div className="marquee-content flex gap-8 md:gap-12 px-4 md:px-6 items-center" style={{ animationDuration: '80s' }}>
-                            {[...CLIENT_LOGOS, ...CLIENT_LOGOS, ...CLIENT_LOGOS].map((logo, idx) => (
-                                <div 
-                                    key={idx} 
-                                    onClick={() => setSelectedLogo(logo)}
-                                    className="cursor-pointer relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 rounded-full bg-white/10 border border-white/10 flex items-center justify-center p-2 group overflow-hidden"
-                                >
-                                    <div className="relative w-full h-full transform group-hover:scale-110 transition-transform duration-300">
-                                        <Image src={logo} alt={`Cliente ${idx}`} fill className="object-contain" />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* PRODUCTS/SOLUTIONS SECTION */}
-                <section id="solutions" className="py-16 md:py-24 px-4 md:px-6 bg-gray-50 relative border-b border-gray-200 reveal-section">
-                    <div className="container mx-auto max-w-6xl">
-                        <div className="mb-10 md:mb-16 text-center md:text-left">
-                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">Servicios y <span className="text-green-600">Soluciones</span></h2>
-                            <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto md:mx-0">Soluciones modulares diseñadas específicamente para optimizar procesos y ventas de tu negocio local.</p>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                            {SOLUTIONS.map((s, idx) => (
-                                <a 
-                                    key={s.id} 
-                                    href={`https://wa.me/5492645438114?text=${encodeURIComponent(`Hola, estaba viendo su sitio web y me interesa saber más sobre el servicio de ${s.title}.`)}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="card-3d bg-white border border-gray-200 shadow-sm rounded-2xl p-6 md:p-8 flex flex-col hover:shadow-xl hover:border-green-400 transition-all cursor-pointer group hover:-translate-y-1 block reveal-child"
-                                >
-                                    <span className="text-green-600 font-bold text-sm mb-4 bg-green-50 border border-green-100 w-8 h-8 flex items-center justify-center rounded-full group-hover:bg-green-100 transition-colors">
-                                        {idx + 1}
-                                    </span>
-                                    <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">{s.title}</h3>
-                                    <p className="text-sm text-gray-600 leading-relaxed flex-1 mb-4">{s.description}</p>
-                                    
-                                    <div className="mt-auto flex items-center gap-2 text-green-600 font-bold text-xs uppercase tracking-wider group-hover:text-green-700 transition-colors">
-                                        Consultar  <i className="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
-                                    </div>
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* GROW IQ B destacado */}
-                <section className="py-24 px-4 md:px-6 bg-[#0a0f0d] relative border-b border-white/10 reveal-section overflow-hidden">
-                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
-                    <div className="container mx-auto max-w-4xl text-center relative z-10">
-                        <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold text-xs uppercase tracking-widest mb-6 border border-emerald-500/20">
-                            Diagnóstico Gratuito
-                        </span>
-                        <h2 className="text-4xl md:text-5xl font-black text-white mb-6">¿Qué tan preparada está tu empresa para crecer?</h2>
-                        <p className="text-lg md:text-xl text-gray-400 mb-10 leading-relaxed max-w-3xl mx-auto">
-                            Respondé un diagnóstico gratuito y descubrí el nivel de madurez operativa, digital y tecnológica de tu empresa.
-                        </p>
-                        
-                        <div className="flex flex-wrap justify-center gap-6 mb-12 text-gray-300">
-                            <div className="flex items-center gap-2"><i className="fas fa-check text-emerald-500"></i> Conocé tu Grow IQ</div>
-                            <div className="flex items-center gap-2"><i className="fas fa-check text-emerald-500"></i> Detectá cuellos de botella</div>
-                            <div className="flex items-center gap-2"><i className="fas fa-check text-emerald-500"></i> Descubrí procesos automatizables</div>
-                            <div className="flex items-center gap-2"><i className="fas fa-check text-emerald-500"></i> Recibí recomendaciones personalizadas</div>
-                        </div>
-
-                        <Link href="/grow-iq" className="btn-grow inline-flex px-10 py-4 text-lg shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:scale-105 transition-transform duration-300">
-                            Calcular mi Grow IQ
-                        </Link>
-                    </div>
-                </section>
-
-                {/* PROBLEMAS / COMPARACION (Restored & Light Theme adapted) */}
-                <section className="py-20 bg-white border-b border-gray-200 reveal-section">
-                    <div className="container mx-auto px-6 max-w-6xl">
-                        <div className="flex flex-col md:flex-row gap-16">
-                            {/* Problemas */}
-                            <div className="w-full md:w-1/2">
-                                <h3 className="text-3xl font-bold mb-8 text-gray-900">¿Tu empresa está perdiendo dinero sin saberlo?</h3>
-                                <div className="space-y-6">
-                                    <div className="flex gap-4">
-                                        <div className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0 text-xl border border-red-100"><i className="fas fa-times"></i></div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-900 text-lg">Oportunidades Perdidas</h4>
-                                            <p className="text-gray-600 text-sm">El 15-30% de los leads se pierden por falta de seguimiento o respuesta rápida.</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex gap-4">
-                                        <div className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0 text-xl border border-red-100"><i className="fas fa-chart-down"></i></div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-900 text-lg">Ineficiencias Operativas</h4>
-                                            <p className="text-gray-600 text-sm">Tu equipo dedica horas a tareas manuales en lugar de a estrategias y ventas.</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex gap-4">
-                                        <div className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0 text-xl border border-red-100"><i className="fas fa-user-clock"></i></div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-900 text-lg">Clientes Frustrados</h4>
-                                            <p className="text-gray-600 text-sm">Tiempos de respuesta inconsistentes generan mala experiencia empresarial.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Comparacion */}
-                            <div className="card-3d w-full md:w-1/2 bg-gray-50 rounded-2xl p-8 border border-gray-200 shadow-sm">
-                                <h3 className="text-xl font-bold mb-6 text-center text-gray-900">Por qué Grow Labs es diferente</h3>
-                                <div className="space-y-4">
-                                    <div className="grid grid-cols-3 gap-4 text-sm font-bold text-gray-500 border-b border-gray-200 pb-3">
-                                        <span></span>
-                                        <span className="text-green-600 text-center">Grow Labs</span>
-                                        <span className="text-center">Tradicional</span>
-                                    </div>
-                                    <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
-                                        <span className="text-gray-700 font-medium">Enfoque Primario</span>
-                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">Procesos y Orden</span>
-                                        <span className="text-center text-gray-500">Software Listo</span>
-                                    </div>
-                                    <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
-                                        <span className="text-gray-700 font-medium">Flexibilidad</span>
-                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">Flujo a Medida</span>
-                                        <span className="text-center text-gray-500">Plantillas Rígidas</span>
-                                    </div>
-                                    <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
-                                        <span className="text-gray-700 font-medium">Implementación</span>
-                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">Semanas (Ágil)</span>
-                                        <span className="text-center text-gray-500">Largo Plazo (Meses)</span>
-                                    </div>
-                                    <div className="grid grid-cols-3 gap-4 text-sm items-center py-1">
-                                        <span className="text-gray-700 font-medium">Soporte y Adopción</span>
-                                        <span className="text-center font-bold text-green-700 bg-green-100 py-1.5 rounded-lg border border-green-200">Acompañamiento</span>
-                                        <span className="text-center text-gray-500">Tickets Lentos</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* ROI, DATA & TECH SECTION (Restored moving SVG & Light Theme adapted) */}
-                <section id="data" className="py-20 bg-gray-900 border-b border-gray-800 text-white relative overflow-hidden reveal-section">
-                    <div className="container mx-auto px-6">
-                        <div className="flex flex-col md:flex-row items-center gap-16 relative z-10">
-                            {/* Texto BI */}
-                            <div className="w-full md:w-1/2 text-left">
-                                <span className="text-green-400 font-bold tracking-widest text-xs uppercase mb-2 block">Business Intelligence</span>
-                                <h2 className="text-3xl md:text-5xl font-bold mb-6">
-                                    El Poder de los <span className="text-green-400 drop-shadow-[0_0_15px_rgba(34,197,94,0.4)]">Datos</span>
-                                </h2>
-                                <p className="text-gray-300 text-lg mb-8 leading-relaxed">
-                                    No tomes decisiones ciegamente. Organizamos tus datos dispersos y los convertimos en un panel corporativo para predicciones precisas y métricas absolutas.
-                                </p>
-                                <a href="https://wa.me/5492645438114" target="_blank" className="text-green-400 font-bold hover:text-green-300 hover:underline decoration-green-400/50 underline-offset-8 transition-all">
-                                    Solicitar una evaluación &rarr;
-                                </a>
-                            </div>
-
-                            {/* SVG Line Chart */}
-                            <div className="w-full md:w-1/2">
-                                <div className="card-3d bg-black/50 p-8 rounded-3xl border border-gray-700 relative group overflow-hidden shadow-2xl backdrop-blur-sm">
-                                    <div className="flex justify-between items-end mb-8 relative z-10">
-                                        <div>
-                                            <p className="text-gray-400 text-sm uppercase tracking-wider mb-1">Crecimiento Eficiencia</p>
-                                            <h3 className="text-4xl font-bold text-white">+145%</h3>
-                                        </div>
-                                        <div className="flex gap-2 items-center">
-                                            <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_#22c55e]"></div>
-                                            <span className="text-xs text-green-500 font-bold tracking-widest">LIVE</span>
-                                        </div>
-                                    </div>
-
-                                    {/* SVG Line Chart */}
-                                    <div className="relative h-48 w-full">
-                                        <svg viewBox="0 0 400 200" className="w-full h-full overflow-visible">
-                                            <defs>
-                                                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="0%" stopColor="#22c55e" stopOpacity="0.4" />
-                                                    <stop offset="100%" stopColor="#22c55e" stopOpacity="0" />
-                                                </linearGradient>
-                                                <filter id="glow">
-                                                    <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                                                    <feMerge>
-                                                        <feMergeNode in="coloredBlur" />
-                                                        <feMergeNode in="SourceGraphic" />
-                                                    </feMerge>
-                                                </filter>
-                                            </defs>
-
-                                            <path
-                                                d="M0,150 C50,140 80,100 120,110 C160,120 200,60 250,70 C300,80 350,20 400,30 V200 H0 Z"
-                                                fill="url(#chartGradient)"
-                                                className="opacity-70"
-                                            />
-
-                                            <path
-                                                d="M0,150 C50,140 80,100 120,110 C160,120 200,60 250,70 C300,80 350,20 400,30"
-                                                fill="none"
-                                                stroke="#22c55e"
-                                                strokeWidth="4"
-                                                strokeLinecap="round"
-                                                filter="url(#glow)"
-                                            >
-                                                <animate
-                                                    attributeName="stroke-dasharray"
-                                                    from="0, 1000"
-                                                    to="1000, 0"
-                                                    dur="3s"
-                                                    fill="freeze"
-                                                    calcMode="spline"
-                                                    keyTimes="0;1"
-                                                    keySplines="0.4 0 0.2 1"
-                                                />
-                                            </path>
-
-                                            {[
-                                                { x: 120, y: 110 }, { x: 250, y: 70 }, { x: 400, y: 30 }
-                                            ].map((point, i) => (
-                                                <circle
-                                                    key={i}
-                                                    cx={point.x}
-                                                    cy={point.y}
-                                                    r="5"
-                                                    fill="#000"
-                                                    stroke="#22c55e"
-                                                    strokeWidth="3"
-                                                    className="transition-all duration-300 cursor-pointer"
-                                                />
-                                            ))}
-                                        </svg>
-                                    </div>
-
-                                    <div className="flex justify-between mt-4 text-xs text-gray-500 font-mono relative z-10 border-t border-gray-800 pt-5">
-                                        <span>ENE</span><span>MAR</span><span>MAY</span><span>JUL</span><span>SEP</span><span>NOV</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* ROI SECTION SIMPLE (Restored) */}
-                <section className="py-20 bg-green-500 text-white reveal-section">
-                    <div className="container mx-auto px-6 text-center">
-                        <h2 className="text-3xl md:text-5xl font-black mb-6 drop-shadow-sm">Garantía Asegurada</h2>
-                        <p className="text-xl font-medium max-w-2xl mx-auto mb-10 text-green-50">
-                            Nuestros desarrollos no son gastos, son inversiones que recuperan dinero desde el primer trimestre.
-                        </p>
-                        <Link href="/grow-iq" className="inline-block px-8 py-4 bg-gray-900 border border-gray-800 text-white font-bold rounded-xl hover:bg-black transition-colors shadow-lg">
-                            Comenzar Diagnóstico
-                        </Link>
-                    </div>
-                </section>
-
-
-                {/* NUESTRO PROCESO (4 ETAPAS) */}
-                <section className="py-16 md:py-24 px-4 md:px-6 bg-white border-b border-gray-200 reveal-section">
-                    <div className="container mx-auto max-w-6xl">
-                        <div className="text-center mb-12 md:mb-16">
-                            <span className="text-green-600 font-bold tracking-widest text-xs uppercase mb-3 block">Nuestro proceso</span>
-                            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900">Del <span className="text-green-600">desorden</span> al sistema</h2>
-                            <p className="text-gray-600 max-w-2xl mx-auto text-base md:text-lg">No vendemos herramientas sueltas. Diseñamos un proceso de transformación con acompañamiento real.</p>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                            {[
-                                { icon: 'fa-search-plus', title: 'Diagnóstico Digital', desc: 'Analizamos tu operation actual, identificamos cuellos de botella y diseñamos un mapa de prioridades claro.', color: 'text-blue-500', bg: 'bg-blue-50' },
-                                { icon: 'fa-sitemap', title: 'Ordenamiento de Procesos', desc: 'Documentamos y estructuramos los procesos clave para que tu equipo trabaje con claridad y trazabilidad.', color: 'text-green-500', bg: 'bg-green-50' },
-                                { icon: 'fa-cogs', title: 'Implementación Tecnológica', desc: 'Desarrollamos e integramos las soluciones digitales que tu empresa necesita: software, automatizaciones, dashboards.', color: 'text-purple-500', bg: 'bg-purple-50' },
-                                { icon: 'fa-chart-line', title: 'Seguimiento y Evolución', desc: 'Acompañamos la adopción, medimos resultados y ajustamos el sistema para que crezca con tu empresa.', color: 'text-amber-500', bg: 'bg-amber-50' },
-                            ].map((s, i) => (
-                                <div key={i} className="card-3d bg-white border border-gray-200 rounded-2xl p-6 md:p-8 flex flex-col group hover:shadow-lg hover:-translate-y-1 transition-all shadow-sm reveal-child">
-                                    <div className="flex items-center gap-3 mb-5">
-                                        <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center ${s.color} text-lg border border-gray-100`}>
-                                            <i className={`fas ${s.icon}`}></i>
-                                        </div>
-                                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Etapa {i + 1}</span>
-                                    </div>
-                                    <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors">{s.title}</h3>
-                                    <p className="text-sm text-gray-600 leading-relaxed flex-1">{s.desc}</p>
-                                    {i < 3 && (
-                                        <div className="hidden lg:flex justify-end mt-4">
-                                            <i className="fas fa-arrow-right text-green-500/30 text-sm"></i>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-
-                {/* EQUIPO DIRECTIVO */}
-                <section className="py-16 md:py-24 px-4 md:px-6 bg-gray-50 border-b border-gray-200 reveal-section">
-                    <div className="container mx-auto max-w-5xl">
-                        <div className="mb-12">
-                            <span className="text-xs font-semibold text-green-600 uppercase tracking-widest mb-3 block">Equipo directivo</span>
-                            <h2 className="text-3xl md:text-4xl font-bold mb-3 text-gray-900">Dirección de Grow Labs</h2>
-                            <p className="text-gray-600 max-w-2xl text-base">Combinamos visión tecnológica, pensamiento estratégico y capacidad real de implementación.</p>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-                            <div className="card-3d bg-white border border-gray-200 rounded-2xl p-6 md:p-8 text-center group shadow-sm hover:shadow-lg transition-all">
-                                <div className="w-28 h-28 md:w-36 md:h-36 mx-auto mb-5 rounded-full overflow-hidden border-2 border-green-200 relative group-hover:border-green-400 transition-all">
-                                    <Image src="/lucas.jpeg" alt="Lucas Marinero" fill className="object-cover" />
-                                </div>
-                                <h3 className="text-lg font-bold text-gray-900">Lucas Marinero</h3>
-                                <p className="text-green-600 text-sm font-medium mb-3">Cofundador · Dirección Técnica y Producto</p>
-                                <p className="text-gray-600 text-sm leading-relaxed mb-4">Lidera la traducción de procesos de negocio complejos a sistemas automatizados robustos, integrando tecnología e IA a medida.</p>
-                                <div className="flex flex-wrap justify-center gap-2">
-                                    {['Producto','IA','Automatización','Software'].map(t => (
-                                        <span key={t} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100">
-                                            <i className="fas fa-code text-green-500/60 text-[8px]"></i>{t}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="card-3d bg-white border border-gray-200 rounded-2xl p-6 md:p-8 text-center group shadow-sm hover:shadow-lg transition-all">
-                                <div className="w-28 h-28 md:w-36 md:h-36 mx-auto mb-5 rounded-full overflow-hidden border-2 border-green-200 relative bg-green-50 flex items-center justify-center group-hover:border-green-400 transition-all">
-                                    <span className="text-3xl font-bold text-green-600/60">GR</span>
-                                </div>
-                                <h3 className="text-lg font-bold text-gray-900">Gustavo Regalado</h3>
-                                <p className="text-green-600 text-sm font-medium mb-3">Socio · Dirección Estratégica, Operativa y Comercial</p>
-                                <p className="text-gray-600 text-sm leading-relaxed mb-4">Fortalece la estrategia empresarial, el orden operativo, el desarrollo comercial y la implementación en empresas reales.</p>
-                                <div className="flex flex-wrap justify-center gap-2">
-                                    {['Estrategia','Gestión','Procesos','Comercial'].map(t => (
-                                        <span key={t} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-50 text-green-700 border border-green-100">
-                                            <i className="fas fa-briefcase text-green-500/60 text-[8px]"></i>{t}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="card-3d bg-white border border-gray-200 rounded-2xl p-6 md:p-8 text-center shadow-sm">
-                            <p className="text-base md:text-lg text-gray-700 max-w-2xl mx-auto">
-                                La fortaleza de Grow Labs está en la complementariedad: <span className="text-green-600 font-semibold">visión y orden de procesos de negocio</span> para estructurar la operación, combinada con la <span className="text-green-600 font-semibold">capacidad técnica para automatizarlos</span> de forma robusta.
+                {/* 5. EJEMPLOS DE APLICACIÓN (INDUSTRIAS) */}
+                <section className="py-20 bg-gray-50 border-y border-gray-200 reveal-section">
+                    <div className="container mx-auto max-w-6xl px-4 md:px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">El software puede adaptarse a operaciones como estas</h2>
+                            <p className="text-gray-500 max-w-2xl mx-auto italic text-sm">
+                                Estos son ejemplos. Cada solución se diseña según la operación real de la empresa.
                             </p>
                         </div>
-                    </div>
-                </section>
-
-                {/* HERRAMIENTAS GRATUITAS (TOOLKIT) */}
-                <section id="tools" className="py-16 md:py-24 px-4 md:px-6 bg-white border-b border-gray-200 overflow-hidden reveal-section">
-                    <div className="container mx-auto max-w-6xl">
-                        <div className="flex flex-col md:flex-row items-center gap-12 mb-16">
-                            {/* Texto y Título */}
-                            <div className="md:w-1/2 text-center md:text-left">
-                                <span className="inline-block py-1 px-3 rounded-full text-green-600 text-xs font-bold border border-green-200 bg-green-50 mb-4">
-                                    OPEN ACCESS
-                                </span>
-                                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Herramientas Públicas</h2>
-                                <p className="text-base md:text-lg text-gray-600 leading-relaxed mb-6">
-                                    Muestras de nuestro poder técnico y desarrollos libres disponibles de manera totalmente gratuita para la comunidad.
-                                </p>
-                                <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-gray-500 font-medium">
-                                    <span className="flex items-center gap-1.5"><i className="fas fa-check-circle text-green-500"></i> Código Abierto</span>
-                                    <span className="flex items-center gap-1.5"><i className="fas fa-check-circle text-green-500"></i> Sin Registro</span>
-                                    <span className="flex items-center gap-1.5"><i className="fas fa-check-circle text-green-500"></i> Uso Ilimitado</span>
-                                </div>
-                            </div>
-
-                            {/* THE RESTORED SOCIAL CARD */}
-                            <div className="md:w-1/2 w-full flex justify-center perspective-1000">
-                                <div className="bg-white/5 backdrop-blur-sm p-6 rounded-2xl max-w-sm w-full transform md:rotate-3 hover:rotate-0 transition-all duration-500 shadow-xl border border-white/10 relative group-card">
-                                    {/* Header */}
-                                    <div className="flex items-center gap-4 mb-5 border-b border-gray-100 pb-4">
-                                        <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 p-0.5">
-                                            <div className="w-full h-full rounded-full overflow-hidden relative">
-                                                <Image src="/lucas.jpeg" fill className="object-cover" alt="Lucas Profile" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-900 text-sm">Lucas M.</h4>
-                                            <p className="text-xs text-gray-500 font-mono">@Founder_GrowLabs</p>
-                                        </div>
-                                        <div className="ml-auto opacity-20">
-                                            <Image src="/logogrow.png" width={24} height={24} alt="Grow Logo" />
-                                        </div>
-                                    </div>
-                                    <div className="space-y-4 mb-5">
-                                        <p className="text-gray-700 text-sm leading-relaxed font-normal">
-                                            "En <span className="font-bold text-green-600">Grow Labs</span> creemos que la tecnología debe empujar todo hacia adelante. Por eso dejamos a disposición el uso libre de estas herramientas de inteligencia artificial para uso general."
-                                        </p>
-                                    </div>
-                                    <div className="flex justify-between items-center text-gray-400 text-sm pt-2">
-                                        <div className="flex gap-4">
-                                            <i className="far fa-heart hover:text-red-500 transition-colors cursor-pointer text-lg"></i>
-                                            <i className="far fa-comment hover:text-blue-500 transition-colors cursor-pointer text-lg"></i>
-                                            <i className="far fa-paper-plane hover:text-green-500 transition-colors cursor-pointer text-lg"></i>
-                                        </div>
-                                        <span className="text-xs">Post de equipo</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Herramientas para Empresas */}
-                        <div className="mb-10">
-                            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                                <i className="fas fa-building text-green-600"></i> Herramientas para empresas
-                            </h3>
-                            <div className="card-3d bg-[#0a0f0d] p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden group hover:border-green-500/50 rounded-2xl shadow-xl transition-all">
-                                <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-green-500/20 rounded-full blur-[80px]"></div>
-                                <div className="flex-1 relative z-10 text-center md:text-left">
-                                    <span className="inline-block px-3 py-1 rounded-full bg-green-500/10 text-green-400 font-bold text-[10px] uppercase tracking-widest mb-4 border border-green-500/20">
-                                        Herramienta gratuita para empresas
-                                    </span>
-                                    <h3 className="text-3xl font-black text-white mb-3">Grow IQ</h3>
-                                    <p className="text-gray-400 text-lg mb-6 max-w-xl">
-                                        Descubrí el nivel de madurez operativa, digital y tecnológica de tu empresa.
-                                    </p>
-                                    <ul className="text-sm text-gray-500 space-y-2 mb-8 hidden md:block">
-                                        <li><i className="fas fa-check text-green-500 mr-2"></i> Resultado inmediato (puntaje 0-100)</li>
-                                        <li><i className="fas fa-check text-green-500 mr-2"></i> Comparación empresarial</li>
-                                        <li><i className="fas fa-check text-green-500 mr-2"></i> Recomendaciones personalizadas</li>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {INDUSTRIES.map((ind) => (
+                                <div key={ind.id} className="card-3d bg-white p-6 rounded-2xl border border-gray-200 shadow-sm reveal-child">
+                                    <div className="text-green-600 text-3xl mb-4"><i className={`fas ${ind.icon}`}></i></div>
+                                    <h3 className="text-xl font-bold text-gray-900 mb-4">{ind.title}</h3>
+                                    <ul className="space-y-2">
+                                        {ind.items.map((item, i) => (
+                                            <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
+                                                <i className="fas fa-circle text-[6px] text-green-400 mt-1.5"></i>
+                                                <span className="leading-snug">{item}</span>
+                                            </li>
+                                        ))}
                                     </ul>
                                 </div>
-                                <div className="relative z-10 w-full md:w-auto text-center">
-                                    <Link href="/grow-iq" className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(22,163,74,0.4)] transition-all">
-                                        Calcular mi Grow IQ <i className="fas fa-arrow-right"></i>
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Herramientas para la Comunidad */}
-                        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                            <i className="fas fa-users text-blue-600"></i> Herramientas para la comunidad
-                        </h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6 text-left">
-                            <div className="card-3d light-card p-6 md:p-8 flex flex-col relative overflow-hidden group hover:border-green-300">
-                                <div className="absolute top-0 right-0 p-1.5 px-3 md:p-2 md:px-4 bg-green-50 border-b border-l border-green-100 text-green-600 text-[10px] md:text-xs font-bold rounded-bl-lg">
-                                    POPULAR
-                                </div>
-                                <div className="mb-4 md:mb-6"><i className="fas fa-file-alt text-2xl md:text-3xl text-gray-700 group-hover:text-green-600 transition-colors"></i></div>
-                                <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">CV Inteligente</h3>
-                                <p className="text-xs md:text-sm text-gray-600 mb-6 md:mb-8 flex-1">Diseños profesionales generados instantáneamente y validados por sistemas ATS.</p>
-                                <Link href="/cv-maker" className="text-green-600 font-bold hover:text-green-700 transition-colors flex items-center gap-2 text-xs md:text-sm uppercase tracking-wider mt-auto">
-                                    IR A CV MAKER <i className="fas fa-arrow-right"></i>
-                                </Link>
-                            </div>
-
-                            <div className="card-3d light-card p-6 md:p-8 flex flex-col group hover:border-green-300">
-                                <div className="mb-4 md:mb-6"><i className="fas fa-microphone-lines text-2xl md:text-3xl text-gray-700 group-hover:text-green-600 transition-colors"></i></div>
-                                <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">Transcriptor IA</h3>
-                                <p className="text-xs md:text-sm text-gray-600 mb-6 md:mb-8 flex-1">Convierte reuniones en resúmenes estructurados usando IA. Transcripciones puras.</p>
-                                <Link href="/tools/transcriptor" className="text-green-600 font-bold hover:text-green-700 transition-colors flex items-center gap-2 text-xs md:text-sm uppercase tracking-wider mt-auto">
-                                    TRANSCRIBIR <i className="fas fa-arrow-right"></i>
-                                </Link>
-                            </div>
-
-                            <div className="card-3d light-card p-6 md:p-8 flex flex-col group hover:border-green-300">
-                                <div className="mb-4 md:mb-6"><i className="fas fa-images text-2xl md:text-3xl text-gray-700 group-hover:text-green-600 transition-colors"></i></div>
-                                <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">Image to PDF</h3>
-                                <p className="text-xs md:text-sm text-gray-600 mb-6 md:mb-8 flex-1">Convierte fotografías de documentos directamente a PDFs ligeros. 100% privado.</p>
-                                <Link href="/tools/image-to-pdf" className="text-green-600 font-bold hover:text-green-700 transition-colors flex items-center gap-2 text-xs md:text-sm uppercase tracking-wider mt-auto">
-                                    CONVERTIR <i className="fas fa-arrow-right"></i>
-                                </Link>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </section>
 
-                {/* FAQ SECTION */}
-                <section id="faq" className="py-16 md:py-24 px-4 md:px-6 bg-gray-50 border-b border-gray-200 reveal-section">
-                    <div className="container mx-auto max-w-3xl">
-                        <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-900">Preguntas Frecuentes</h2>
-                        <div className="space-y-3 md:space-y-4 px-2 sm:px-0">
-                            {[
-                                { q: "¿Cuánto tiempo toma la implementación?", a: "La adopción de software e IA lleva típicamente entre 15 y 30 días, dependiendo de la magnitud de los datos de su empresa." },
-                                { q: "¿Necesito conocimientos técnicos?", a: "Absolutamente no. Nosotros nos encargamos de todo el despliegue técnico e infraestructura. El software que usamos es en gran parte No-Code, enfocado a usuarios finales." },
-                                { q: "¿Se conecta a mi sistema de facturación actual?", a: "Sí. Mediante APIs o Webhooks, interactuamos con casi cualquier sistema moderno o legacy." },
-                                { q: "¿Cuál es el costo del servicio?", a: "Depende de la solución implementada. Por favor, agenda una reunión gratuita para realizar una consulta técnica y armar una cotización exacta." }
-                            ].map((faq, i) => (
-                                <div key={i} className="bg-white border border-gray-200 rounded-xl overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onClick={() => toggleFaq(i)}>
-                                    <div className="p-4 md:p-6 flex justify-between items-center text-base md:text-lg font-bold text-gray-900 hover:text-green-600 transition-colors">
-                                        <span className="pr-4">{faq.q}</span>
-                                        <i className={`fas fa-chevron-down text-gray-400 flex-shrink-0 transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`}></i>
+                {/* 6. CÓMO TRABAJAMOS */}
+                <section id="como-trabajamos" className="py-24 px-4 md:px-6 bg-gray-950 text-white relative reveal-section">
+                    <div className="container mx-auto max-w-5xl relative z-10">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-5xl font-bold mb-6">Cómo convertimos tu operación en software</h2>
+                            <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+                                La empresa no tiene que esperar meses para ver valor. El desarrollo se organiza por módulos funcionales y entregables concretos.
+                            </p>
+                        </div>
+
+                        <div className="space-y-6 relative before:absolute before:inset-0 before:ml-6 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-green-500/0 before:via-green-500/50 before:to-green-500/0">
+                            {WORK_STAGES.map((stage, i) => (
+                                <div key={stage.num} className={`relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active reveal-child`}>
+                                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 border-2 border-green-500 text-green-400 font-bold shadow-[0_0_15px_rgba(34,197,94,0.3)] shrink-0 z-10 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                                        {stage.num}
                                     </div>
-                                    <div className={`px-4 md:px-6 pb-4 md:pb-6 text-gray-600 text-sm overflow-hidden transition-all duration-300 ${openFaq === i ? 'block border-t border-gray-100 pt-3 md:pt-4' : 'hidden'}`}>
-                                        {faq.a}
+                                    <div className="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] card-3d bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm hover:border-green-500/30 transition-colors">
+                                        <h3 className="text-xl font-bold text-white mb-2">{stage.title}</h3>
+                                        <p className="text-gray-400 text-sm leading-relaxed">{stage.desc}</p>
                                     </div>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* 7. CASOS Y PROYECTOS */}
+                <section id="casos" className="py-24 bg-white reveal-section">
+                    <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Proyectos reales, <span className="text-green-600">resultados concretos</span></h2>
+                            <p className="text-lg text-gray-600">Convertimos problemas operativos en casos de éxito.</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                            {CASES.map((caso, i) => (
+                                <div key={i} className="card-3d bg-gray-50 border border-gray-200 rounded-2xl p-8 flex flex-col reveal-child hover:shadow-xl hover:border-green-300 transition-all">
+                                    <h3 className="text-xl font-bold text-gray-900 mb-6 border-b border-gray-200 pb-4">{caso.title}</h3>
+                                    
+                                    <div className="mb-4">
+                                        <div className="text-xs font-bold text-red-500 uppercase tracking-widest mb-1">Problema</div>
+                                        <p className="text-sm text-gray-700">{caso.problem}</p>
+                                    </div>
+                                    
+                                    <div className="mb-4">
+                                        <div className="text-xs font-bold text-blue-500 uppercase tracking-widest mb-1">Solución</div>
+                                        <p className="text-sm text-gray-700">{caso.solution}</p>
+                                    </div>
+                                    
+                                    <div className="mt-auto bg-green-50 p-4 rounded-xl border border-green-100">
+                                        <div className="text-xs font-bold text-green-700 uppercase tracking-widest mb-1">Resultado</div>
+                                        <p className="text-sm text-gray-900 font-medium">{caso.result}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="text-center">
+                            <a href="https://wa.me/5492645438114" target="_blank" className="inline-flex items-center gap-3 px-8 py-4 bg-gray-900 text-white font-bold rounded-full hover:bg-black transition-colors">
+                                Quiero analizar un proceso de mi empresa <i className="fab fa-whatsapp text-green-400 text-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 8. DIFERENCIAL */}
+                <section className="py-20 px-4 md:px-6 bg-gray-950 text-white relative reveal-section border-t border-white/10">
+                    <div className="container mx-auto max-w-5xl relative z-10">
+                        <div className="text-center mb-12">
+                            <span className="inline-block px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-bold text-xs uppercase tracking-widest mb-4 border border-emerald-500/20">
+                                NUESTRO DIFERENCIAL
+                            </span>
+                            <h2 className="text-3xl md:text-5xl font-bold mb-4">No vendemos un sistema para que tu empresa se adapte</h2>
+                            <p className="text-gray-400 text-lg">Diseñamos el sistema alrededor de la lógica real de tu organización.</p>
+                        </div>
+
+                        <div className="overflow-x-auto pb-6 reveal-child">
+                            <table className="w-full min-w-[600px] text-left border-collapse">
+                                <thead>
+                                    <tr>
+                                        <th className="w-1/3"></th>
+                                        <th className="p-4 bg-white/5 text-gray-300 font-bold text-lg rounded-tl-xl border-t border-l border-white/10">Software convencional</th>
+                                        <th className="p-4 bg-green-500/10 text-green-400 font-bold text-xl rounded-tr-xl border-t border-r border-green-500/20">Grow Labs</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {[
+                                        ['La empresa debe adaptarse', 'El sistema se adapta a la empresa'],
+                                        ['Funciones genéricas', 'Módulos y procesos específicos'],
+                                        ['Información fragmentada', 'Operación centralizada'],
+                                        ['Implementación puramente técnica', 'Diseño operativo y tecnológico'],
+                                        ['Cambios limitados', 'Evolución según el negocio'],
+                                        ['Soporte reactivo', 'Acompañamiento continuo'],
+                                        ['Soluciones rígidas', 'Arquitectura modular']
+                                    ].map((row, i, arr) => (
+                                        <tr key={i} className="border-b border-white/5">
+                                            <td className="p-4 text-gray-400 text-sm font-medium border-l border-white/10">{i === 0 ? 'Enfoque' : i === 1 ? 'Funcionalidad' : i === 2 ? 'Datos' : i === 3 ? 'Implementación' : i === 4 ? 'Crecimiento' : i === 5 ? 'Soporte' : 'Estructura'}</td>
+                                            <td className="p-4 bg-white/5 text-gray-400 text-sm">{row[0]}</td>
+                                            <td className={`p-4 bg-green-500/5 text-green-300 text-sm font-bold border-r border-green-500/20 ${i === arr.length - 1 ? 'rounded-br-xl' : ''}`}>{row[1]}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 9. HERRAMIENTAS GRATUITAS */}
+                <section id="herramientas" className="py-24 px-4 md:px-6 bg-gray-50 border-t border-gray-200 reveal-section">
+                    <div className="container mx-auto max-w-6xl">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Tecnología abierta de Grow Labs</h2>
+                            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                                Creamos herramientas gratuitas para ayudar a empresas y personas a acceder a información, analizar situaciones y mejorar su toma de decisiones.
+                            </p>
+                        </div>
+
+                        {/* Para empresas */}
+                        <div className="mb-16">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+                                <i className="fas fa-building text-green-600"></i> Herramientas para empresas
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="card-3d bg-white border border-green-200 shadow-[0_10px_30px_rgba(34,197,94,0.1)] rounded-2xl p-8 reveal-child relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 px-4 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-bl-xl border-l border-b border-green-200">RECOMENDADO</div>
+                                    <h4 className="text-2xl font-bold text-gray-900 mb-3">Grow IQ</h4>
+                                    <p className="text-gray-600 mb-6 text-sm">Descubrí el nivel de madurez operativa, digital y tecnológica de tu empresa.</p>
+                                    <Link href="/grow-iq" className="inline-block px-6 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-colors">
+                                        Calcular Grow IQ
+                                    </Link>
+                                </div>
+                                <div className="card-3d bg-gray-100/50 border border-gray-200 rounded-2xl p-8 reveal-child flex flex-col justify-center items-center text-center">
+                                    <h4 className="text-xl font-bold text-gray-400 mb-2">Próximamente</h4>
+                                    <p className="text-gray-500 text-sm">Nuevas herramientas en desarrollo para evaluar procesos y calcular el retorno de inversión en software.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Para la comunidad */}
+                        <div>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+                                <i className="fas fa-users text-blue-600"></i> Herramientas para la comunidad
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <Link href="/cv-maker" className="card-3d bg-white border border-gray-200 shadow-sm rounded-2xl p-6 hover:border-blue-300 hover:shadow-md transition-all reveal-child group">
+                                    <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform"><i className="fas fa-file-alt"></i></div>
+                                    <h4 className="text-lg font-bold text-gray-900 mb-2">CV Inteligente</h4>
+                                    <p className="text-sm text-gray-600">Creá un CV profesional estructurado para pasar los filtros de los reclutadores (ATS).</p>
+                                </Link>
+                                <Link href="/tools/transcriptor" className="card-3d bg-white border border-gray-200 shadow-sm rounded-2xl p-6 hover:border-purple-300 hover:shadow-md transition-all reveal-child group">
+                                    <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform"><i className="fas fa-microphone"></i></div>
+                                    <h4 className="text-lg font-bold text-gray-900 mb-2">Transcriptor</h4>
+                                    <p className="text-sm text-gray-600">Convertí audios y reuniones a texto con formato profesional de manera automática.</p>
+                                </Link>
+                                <Link href="/tools/image-to-pdf" className="card-3d bg-white border border-gray-200 shadow-sm rounded-2xl p-6 hover:border-orange-300 hover:shadow-md transition-all reveal-child group">
+                                    <div className="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform"><i className="fas fa-file-pdf"></i></div>
+                                    <h4 className="text-lg font-bold text-gray-900 mb-2">Imágenes a PDF</h4>
+                                    <p className="text-sm text-gray-600">Herramienta rápida y privada para combinar múltiples imágenes en un solo archivo PDF.</p>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 10. EQUIPO DIRECTIVO */}
+                <section id="nosotros" className="py-24 px-4 md:px-6 bg-white border-t border-gray-200 reveal-section">
+                    <div className="container mx-auto max-w-5xl">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900">Negocio, procesos y tecnología <span className="text-green-600">en un mismo equipo</span></h2>
+                            <p className="text-gray-600 max-w-2xl mx-auto text-lg">Grow Labs combina conocimiento de gestión empresarial, diseño de procesos y desarrollo de software. Esto permite entender el problema operativo antes de decidir qué tecnología utilizar.</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="card-3d bg-gray-50 border border-gray-200 rounded-3xl p-8 text-center group shadow-sm hover:shadow-xl hover:border-green-300 transition-all reveal-child">
+                                <div className="w-32 h-32 md:w-40 md:h-40 mx-auto mb-6 rounded-full overflow-hidden border-4 border-white shadow-lg relative">
+                                    <Image src="/lucas.jpeg" alt="Lucas Marinero" fill className="object-cover" />
+                                </div>
+                                <h3 className="text-2xl font-bold text-gray-900">Lucas Marinero</h3>
+                                <p className="text-green-600 text-sm font-bold uppercase tracking-widest mb-4">Dirección de Producto e Innovación</p>
+                                <p className="text-gray-600 text-base leading-relaxed max-w-xs mx-auto">
+                                    Especializado en convertir procesos complejos en sistemas, automatizaciones, productos digitales y herramientas para la toma de decisiones.
+                                </p>
+                            </div>
+                            <div className="card-3d bg-gray-50 border border-gray-200 rounded-3xl p-8 text-center group shadow-sm hover:shadow-xl hover:green-300 transition-all reveal-child">
+                                <div className="w-32 h-32 md:w-40 md:h-40 mx-auto mb-6 rounded-full overflow-hidden border-4 border-white shadow-lg relative bg-green-100 flex items-center justify-center">
+                                    <span className="text-4xl font-black text-green-700/50">GR</span>
+                                </div>
+                                <h3 className="text-2xl font-bold text-gray-900">Gustavo Regalado</h3>
+                                <p className="text-green-600 text-sm font-bold uppercase tracking-widest mb-4">Dirección Estratégica y Operativa</p>
+                                <p className="text-gray-600 text-base leading-relaxed max-w-xs mx-auto">
+                                    Especializado en gestión empresarial, organización de procesos, implementación y desarrollo comercial.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 11. FAQ */}
+                <section id="faq" className="py-24 bg-gray-50 border-t border-gray-200 reveal-section">
+                    <div className="container mx-auto px-4 max-w-3xl">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Preguntas Frecuentes</h2>
+                            <p className="text-gray-600 text-lg">Todo lo que necesitas saber sobre nuestra forma de trabajar.</p>
+                        </div>
+                        <div className="space-y-4">
+                            {FAQS.map((faq, index) => (
+                                <div key={index} className="card-3d bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm reveal-child">
+                                    <button
+                                        onClick={() => toggleFaq(index)}
+                                        className="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none"
+                                    >
+                                        <span className="font-bold text-gray-900 text-lg pr-8">{faq.q}</span>
+                                        <i className={`fas fa-chevron-down text-green-500 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`}></i>
+                                    </button>
+                                    <div 
+                                        className="overflow-hidden transition-all duration-300 ease-in-out"
+                                        style={{ maxHeight: openFaq === index ? '200px' : '0', opacity: openFaq === index ? 1 : 0 }}
+                                    >
+                                        <div className="px-6 pb-6 text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
+                                            {faq.a}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* 12. CTA FINAL */}
+                <section className="py-24 px-4 bg-gray-950 text-white text-center relative overflow-hidden reveal-section">
+                    <div className="absolute inset-0 bg-green-500/10" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-green-500/20 rounded-full blur-[100px] pointer-events-none" />
+                    <div className="container mx-auto max-w-4xl relative z-10 reveal-child">
+                        <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tight">El próximo sistema de tu empresa debería adaptarse a <span className="text-green-400">tu forma de trabajar</span></h2>
+                        <p className="text-xl md:text-2xl font-medium text-gray-300 mb-12 max-w-3xl mx-auto">
+                            Primero entendamos tus procesos, detectemos dónde se encuentra el mayor problema y definamos qué solución tendría un impacto real.
+                        </p>
+                        <div className="flex flex-col sm:flex-row justify-center gap-6">
+                            <Link href="/grow-iq" className="px-10 py-5 bg-green-500 text-white font-bold rounded-full text-lg shadow-[0_0_30px_rgba(34,197,94,0.4)] hover:bg-green-400 hover:scale-105 transition-all">
+                                Calcular mi Grow IQ
+                            </Link>
+                            <a href="https://wa.me/5492645438114" target="_blank" className="px-10 py-5 bg-white/10 text-white font-bold rounded-full text-lg border border-white/20 hover:bg-white/20 transition-all backdrop-blur-sm">
+                                Hablar sobre un proyecto
+                            </a>
                         </div>
                     </div>
                 </section>
             </main>
 
-            {/* FOOTER */}
-            <footer className="bg-black/80 backdrop-blur-xl py-10 md:py-12 relative z-10 border-t border-white/10">
-                <div className="container mx-auto px-6 text-center">
-                    <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/20 mx-auto mb-6">
-                        <Image src="/logogrow.png" alt="Grow Labs" fill className="object-cover" />
+            {/* 13. FOOTER */}
+            <footer className="bg-black py-16 text-gray-400 border-t border-white/10 relative z-20">
+                <div className="container mx-auto px-6 max-w-6xl">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-12">
+                        <div className="col-span-1 md:col-span-2">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20">
+                                    <Image src="/logogrow.png" alt="Grow Labs" fill className="object-cover" />
+                                </div>
+                                <span className="font-bold text-xl text-white tracking-tight">Grow Labs</span>
+                            </div>
+                            <p className="text-sm leading-relaxed max-w-sm mb-6">
+                                Software empresarial a medida para ordenar procesos, centralizar información y acompañar el crecimiento de las organizaciones.
+                            </p>
+                            <div className="flex gap-4">
+                                <a href="https://wa.me/5492645438114" target="_blank" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-green-500 hover:text-white transition-all border border-white/10"><i className="fab fa-whatsapp"></i></a>
+                                <a href="https://instagram.com/growlabs.lat" target="_blank" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-green-500 hover:text-white transition-all border border-white/10"><i className="fab fa-instagram"></i></a>
+                                <a href="https://www.linkedin.com/company/grow-labs-latam/" target="_blank" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-green-500 hover:text-white transition-all border border-white/10"><i className="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 className="font-bold text-white mb-6 uppercase tracking-widest text-xs">Navegación</h4>
+                            <ul className="space-y-3 text-sm">
+                                <li><a href="#soluciones" className="hover:text-green-400 transition-colors">Soluciones</a></li>
+                                <li><a href="#como-trabajamos" className="hover:text-green-400 transition-colors">Cómo trabajamos</a></li>
+                                <li><a href="#casos" className="hover:text-green-400 transition-colors">Casos de éxito</a></li>
+                                <li><a href="#herramientas" className="hover:text-green-400 transition-colors">Herramientas Públicas</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="font-bold text-white mb-6 uppercase tracking-widest text-xs">Acceso Rápido</h4>
+                            <ul className="space-y-3 text-sm">
+                                <li><Link href="/grow-iq" className="text-green-400 font-medium hover:text-green-300 transition-colors">Calcular Grow IQ</Link></li>
+                                <li><Link href="/cv-maker" className="hover:text-white transition-colors">CV Inteligente</Link></li>
+                                <li><Link href="/tools/transcriptor" className="hover:text-white transition-colors">Transcriptor Automático</Link></li>
+                                <li><a href="https://wa.me/5492645438114" target="_blank" className="hover:text-white transition-colors">Contacto directo</a></li>
+                            </ul>
+                        </div>
                     </div>
-                    <div className="flex justify-center gap-6 md:gap-8 mb-6 md:mb-8 text-xs md:text-sm font-medium flex-wrap">
-                        <Link href="#solutions" className="text-gray-400 hover:text-green-400 transition-colors">Funcionalidades</Link>
-                        <Link href="#tools" className="text-gray-400 hover:text-green-400 transition-colors">Herramientas</Link>
-                        <a href="https://wa.me/5492645438114" target="_blank" className="text-gray-400 hover:text-green-400 transition-colors">Contacto Técnico</a>
-                    </div>
-                    <div className="text-gray-500 text-xs text-center border-t border-white/10 pt-6 max-w-sm mx-auto">
-                        &copy; {new Date().getFullYear()} Grow Labs. Todos los derechos reservados.
-                    </div>
-                </div>
-            </footer>
-
-            {/* FLOATING SOCIAL BAR */}
-            <div className="fixed right-4 md:right-6 bottom-4 md:bottom-8 flex flex-col gap-3 z-50">
-                <a href="https://www.linkedin.com/in/lucas-marinero-182521308/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white text-xl shadow-[0_4px_15px_rgba(0,0,0,0.3)] border border-white/10 hover:-translate-y-1 hover:bg-white/20 hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)] transition-all duration-300">
-                    <i className="fab fa-linkedin-in"></i>
-                </a>
-                <a href="https://www.instagram.com/growsanjuan/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white text-xl shadow-[0_4px_15px_rgba(0,0,0,0.3)] border border-white/10 hover:-translate-y-1 hover:bg-white/20 hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)] transition-all duration-300">
-                    <i className="fab fa-instagram"></i>
-                </a>
-                <a href="https://api.whatsapp.com/send/?phone=5492645438114&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-[#25D366] rounded-full flex items-center justify-center text-white text-2xl shadow-[0_4px_15px_rgba(37,211,102,0.3)] border border-[#25D366] hover:bg-[#1ebc59] hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(37,211,102,0.4)] transition-all duration-300">
-                    <i className="fab fa-whatsapp"></i>
-                </a>
-            </div>
-
-            {/* CLIENT LOGO LIGHTBOX */}
-            {selectedLogo && (
-                <div 
-                    className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 cursor-pointer transition-opacity"
-                    onClick={() => setSelectedLogo(null)}
-                >
-                    <div 
-                        className="relative w-full max-w-3xl aspect-[16/9] md:aspect-video bg-white/5 rounded-2xl p-4 md:p-8 shadow-2xl transform transition-transform animate-flip cursor-default"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <button 
-                            className="absolute -top-4 -right-4 md:-top-6 md:-right-6 w-12 h-12 bg-white rounded-full flex items-center justify-center text-gray-900 border border-gray-200 shadow-lg hover:bg-gray-100 hover:scale-110 transition-all z-10"
-                            onClick={() => setSelectedLogo(null)}
-                        >
-                            <i className="fas fa-times text-xl"></i>
-                        </button>
-                        <div className="relative w-full h-full">
-                            <Image src={selectedLogo} fill alt="Cliente Detalle" className="object-contain" />
+                    <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
+                        <p>&copy; {new Date().getFullYear()} Grow Labs. Todos los derechos reservados.</p>
+                        <div className="flex gap-6">
+                            <span className="hover:text-white cursor-pointer">Política de Privacidad</span>
+                            <span className="hover:text-white cursor-pointer">Aviso Legal</span>
                         </div>
                     </div>
                 </div>
-            )}
-
-            {/* External CSS for Icons */}
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+            </footer>
         </div>
     );
 }
