@@ -71,7 +71,13 @@ export default function GrowIqWizard() {
 
   const validateStep = (): boolean => {
     if (step === 0) {
-      return !!(formData.companyName && formData.industry && formData.province && formData.employees && formData.role);
+      if (!formData.companyName || !formData.industry || !formData.province || !formData.employees || !formData.role || !formData.fullName || !formData.email || !formData.whatsapp) {
+        return false;
+      }
+      if (formData.industry === 'Otro' && !formData.customIndustry) {
+        return false;
+      }
+      return true;
     }
     if (step >= 1 && step <= 6) {
       const dimension = DIMENSIONS[step - 1];
@@ -225,6 +231,40 @@ export default function GrowIqWizard() {
                   placeholder="Ej. Director General, Gerente de Operaciones..."
                 />
               </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Nombre y apellido *</label>
+                  <input 
+                    type="text" 
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                    value={formData.fullName}
+                    onChange={e => updateField('fullName', e.target.value)}
+                    placeholder="Ej. Juan Pérez"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Correo corporativo *</label>
+                  <input 
+                    type="email" 
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                    value={formData.email}
+                    onChange={e => updateField('email', e.target.value)}
+                    placeholder="Ej. juan@empresa.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">Teléfono / WhatsApp *</label>
+                <input 
+                  type="tel" 
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                  value={formData.whatsapp}
+                  onChange={e => updateField('whatsapp', e.target.value)}
+                  placeholder="Ej. +54 9 11 1234-5678"
+                />
+              </div>
             </div>
           </div>
         )}
@@ -298,38 +338,10 @@ export default function GrowIqWizard() {
             <p className="text-gray-400 mb-8">Ingresá tus datos para ver tu Grow IQ y acceder al informe completo.</p>
             
             <div className="space-y-5">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">Nombre y apellido *</label>
-                <input 
-                  type="text" 
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
-                  value={formData.fullName}
-                  onChange={e => updateField('fullName', e.target.value)}
-                  placeholder="Ej. Juan Pérez"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">Correo electrónico corporativo *</label>
-                <input 
-                  type="email" 
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
-                  value={formData.email}
-                  onChange={e => updateField('email', e.target.value)}
-                  placeholder="Ej. juan@empresa.com"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">WhatsApp *</label>
-                <input 
-                  type="tel" 
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
-                  value={formData.whatsapp}
-                  onChange={e => updateField('whatsapp', e.target.value)}
-                  placeholder="Ej. +54 9 11 1234-5678"
-                />
-              </div>
+              <p className="text-gray-400">
+                Estás a un paso de descubrir el nivel de madurez operativa y tecnológica de tu empresa.
+                Al hacer clic en generar reporte, procesaremos tus respuestas y crearemos un plan de acción personalizado.
+              </p>
 
               <div className="pt-4">
                 <label className="flex items-start gap-3 cursor-pointer group">

@@ -11,6 +11,7 @@ type DiagnosticLead = {
   company_name: string;
   contact_name: string;
   contact_email: string;
+  whatsapp: string;
   contact_role: string;
   industry: string;
   score: number;
@@ -132,10 +133,16 @@ export default function GrowIqAdminPage() {
                       <span className="text-gray-300 font-semibold">{l.contact_name}</span>
                       <span className="text-[10px] bg-white/5 px-1.5 py-0.5 rounded text-gray-400 ml-1">{l.contact_role}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
                       <Mail size={12} />
                       <a href={`mailto:${l.contact_email}`} className="hover:text-emerald-400 transition-colors">{l.contact_email}</a>
                     </div>
+                    {l.whatsapp && (
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <Zap size={12} />
+                        <a href={`https://wa.me/${l.whatsapp.replace(/\D/g, '')}`} target="_blank" className="hover:text-emerald-400 transition-colors">{l.whatsapp}</a>
+                      </div>
+                    )}
                   </td>
                   <td className="px-5 py-4 text-center">
                     <span className="text-lg font-black text-white">{l.score}</span>
