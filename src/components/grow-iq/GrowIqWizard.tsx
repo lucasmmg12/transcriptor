@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { DIMENSIONS, QUESTIONS, OPEN_QUESTIONS, OPTIONS } from '@/lib/grow-iq/questions';
 import { GrowIqFormState } from '@/lib/types/grow-iq';
-import { ChevronRight, ChevronLeft, Check, Loader2 } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Check, Loader2, CheckCircle2 } from 'lucide-react';
 
 const INITIAL_STATE: GrowIqFormState = {
   companyName: '',
@@ -32,6 +32,7 @@ export default function GrowIqWizard() {
   const [formData, setFormData] = useState<GrowIqFormState>(INITIAL_STATE);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [banner, setBanner] = useState<{ title: string; subtitle: string } | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -95,6 +96,26 @@ export default function GrowIqWizard() {
 
   const handleNext = () => {
     if (validateStep()) {
+      if (step === 0) {
+        setBanner({
+          title: '¡Datos de contacto guardados exitosamente!',
+          subtitle: `Ya registramos la información de ${formData.companyName} (${formData.email}). Completá las siguientes secciones para calcular tu Grow IQ y generar tu informe detallado.`
+        });
+      } else if (step >= 1 && step <= 6) {
+        const messages = [
+          "¡Excelente! Tus respuestas de la dimensión de procesos ya están guardadas.",
+          "¡Progreso registrado! Cada respuesta nos da mayor precisión sobre la madurez de tu empresa.",
+          "¡Muy bien! Evaluamos tus herramientas e integración tecnológica.",
+          "¡Genial! Los datos de gestión comercial y seguimiento están asegurados.",
+          "¡Fantástico! Ya analizamos el uso de tecnología e Inteligencia Artificial.",
+          "¡Último paso! Respondé los desafíos clave para desbloquear tu reporte completo."
+        ];
+        setBanner({
+          title: '¡Información guardada correctamente!',
+          subtitle: messages[(step - 1) % messages.length]
+        });
+      }
+
       setStep(prev => prev + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -147,6 +168,26 @@ export default function GrowIqWizard() {
         <span className="text-sm font-medium text-gray-400">Paso {step + 1} de {totalSteps}</span>
         <span className="text-sm font-bold text-emerald-400">{progress}% Completado</span>
       </div>
+
+      {/* Saved Info Banner */}
+      {banner && step > 0 && (
+        <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 flex items-start gap-3.5 animate-in fade-in slide-in-from-top-2 duration-300 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
+          <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30 mt-0.5">
+            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+          </div>
+          <div className="flex-1 text-sm">
+            <p className="font-bold text-white mb-0.5">{banner.title}</p>
+            <p className="text-gray-300 text-xs md:text-sm leading-relaxed">{banner.subtitle}</p>
+          </div>
+          <button 
+            onClick={() => setBanner(null)}
+            className="text-gray-400 hover:text-white p-1 transition-colors text-xs font-bold"
+            title="Cerrar"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       <div className="min-h-[400px]">
         {/* Step 0: Basic Info */}
